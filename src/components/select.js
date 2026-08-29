@@ -153,6 +153,7 @@ export function Select(props = {}) {
       return
     }
 
+    currentPlacement.value = normalizePlacement(isReactiveValue(placement) ? placement.value : placement)
     open.value = true
     addOpenListeners()
     schedulePosition()
@@ -169,18 +170,6 @@ export function Select(props = {}) {
     closeMenu(true)
   }
 
-  const handleMenuClick = event => {
-    const optionElement = event.target?.closest?.(`.${baseClassName}-option`)
-    if (!optionElement) {
-      return
-    }
-
-    const option = readOptions().find(item => String(item.value) === optionElement.value)
-    if (option) {
-      selectOption(option, event)
-    }
-  }
-
   const handleKeyDown = event => {
     if (event.key === 'Escape' && open.value) {
       event.preventDefault()
@@ -194,16 +183,14 @@ export function Select(props = {}) {
     }
   }
 
-  const menu = computed(() => {
-    if (!open.value) {
-      return null
-    }
-
+  const optionMarkup = computed(() => {
     const selected = String(selectedValue.value ?? '')
-    const listboxId = id === undefined ? undefined : `${id}-listbox`
 
-    return html`<div class="${baseClassName}-menu ${baseClassName}-menu-${currentPlacement}" id="${listboxId}" role="listbox" aria-label="${ariaLabel ?? 'Options'}" @click=${handleMenuClick}>${readOptions().map(option => html`<button type="button" class="${baseClassName}-option" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" ?disabled=${option.disabled}>${option.label}</button>`)}</div>`
+    return readOptions().map(option => html`<button type="button" class="${baseClassName}-option" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" ?disabled=${option.disabled} @click=${event => selectOption(option, event)}>${option.label}</button>`)
   })
+
+  const listboxId = id === undefined ? undefined : `${id}-listbox`
+  const menu = html`<div class="${baseClassName}-menu ${baseClassName}-menu-${currentPlacement}" id="${listboxId}" role="listbox" aria-label="${ariaLabel ?? 'Options'}" ?hidden=${computed(() => !open.value)}>${optionMarkup}</div>`
 
   return html`<div class="${baseClassName} ${baseClassName}-${sizeValue} ${classValue}"><button type="button" class="${baseClassName}-trigger" id="${id}" name="${name}" aria-haspopup="listbox" aria-expanded="${open}" aria-label="${ariaLabel}" aria-required="${required}" ?disabled=${disabled} @click=${toggleMenu} @keydown=${handleKeyDown}><span class="${baseClassName}-value">${selectedLabel}</span><span class="${baseClassName}-chevron" aria-hidden="true"></span></button>${menu}</div>`
 }

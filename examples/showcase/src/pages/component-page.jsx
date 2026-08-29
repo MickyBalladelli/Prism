@@ -178,7 +178,10 @@ function SelectPlayground() {
         <label class="setting-label" htmlFor="select-placement">Menu placement</label>
         <Select
           id="select-placement"
-          value={placement}
+          value={placement.value}
+          onChange={event => {
+            placement.value = event.target?.value
+          }}
           options={[
             { value: 'bottom', label: 'Bottom — default' },
             { value: 'top', label: 'Top' },

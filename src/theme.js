@@ -588,6 +588,10 @@ export const prismTheme = globalCss(`
     box-shadow: 0 .7rem 1.8rem rgb(37 49 78 / 15%), 0 .1rem .3rem rgb(37 49 78 / 8%);
   }
 
+  .prism-select-menu[hidden] {
+    display: none;
+  }
+
   .prism-select-menu-bottom {
     top: calc(100% + .35rem);
     right: 0;
