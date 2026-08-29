@@ -11,7 +11,7 @@ export interface BoxProps {
 }
 
 export type BackgroundPalette = 'midnight' | 'aurora' | 'tide'
-export type BackgroundAnimation = 'veil' | 'sanctum'
+export type BackgroundAnimation = 'veil' | 'mist' | 'sanctum'
 
 export type LabelSize = 'small' | 'medium' | 'large' | 'display'
 export type LabelFont = 'sans' | 'serif' | 'mono'
@@ -28,6 +28,8 @@ export interface LabelProps {
   weight?: LabelWeight | Signal<LabelWeight>
   tone?: LabelTone | Signal<LabelTone>
   alwaysVisible?: boolean | Signal<boolean>
+  outlineColor?: string | Signal<string>
+  backgroundColor?: string | Signal<string>
   fontSize?: string | Signal<string>
   fontFamily?: string | Signal<string>
   fontWeight?: string | number | Signal<string | number>

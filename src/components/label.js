@@ -29,7 +29,9 @@ function createStyleValue(props) {
       '--prism-label-font': readValue(props.fontFamily),
       '--prism-label-weight': readValue(props.fontWeight),
       '--prism-label-tracking': readValue(props.letterSpacing),
-      '--prism-label-leading': readValue(props.lineHeight)
+      '--prism-label-leading': readValue(props.lineHeight),
+      '--prism-label-color': readValue(props.backgroundColor),
+      '--prism-label-stroke': readValue(props.outlineColor)
     }
 
     if (typeof style === 'string') {
@@ -57,6 +59,8 @@ export function Label(props = {}) {
     weight = 'semibold',
     tone = 'ink',
     alwaysVisible = false,
+    outlineColor,
+    backgroundColor,
     fontSize,
     fontFamily,
     fontWeight,
@@ -81,7 +85,9 @@ export function Label(props = {}) {
     fontFamily,
     fontWeight,
     letterSpacing,
-    lineHeight
+    lineHeight,
+    outlineColor,
+    backgroundColor
   })
 
   const content = computed(() => readValue(alwaysVisible, false)

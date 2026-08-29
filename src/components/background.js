@@ -22,7 +22,8 @@ const palettes = Object.freeze({
 
 const animations = Object.freeze({
   veil: 0,
-  sanctum: 1
+  sanctum: 1,
+  mist: 2
 })
 
 const vertexSource = `
@@ -72,19 +73,35 @@ void main() {
       color += z * z * vec4(2.0 - sin(p * 5.0), 0.0) / (0.001 + length(vec4(sin(p * 33.0) / 99.0, p.x)));
     }
     color = cubicTanh(color / 400.0);
-  } else {
-    for (int i = 0; i < 30; i++) {
-      vec3 p = z * ray;
-      vec3 t = p;
+  } else if (uMode < 1.5) {
+    vec2 uv = (frag * 2.0 - uResolution.xy) / max(uResolution.y, 1.0);
+    for (int i = 0; i < 10; i++) {
+      float depth = float(i) * 0.3;
+      vec3 p = vec3(uv * (1.12 + depth * 0.1), depth + uTime * 0.11);
       float d = 4.0;
       for (int j = 0; j < 6; j++) {
         d /= 0.8;
-        p += sin(p.yzx * d + z + uTime) / d;
+        p += sin(p.yzx * d + depth + uTime) / d;
       }
-      z += (3.0 - length(p.xz)) / 9.0;
-      color += vec4(9.0, 7.0, 4.0, 1.0) / (abs(t.x * (t.y - 0.8)) + abs(t.z + 3.0) * 0.5 + 0.001);
+      float dens = 0.42 + abs(p.y) * 0.38 + abs(sin(p.x * 2.1 + p.z * 0.8));
+      color += vec4(9.0, 7.0, 4.0, 1.0) / dens * (0.085 - float(i) * 0.004);
     }
-    color = cubicTanh((color * color) / 300000.0);
+    color = cubicTanh(color / 11.0);
+  } else {
+    vec2 uv = (frag * 2.0 - uResolution.xy) / max(uResolution.y, 1.0);
+    for (int i = 0; i < 8; i++) {
+      float depth = float(i) * 0.34;
+      vec3 p = vec3(uv * (1.08 + depth * 0.16), depth + uTime * 0.12);
+      float d = 4.0;
+      for (int j = 0; j < 6; j++) {
+        d += d;
+        p = p.yzx + sin(p * d - uTime) / d;
+      }
+      vec3 sheets = 2.0 - sin(p * 5.0);
+      float dens = 0.18 + abs(p.x) + length(sin(p * 33.0) / 99.0);
+      color += vec4(sheets, 0.0) / dens * (0.1 - float(i) * 0.007);
+    }
+    color = cubicTanh(color / 16.0);
   }
 
   vec3 shade = max(color.rgb, 0.0) * uIntensity;
@@ -238,6 +255,7 @@ function renderFallback(canvas, time, options) {
   const logicalHeight = height / ratio
   const pulse = time * 0.00032 * (options.speed || 1)
   const sanctum = options.animation === 'sanctum'
+  const mist = options.animation === 'mist'
 
   context.setTransform(1, 0, 0, 1, 0, 0)
   context.clearRect(0, 0, width, height)
@@ -247,10 +265,14 @@ function renderFallback(canvas, time, options) {
 
   const driftX = sanctum
     ? 0.5 + Math.sin(pulse * 0.55) * 0.08
-    : 0.52 + Math.sin(pulse) * 0.22
+    : mist
+      ? 0.38 + Math.sin(pulse * 0.45) * 0.28
+      : 0.52 + Math.sin(pulse) * 0.22
   const driftY = sanctum
     ? 0.42 + Math.cos(pulse * 0.4) * 0.06
-    : 0.38 + Math.cos(pulse * 0.85) * 0.2
+    : mist
+      ? 0.48 + Math.cos(pulse * 0.38) * 0.22
+      : 0.38 + Math.cos(pulse * 0.85) * 0.2
   const glow = context.createRadialGradient(
     logicalWidth * driftX,
     logicalHeight * driftY,

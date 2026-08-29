@@ -94,16 +94,23 @@ test('Background exposes a reusable animated surface', () => {
 })
 
 test('Background can switch named motion recipes', () => {
-  const background = Background({
+  const sanctum = Background({
     animation: 'sanctum',
     children: 'Backdrop'
   })
+  const mist = Background({
+    animation: 'mist',
+    children: 'Backdrop'
+  })
 
-  const classNames = background.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-sanctum'))
-  assert.equal(classNames?.value.includes('prism-background-sanctum'), true)
+  const sanctumClass = sanctum.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-sanctum'))
+  assert.equal(sanctumClass?.value.includes('prism-background-sanctum'), true)
 
-  const canvasLayer = background.values.find(value => value?.kind === 'computed' && value.value?.render)
-  assert.equal(canvasLayer?.value.props.animation, 'sanctum')
+  const mistClass = mist.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-mist'))
+  assert.equal(mistClass?.value.includes('prism-background-mist'), true)
+
+  const canvasLayer = mist.values.find(value => value?.kind === 'computed' && value.value?.render)
+  assert.equal(canvasLayer?.value.props.animation, 'mist')
 })
 
 test('Background removes the motion layer when animation is off', () => {
@@ -125,7 +132,9 @@ test('Label supports typography props and an always-visible lock', () => {
     size: 'display',
     font: 'serif',
     weight: 'bold',
-    alwaysVisible: true
+    alwaysVisible: true,
+    outlineColor: '#f3eee4',
+    backgroundColor: '#0a1020'
   })
 
   const classNames = label.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-label'))
@@ -133,6 +142,10 @@ test('Label supports typography props and an always-visible lock', () => {
   assert.equal(classNames?.value.includes('prism-label-font-serif'), true)
   assert.equal(classNames?.value.includes('prism-label-weight-bold'), true)
   assert.equal(classNames?.value.includes('prism-label-always-visible'), true)
+
+  const styleValue = label.values.find(value => value?.kind === 'computed' && typeof value.value === 'object' && value.value['--prism-label-stroke'])
+  assert.equal(styleValue?.value['--prism-label-stroke'], '#f3eee4')
+  assert.equal(styleValue?.value['--prism-label-color'], '#0a1020')
 })
 
 test('Label can associate with a control', () => {

@@ -31,7 +31,7 @@ const button = Button({
 Components accept Matrix signals for `value` and `checked`, keeping controls synchronized in both directions. `TextField` supports `small`, `medium`, and `large` sizes.
 `Box` and `Card` support `sticky` and `stickyTop` for parent-bounded sticky layout, and `Card` can also render an `actions` footer.
 
-`Background` renders a reusable animated backdrop with an overlay content slot. Use `palette`, `animation` (`veil` or `sanctum`), `animated`, `speed`, `intensity`, `grain`, `overlayOpacity`, `minHeight`, `height`, `padding`, and `radius` to tune the surface:
+`Background` renders a reusable animated backdrop with an overlay content slot. Use `palette`, `animation` (`veil`, `mist`, or `sanctum`), `animated`, `speed`, `intensity`, `grain`, `overlayOpacity`, `minHeight`, `height`, `padding`, and `radius` to tune the surface:
 
 ```jsx
 import { html } from 'matrix'
@@ -48,7 +48,7 @@ const view = Background({
 })
 ```
 
-`Label` sets size, typeface, and weight. Set `alwaysVisible` to draw a contrasting border around each character so dark type stays readable on a light field, and the reverse.
+`Label` sets size, typeface, and weight. Set `alwaysVisible` to outline each character. Use `backgroundColor` for the glyph fill and `outlineColor` for the character border.
 
 `CodeViewer` renders editable, syntax-colored code with optional line numbers and a copy button:
 

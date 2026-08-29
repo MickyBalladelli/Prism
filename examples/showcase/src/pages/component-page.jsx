@@ -181,6 +181,7 @@ function BackgroundPlayground() {
           value={animation}
           options={[
             { value: 'veil', label: 'Veil — sine cloud drift' },
+            { value: 'mist', label: 'Mist — open veil, quiet core' },
             { value: 'sanctum', label: 'Sanctum — gilded hall' }
           ]}
         />
@@ -228,6 +229,8 @@ function LabelPlayground() {
   const weight = signal('medium')
   const alwaysVisible = signal(true)
   const animation = signal('sanctum')
+  const outlineColor = signal('#f3eee4')
+  const backgroundColor = signal('#0a1020')
   const codePreview = createCodePreview(codeLines(
     'Background({',
     '  palette: "midnight",',
@@ -237,6 +240,8 @@ function LabelPlayground() {
     '    ${Label({',
     '      size: "small",',
     '      alwaysVisible: true,',
+    '      outlineColor,',
+    '      backgroundColor,',
     '      children: "Over the motion"',
     '    })}',
     '    ${Label({',
@@ -244,12 +249,14 @@ function LabelPlayground() {
     '      font,',
     '      weight,',
     '      alwaysVisible,',
+    '      outlineColor,',
+    '      backgroundColor,',
     '      children: copy',
     '    })}',
-    '    <p class="label-demo-copy">Switch Veil and Sanctum. Dark letters with a light outline, no plate behind them.</p>',
+    '    <p class="label-demo-copy">Tune the glyph fill and the character outline. There is no plate behind the type.</p>',
     '  </div>`',
     '})'
-  ), { ...playgroundRuntime, copy, size, font, weight, alwaysVisible, animation })
+  ), { ...playgroundRuntime, copy, size, font, weight, alwaysVisible, animation, outlineColor, backgroundColor })
 
   return {
     code: codePreview.code,
@@ -290,17 +297,44 @@ function LabelPlayground() {
             { value: 'bold', label: 'Bold' }
           ]}
         />
+        <label class="setting-label" htmlFor="label-background-color">Character background</label>
+        <Select
+          id="label-background-color"
+          value={backgroundColor}
+          options={[
+            { value: '#0a1020', label: 'Night — #0a1020' },
+            { value: '#1d2638', label: 'Ink — #1d2638' },
+            { value: '#f6f3ec', label: 'Ivory — #f6f3ec' },
+            { value: '#3657d6', label: 'Prism blue — #3657d6' },
+            { value: '#ef685a', label: 'Accent — #ef685a' }
+          ]}
+        />
+        <TextField id="label-background-color-custom" value={backgroundColor} placeholder="#0a1020" />
+        <label class="setting-label" htmlFor="label-outline-color">Character outline</label>
+        <Select
+          id="label-outline-color"
+          value={outlineColor}
+          options={[
+            { value: '#f3eee4', label: 'Cream — #f3eee4' },
+            { value: '#ffffff', label: 'White — #ffffff' },
+            { value: '#0a1020', label: 'Night — #0a1020' },
+            { value: '#7ac7ff', label: 'Glow — #7ac7ff' },
+            { value: '#f2c14e', label: 'Gold — #f2c14e' }
+          ]}
+        />
+        <TextField id="label-outline-color-custom" value={outlineColor} placeholder="#f3eee4" />
         <label class="setting-label" htmlFor="label-animation">Backdrop recipe</label>
         <Select
           id="label-animation"
           value={animation}
           options={[
             { value: 'veil', label: 'Veil — sine cloud drift' },
+            { value: 'mist', label: 'Mist — open veil, quiet core' },
             { value: 'sanctum', label: 'Sanctum — gilded hall' }
           ]}
         />
         <CheckBox checked={alwaysVisible}>Always visible</CheckBox>
-        <p class="playground-note">Always visible draws a light border around each character. There is no background box. Turn it off to drop back to plain type.</p>
+        <p class="playground-note">Character background fills the glyphs. Outline color strokes each letter. Always visible turns the outline on, with no box behind the type.</p>
       </div>
     )
   }
