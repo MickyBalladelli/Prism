@@ -1,6 +1,6 @@
 # Prism
 
-Small UI components for [Matrix]([../Matrix)](https://github.com/MickyBalladelli/Matrix).
+Small UI components for [Matrix](https://github.com/MickyBalladelli/Matrix).
 
 ```js
 import { Box, Button, Card, CheckBox, TextField } from 'prism-ui'
