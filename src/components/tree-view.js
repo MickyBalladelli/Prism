@@ -85,9 +85,7 @@ export function TreeView(props = {}) {
     model = 'prism'
   } = props
 
-  const itemList = items?.kind === 'signal' || items?.kind === 'computed'
-    ? items.value
-    : items
+  const isReactiveItems = items?.kind === 'signal' || items?.kind === 'computed'
   const modelValue = model?.kind === 'signal' || model?.kind === 'computed'
     ? computed(() => normalizeTreeViewModel(model.value))
     : normalizeTreeViewModel(model)
@@ -221,11 +219,15 @@ export function TreeView(props = {}) {
     }
   }
 
+  const itemMarkup = isReactiveItems
+    ? computed(() => (items.value ?? []).map(item => renderItem(item, handleKeyDown, handleToggle)))
+    : (items ?? []).map(item => renderItem(item, handleKeyDown, handleToggle))
+
   if (id === undefined) {
-    return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemList.map(item => renderItem(item, handleKeyDown, handleToggle))}</ul></nav>`
+    return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
   }
 
-  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemList.map(item => renderItem(item, handleKeyDown, handleToggle))}</ul></nav>`
+  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
 }
 
 export const TreeViewComponent = props => component(TreeView, props)

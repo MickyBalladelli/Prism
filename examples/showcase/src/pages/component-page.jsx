@@ -600,7 +600,6 @@ function PulsePlayground() {
 }
 
 function TreeViewPlayground() {
-  const activeItem = signal('button')
   const showMeta = signal(true)
   const expanded = signal(true)
   const model = signal('prism')
@@ -614,13 +613,12 @@ function TreeViewPlayground() {
   const items = computed(() => [
     {
       label: 'Overview',
-      active: activeItem.value === 'overview',
       meta: showMeta.value ? 'Home' : undefined
     },
     {
       label: 'Components',
       expanded: expanded.value,
-      meta: showMeta.value ? '6' : undefined,
+      meta: showMeta.value ? '7' : undefined,
       children: [
         {
           label: 'Layout',
@@ -628,31 +626,30 @@ function TreeViewPlayground() {
           meta: showMeta.value ? '2' : undefined,
           children: [
             {
-              label: 'Box',
-              active: activeItem.value === 'box'
+              label: 'Box'
             },
             {
-              label: 'Card',
-              active: activeItem.value === 'card'
+              label: 'Card'
             }
           ]
         },
         {
           label: 'Forms',
           expanded: expanded.value,
-          meta: showMeta.value ? '3' : undefined,
+          meta: showMeta.value ? '4' : undefined,
           children: [
             {
-              label: 'TextField',
-              active: activeItem.value === 'text-field'
+              label: 'TextField'
             },
             {
-              label: 'CheckBox',
-              active: activeItem.value === 'check-box'
+              label: 'Select'
+            },
+            {
+              label: 'CheckBox'
             },
             {
               label: 'Button',
-              active: activeItem.value === 'button'
+              active: true
             }
           ]
         },
@@ -662,8 +659,7 @@ function TreeViewPlayground() {
           meta: showMeta.value ? '1' : undefined,
           children: [
             {
-              label: 'TreeView',
-              active: activeItem.value === 'tree-view'
+              label: 'TreeView'
             }
           ]
         }
@@ -680,21 +676,6 @@ function TreeViewPlayground() {
         <label class="setting-label" htmlFor="tree-model">Visual model</label>
         <Select id="tree-model" value={model} options={modelOptions} />
         <p class="tree-model-description"><strong>{modelName}</strong><span>{modelDescription}</span></p>
-        <label class="setting-label" htmlFor="tree-active-item">Active item</label>
-        <Select
-          id="tree-active-item"
-          value={activeItem}
-          options={[
-            { value: 'overview', label: 'Overview' },
-            { value: 'box', label: 'Box' },
-            { value: 'card', label: 'Card' },
-            { value: 'text-field', label: 'TextField' },
-            { value: 'select', label: 'Select' },
-            { value: 'check-box', label: 'CheckBox' },
-            { value: 'button', label: 'Button' },
-            { value: 'tree-view', label: 'TreeView' }
-          ]}
-        />
         <CheckBox checked={showMeta}>Show metadata chips</CheckBox>
         <CheckBox checked={expanded}>Expand sections</CheckBox>
         <p class="playground-note">Keyboard: ↑↓ move, type a letter to cycle, ←→ open or close, Enter or Space activates.</p>
