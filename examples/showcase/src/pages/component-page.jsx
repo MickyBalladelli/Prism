@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, ImageIcon, Pulse, Select, SparkIcon, TextField, TreeView } from 'prism-ui'
+import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, FileIcon, FolderIcon, ImageIcon, Pulse, Select, SparkIcon, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
@@ -47,7 +47,7 @@ const componentInfo = {
   'tree-view': {
     eyebrow: 'Navigation',
     title: 'TreeView',
-    description: 'Inspect nested navigation, active states, metadata chips, and branch expansion.'
+    description: 'Inspect nested navigation, active states, metadata chips, branch expansion, and custom item rendering.'
   }
 }
 
@@ -603,6 +603,7 @@ function PulsePlayground() {
 function TreeViewPlayground() {
   const showMeta = signal(true)
   const expanded = signal(true)
+  const renderMode = signal('text')
 
   const items = computed(() => [
     {
@@ -661,12 +662,41 @@ function TreeViewPlayground() {
     }
   ])
 
+  const renderTreeItem = (item, context) => {
+    if (renderMode.value === 'text') {
+      return item.label
+    }
+
+    const Icon = context.type === 'branch' ? FolderIcon : FileIcon
+    const icon = Icon({ size: '1.05em' })
+
+    if (renderMode.value === 'icon-text') {
+      return html`<span class="tree-rendered-copy"><span class="tree-rendered-icon" aria-hidden="true">${icon}</span><span>${item.label}</span></span>`
+    }
+
+    const detail = context.type === 'branch'
+      ? `${item.children?.length ?? 0} items`
+      : 'Component'
+
+    return html`<span class="tree-rendered-rich"><span class="tree-rendered-icon" aria-hidden="true">${icon}</span><span class="tree-rendered-rich-copy"><strong>${item.label}</strong><small>${detail}</small></span></span>`
+  }
+
   return {
     preview: (
-      <TreeView class="component-tree-preview" ariaLabel="Tree view playground" items={items} model={showcaseThemeModel} />
+      <TreeView class="component-tree-preview" ariaLabel="Tree view playground" items={items} model={showcaseThemeModel} onRender={renderTreeItem} />
     ),
     controls: (
       <div class="settings-list">
+        <label class="setting-label" htmlFor="tree-render-mode">Custom item rendering</label>
+        <Select
+          id="tree-render-mode"
+          value={renderMode}
+          options={[
+            { value: 'text', label: 'Text' },
+            { value: 'icon-text', label: 'Icon + Text' },
+            { value: 'rich', label: 'Rich row' }
+          ]}
+        />
         <CheckBox checked={showMeta}>Show metadata chips</CheckBox>
         <CheckBox checked={expanded}>Expand sections</CheckBox>
         <p class="playground-note">Keyboard: ↑↓ move, type a letter to cycle, ←→ open or close, Enter or Space activates.</p>

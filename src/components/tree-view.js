@@ -8,7 +8,13 @@ function renderMeta(meta) {
     : component(Badge, { value: meta, pulseOnChange: true, class: 'prism-tree-meta' })
 }
 
-function renderLeaf(item = {}, onKeyDown) {
+function renderLabel(item, label, onRender, context) {
+  return typeof onRender === 'function'
+    ? onRender({ ...item, label }, context)
+    : label
+}
+
+function renderLeaf(item = {}, onKeyDown, onRender, depth = 0) {
   const {
     label = 'Untitled',
     href,
@@ -20,7 +26,7 @@ function renderLeaf(item = {}, onKeyDown) {
   const content = html`
     <span class="prism-tree-entry-copy">
       <span class="prism-tree-dot" aria-hidden="true"></span>
-      <span class="prism-tree-label">${label}</span>
+      <span class="prism-tree-label">${renderLabel(item, label, onRender, { location: 'item', type: 'leaf', selected: active, depth })}</span>
     </span>
     ${renderMeta(meta)}
   `
@@ -40,40 +46,44 @@ function renderLeaf(item = {}, onKeyDown) {
   return html`<li class="prism-tree-leaf"><div class="${classValue}" role="treeitem" tabindex="0" @keydown=${onKeyDown}>${content}</div></li>`
 }
 
-function renderBranch(item = {}, onKeyDown, onToggle) {
+function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
   const {
     label = 'Section',
     children = [],
     expanded = true,
+    active = false,
     meta
   } = item
+  const summaryClass = active
+    ? 'prism-tree-summary prism-tree-summary-active'
+    : 'prism-tree-summary'
 
   return html`
     <li class="prism-tree-branch">
       <details class="prism-tree-details" ?open=${expanded} @toggle=${onToggle}>
-        <summary class="prism-tree-summary" role="treeitem" aria-expanded="${expanded}" @keydown=${onKeyDown}>
+        <summary class="${summaryClass}" role="treeitem" aria-expanded="${expanded}" @keydown=${onKeyDown}>
           <span class="prism-tree-entry-copy">
             <span class="prism-tree-toggle" aria-hidden="true">
               <span class="prism-tree-toggle-bar prism-tree-toggle-bar-horizontal"></span>
               <span class="prism-tree-toggle-bar prism-tree-toggle-bar-vertical"></span>
             </span>
             <span class="prism-tree-marker" aria-hidden="true"></span>
-            <span class="prism-tree-label">${label}</span>
+            <span class="prism-tree-label">${renderLabel(item, label, onRender, { location: 'item', type: 'branch', selected: active, expanded, depth })}</span>
           </span>
           ${renderMeta(meta)}
         </summary>
         <ul class="prism-tree-list prism-tree-list-nested" role="group">
-          ${children.map(child => renderItem(child, onKeyDown, onToggle))}
+          ${children.map(child => renderItem(child, onKeyDown, onToggle, onRender, depth + 1))}
         </ul>
       </details>
     </li>
   `
 }
 
-function renderItem(item = {}, onKeyDown, onToggle) {
+function renderItem(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
   return Array.isArray(item.children) && item.children.length > 0
-    ? renderBranch(item, onKeyDown, onToggle)
-    : renderLeaf(item, onKeyDown)
+    ? renderBranch(item, onKeyDown, onToggle, onRender, depth)
+    : renderLeaf(item, onKeyDown, onRender, depth)
 }
 
 export function TreeView(props = {}) {
@@ -82,7 +92,8 @@ export function TreeView(props = {}) {
     class: classValue = '',
     id,
     ariaLabel = 'Tree view',
-    model = 'prism'
+    model = 'prism',
+    onRender
   } = props
 
   const isReactiveItems = items?.kind === 'signal' || items?.kind === 'computed'
@@ -219,9 +230,10 @@ export function TreeView(props = {}) {
     }
   }
 
-  const itemMarkup = isReactiveItems
-    ? computed(() => (items.value ?? []).map(item => renderItem(item, handleKeyDown, handleToggle)))
-    : (items ?? []).map(item => renderItem(item, handleKeyDown, handleToggle))
+  const itemMarkup = computed(() => {
+    const sourceItems = isReactiveItems ? items.value : items
+    return (sourceItems ?? []).map(item => renderItem(item, handleKeyDown, handleToggle, onRender))
+  })
 
   if (id === undefined) {
     return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`

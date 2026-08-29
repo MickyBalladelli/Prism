@@ -1027,6 +1027,47 @@ h2 {
   width: min(100%, 24rem);
 }
 
+.tree-rendered-copy,
+.tree-rendered-rich {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-width: 0;
+  vertical-align: middle;
+}
+
+.tree-rendered-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--prism-color-action);
+}
+
+.tree-rendered-rich-copy {
+  display: grid;
+  min-width: 0;
+  gap: .08rem;
+  line-height: 1.05;
+}
+
+.tree-rendered-rich-copy strong,
+.tree-rendered-rich-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-rendered-rich-copy strong {
+  color: var(--prism-color-ink);
+  font-size: .9em;
+}
+
+.tree-rendered-rich-copy small {
+  color: var(--prism-color-text-subtle);
+  font-size: .7em;
+  font-weight: 650;
+  letter-spacing: .02em;
+}
+
 .prism-theme-model-nocturne .showcase-theme-picker,
 .prism-theme-model-terminal .showcase-theme-picker {
   box-shadow: 0 .45rem 1.1rem rgb(0 0 0 / 24%);

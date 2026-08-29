@@ -130,6 +130,17 @@ export interface TreeViewItem {
   children?: TreeViewItem[]
 }
 
+export type TreeViewRenderLocation = 'item'
+export type TreeViewItemType = 'branch' | 'leaf'
+
+export interface TreeViewRenderContext {
+  location: TreeViewRenderLocation
+  type: TreeViewItemType
+  selected: boolean
+  expanded?: boolean
+  depth: number
+}
+
 export type TreeViewModel = 'prism' | 'aurora' | 'nocturne' | 'editorial' | 'terminal'
 
 export interface TreeViewModelDefinition {
@@ -145,6 +156,7 @@ export interface TreeViewProps {
   id?: string
   ariaLabel?: string
   model?: TreeViewModel | Signal<TreeViewModel>
+  onRender?: (item: TreeViewItem, context: TreeViewRenderContext) => unknown
 }
 
 export function Box(props?: BoxProps): unknown

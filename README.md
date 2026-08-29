@@ -134,6 +134,8 @@ import { TreeView } from 'prism-ui'
 const view = <TreeView model="aurora" items={items} />
 ```
 
+Use `onRender` to customize each branch and leaf label. It receives the item and a context with `type`, `selected`, `expanded`, and `depth`, so you can render text, icons, or richer rows.
+
 The exported `treeViewModels` map contains each model's display name and description.
 
 ## Showcase
