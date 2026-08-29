@@ -687,6 +687,7 @@ function TreeViewPlayground() {
         />
         <CheckBox checked={showMeta}>Show metadata chips</CheckBox>
         <CheckBox checked={expanded}>Expand sections</CheckBox>
+        <p class="playground-note">Keyboard: ↑↓ move, type a letter to cycle, ←→ open or close, Enter or Space activates.</p>
       </div>
     )
   }

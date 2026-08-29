@@ -124,6 +124,10 @@ const view = (
 
 Use `ariaLabel` when the pulse has no visible label. The animation respects `prefers-reduced-motion`.
 
+## TreeView
+
+`TreeView` supports keyboard navigation with Arrow Up and Down, Home and End, letter cycling with wraparound, Enter or Space activation, and Arrow Left or Right branch control. Escape closes the focused branch.
+
 ## Showcase
 
 Run the Vite showcase:
