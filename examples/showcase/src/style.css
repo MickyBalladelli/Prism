@@ -258,14 +258,7 @@ h1 em {
 .detail-settings-rail > .settings-card {
   position: sticky;
   top: 1.5rem;
-  max-height: min(calc(100svh - 3rem), 100%);
   overflow: visible;
-}
-
-.detail-settings-rail .settings-list {
-  max-height: calc(min(calc(100svh - 3rem), 100%) - 4.5rem);
-  overflow: auto;
-  padding-bottom: 0.25rem;
 }
 
 .stage-heading {
@@ -849,9 +842,8 @@ h1 em {
 
 .background-demo-copy {
   max-width: 26rem;
-  color: rgb(226 236 255 / 84%);
-  font-size: var(--prism-font-size-body);
-  line-height: 1.6;
+  --prism-label-leading: 1.55;
+  --prism-label-tracking: .01em;
 }
 
 .background-demo-badges {
@@ -873,18 +865,6 @@ h1 em {
   letter-spacing: .06em;
   text-transform: uppercase;
   backdrop-filter: blur(12px);
-}
-
-.background-demo-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .75rem;
-  margin-top: .35rem;
-}
-
-.background-demo-actions .prism-button-secondary {
-  border-color: rgb(255 255 255 / 18%);
-  background: linear-gradient(135deg, rgb(78 96 146 / 78%), rgb(52 67 110 / 88%));
 }
 
 .label-demo-stage {
@@ -2077,12 +2057,6 @@ input[type="text"]:required:invalid {
 
   .detail-settings-rail > .settings-card {
     position: static;
-    max-height: none;
-    overflow: visible;
-  }
-
-  .detail-settings-rail .settings-list {
-    max-height: none;
     overflow: visible;
   }
 

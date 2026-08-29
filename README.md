@@ -40,7 +40,7 @@ import { Background, Button, Label } from 'prism-ui'
 const view = Background({
   palette: 'midnight',
   animation: 'veil',
-  intensity: 1.15,
+  intensity: 0.85,
   children: [
     Label({ children: 'Deep focus', size: 'display', alwaysVisible: true }),
     Button({ children: 'Open workspace' })

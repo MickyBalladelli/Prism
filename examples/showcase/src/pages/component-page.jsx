@@ -126,11 +126,12 @@ function createCodePreview(initialCode, scope = {}) {
 
 function BackgroundPlayground() {
   const headline = signal('Deep focus, soft glow')
+  const copy = signal('True mastery of a tool occurs when AI and UI dissolve into pure poetry.')
   const palette = signal('midnight')
   const animation = signal('veil')
   const animated = signal(true)
   const speed = signal(1)
-  const intensity = signal(1.15)
+  const intensity = signal(0.85)
   const overlayOpacity = signal(0.22)
   const codePreview = createCodePreview(codeLines(
     'Background({',
@@ -144,19 +145,15 @@ function BackgroundPlayground() {
     '  children: html`<div class="background-demo-stage">',
     '    <p class="eyebrow">Ambient layer</p>',
     '    ${Label({ size: "large", font: "sans", weight: "medium", alwaysVisible: true, children: headline })}',
-    '    <p class="background-demo-copy">The animation stays behind the content, so the surface can hold real UI, copy, and actions.</p>',
+    '    ${Label({ class: "background-demo-copy", size: "medium", font: "sans", weight: "regular", alwaysVisible: true, backgroundColor: "#f3eee4", outlineColor: "#0a1020", children: copy })}',
     '    <div class="background-demo-badges">',
     '      <span>Palette: ${palette}</span>',
     '      <span>${animated ? animation : "Solid surface"}</span>',
     '      <span>Intensity × ${intensity}</span>',
     '    </div>',
-    '    <div class="background-demo-actions">',
-    '      ${Button({ children: "Primary action" })}',
-    '      ${Button({ variant: "secondary", children: "Secondary" })}',
-    '    </div>',
     '  </div>`',
     '})'
-  ), { ...playgroundRuntime, headline, palette, animation, animated, speed, intensity, overlayOpacity })
+  ), { ...playgroundRuntime, headline, copy, palette, animation, animated, speed, intensity, overlayOpacity })
 
   return {
     code: codePreview.code,
@@ -165,6 +162,8 @@ function BackgroundPlayground() {
       <div class="settings-list">
         <label class="setting-label" htmlFor="background-headline">Headline</label>
         <TextField id="background-headline" value={headline} placeholder="Headline" />
+        <label class="setting-label" htmlFor="background-copy">Supporting line</label>
+        <TextField id="background-copy" value={copy} placeholder="Supporting line" />
         <label class="setting-label" htmlFor="background-palette">Palette</label>
         <Select
           id="background-palette"
@@ -211,8 +210,8 @@ function BackgroundPlayground() {
           id="background-intensity"
           value={intensity}
           options={[
-            { value: '.85', label: '0.85× — restrained' },
-            { value: '1.15', label: '1.15× — default' },
+            { value: '.85', label: '0.85× — default' },
+            { value: '1.15', label: '1.15× — brighter' },
             { value: '1.55', label: '1.55× — vivid' }
           ]}
         />
@@ -220,7 +219,6 @@ function BackgroundPlayground() {
         <Select
           id="background-overlay"
           value={overlayOpacity}
-          placement="top"
           options={[
             { value: '.14', label: '0.14 — airy' },
             { value: '.22', label: '0.22 — balanced' },
