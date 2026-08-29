@@ -985,7 +985,8 @@ export const prismTheme = globalCss(`
     --prism-code-tab-size: 2;
     --prism-code-min-height: 18rem;
     --prism-code-max-height: 32rem;
-    display: block;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     border: 1px solid var(--prism-code-border);
     border-radius: var(--prism-radius-surface);
@@ -1078,10 +1079,16 @@ export const prismTheme = globalCss(`
   .prism-code-body {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
+    flex: 1;
+    min-height: var(--prism-code-min-height);
+    height: 24rem;
+    max-height: var(--prism-code-max-height);
+    overflow: hidden;
   }
 
   .prism-code-gutter {
     min-width: 3.1rem;
+    height: 100%;
     padding: 1.05rem .8rem 1.05rem .6rem;
     overflow: hidden;
     border-right: 1px solid var(--prism-code-border);
@@ -1111,9 +1118,8 @@ export const prismTheme = globalCss(`
   .prism-code-scroll {
     position: relative;
     min-width: 0;
-    min-height: var(--prism-code-min-height);
-    height: 24rem;
-    max-height: var(--prism-code-max-height);
+    min-height: 0;
+    height: 100%;
     overflow: hidden;
     background: var(--prism-code-background);
   }
@@ -1159,7 +1165,8 @@ export const prismTheme = globalCss(`
     display: block;
     width: 100%;
     height: 100%;
-    min-height: 100%;
+    max-height: 100%;
+    min-height: 0;
     overflow: auto;
     border: 0 !important;
     outline: none;

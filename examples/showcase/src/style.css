@@ -1316,7 +1316,7 @@ h1 em {
   padding: .85rem;
 }
 
-.table-settings-popup .prism-code-scroll {
+.table-settings-popup .prism-code-body {
   height: min(27rem, 58svh);
 }
 
