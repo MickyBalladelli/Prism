@@ -79,11 +79,15 @@ export function TreeView(props = {}) {
     ariaLabel = 'Tree view'
   } = props
 
+  const itemList = items?.kind === 'signal' || items?.kind === 'computed'
+    ? items.value
+    : items
+
   if (id === undefined) {
-    return html`<nav class="prism-tree-view ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list">${items.map(renderItem)}</ul></nav>`
+    return html`<nav class="prism-tree-view ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list">${itemList.map(renderItem)}</ul></nav>`
   }
 
-  return html`<nav class="prism-tree-view ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list">${items.map(renderItem)}</ul></nav>`
+  return html`<nav class="prism-tree-view ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list">${itemList.map(renderItem)}</ul></nav>`
 }
 
 export const TreeViewComponent = props => component(TreeView, props)

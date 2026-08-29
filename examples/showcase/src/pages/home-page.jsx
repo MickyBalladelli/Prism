@@ -1,11 +1,35 @@
 import { signal } from 'matrix'
-import { Box, Button, Card, CheckBox, TextField } from 'prism-ui'
+import { Box, Button, Card, CheckBox, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { ShowDetailsButton } from '../show-details-button.jsx'
 
 const name = signal('')
 const updates = signal(true)
 const buttonMessage = signal('Ready to click')
+const treePreviewItems = [
+  {
+    label: 'Overview',
+    active: true,
+    meta: 'Home'
+  },
+  {
+    label: 'Components',
+    meta: '6',
+    expanded: true,
+    children: [
+      {
+        label: 'Forms',
+        meta: '3',
+        expanded: true,
+        children: [
+          { label: 'Button' },
+          { label: 'TextField' },
+          { label: 'CheckBox' }
+        ]
+      }
+    ]
+  }
+]
 
 export function HomePage({ link }) {
   return (
@@ -117,6 +141,21 @@ export function HomePage({ link }) {
               </Button>
               <span>{buttonMessage}</span>
             </div>
+          </Card>
+
+          <Card
+            class="component-card"
+            actions={<ShowDetailsButton onClick={link('/components/tree-view')} />}
+          >
+            <div class="card-heading">
+              <div>
+                <p class="eyebrow">Navigation</p>
+                <h2>TreeView</h2>
+              </div>
+              <span class="component-mark">06</span>
+            </div>
+            <p class="card-copy">A polished navigation tree with nested branches, active items, and metadata chips.</p>
+            <TreeView class="tree-card-preview" items={treePreviewItems} ariaLabel="Tree view preview" />
           </Card>
         </section>
 

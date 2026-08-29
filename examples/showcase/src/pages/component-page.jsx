@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { Box, Button, Card, CheckBox, TextField } from 'prism-ui'
+import { Box, Button, Card, CheckBox, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const componentInfo = {
@@ -27,6 +27,11 @@ const componentInfo = {
     eyebrow: 'Forms',
     title: 'Button',
     description: 'Change the label, compare core and feedback variants, try three palettes, and test the click behavior.'
+  },
+  'tree-view': {
+    eyebrow: 'Navigation',
+    title: 'TreeView',
+    description: 'Inspect nested navigation, active states, metadata chips, and branch expansion.'
   }
 }
 
@@ -361,12 +366,101 @@ function ButtonPlayground() {
   }
 }
 
+function TreeViewPlayground() {
+  const activeItem = signal('button')
+  const showMeta = signal(true)
+  const expanded = signal(true)
+
+  const items = computed(() => [
+    {
+      label: 'Overview',
+      active: activeItem.value === 'overview',
+      meta: showMeta.value ? 'Home' : undefined
+    },
+    {
+      label: 'Components',
+      expanded: expanded.value,
+      meta: showMeta.value ? '6' : undefined,
+      children: [
+        {
+          label: 'Layout',
+          expanded: expanded.value,
+          meta: showMeta.value ? '2' : undefined,
+          children: [
+            {
+              label: 'Box',
+              active: activeItem.value === 'box'
+            },
+            {
+              label: 'Card',
+              active: activeItem.value === 'card'
+            }
+          ]
+        },
+        {
+          label: 'Forms',
+          expanded: expanded.value,
+          meta: showMeta.value ? '3' : undefined,
+          children: [
+            {
+              label: 'TextField',
+              active: activeItem.value === 'text-field'
+            },
+            {
+              label: 'CheckBox',
+              active: activeItem.value === 'check-box'
+            },
+            {
+              label: 'Button',
+              active: activeItem.value === 'button'
+            }
+          ]
+        },
+        {
+          label: 'Navigation',
+          expanded: expanded.value,
+          meta: showMeta.value ? '1' : undefined,
+          children: [
+            {
+              label: 'TreeView',
+              active: activeItem.value === 'tree-view'
+            }
+          ]
+        }
+      ]
+    }
+  ])
+
+  return {
+    preview: (
+      <TreeView class="component-tree-preview" ariaLabel="Tree view playground" items={items} />
+    ),
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="tree-active-item">Active item</label>
+        <select id="tree-active-item" value={activeItem} onChange={event => activeItem.value = event.currentTarget.value}>
+          <option value="overview">Overview</option>
+          <option value="box">Box</option>
+          <option value="card">Card</option>
+          <option value="text-field">TextField</option>
+          <option value="check-box">CheckBox</option>
+          <option value="button">Button</option>
+          <option value="tree-view">TreeView</option>
+        </select>
+        <CheckBox checked={showMeta}>Show metadata chips</CheckBox>
+        <CheckBox checked={expanded}>Expand sections</CheckBox>
+      </div>
+    )
+  }
+}
+
 const playgrounds = {
   box: BoxPlayground,
   'text-field': TextFieldPlayground,
   'check-box': CheckBoxPlayground,
   card: CardPlayground,
-  button: ButtonPlayground
+  button: ButtonPlayground,
+  'tree-view': TreeViewPlayground
 }
 
 export function ComponentPage({ name, link }) {

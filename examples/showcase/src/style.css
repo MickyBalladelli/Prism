@@ -699,6 +699,25 @@ h2 {
   font-size: var(--prism-font-size-label);
 }
 
+.tree-card-preview .prism-tree-summary,
+.tree-card-preview .prism-tree-link {
+  min-height: 2.12rem;
+  padding: .48rem .58rem;
+  border-radius: .9rem;
+}
+
+.tree-card-preview .prism-tree-label {
+  font-size: var(--prism-font-size-ui);
+}
+
+.tree-card-preview .prism-tree-meta {
+  padding: .14rem .38rem;
+}
+
+.component-tree-preview {
+  width: min(100%, 24rem);
+}
+
 .box-preview-icon {
   display: grid;
   flex: 0 0 2.3rem;

@@ -11,7 +11,7 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '5',
+      meta: '6',
       expanded: true,
       children: [
         {
@@ -55,6 +55,19 @@ function createSidebarItems(link, activeKey) {
               href: '/components/button',
               onClick: link('/components/button'),
               active: activeKey === 'button'
+            }
+          ]
+        },
+        {
+          label: 'Navigation',
+          meta: '1',
+          expanded: true,
+          children: [
+            {
+              label: 'TreeView',
+              href: '/components/tree-view',
+              onClick: link('/components/tree-view'),
+              active: activeKey === 'tree-view'
             }
           ]
         }
