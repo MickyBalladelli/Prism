@@ -126,7 +126,15 @@ Use `ariaLabel` when the pulse has no visible label. The animation respects `pre
 
 ## TreeView
 
-`TreeView` supports keyboard navigation with Arrow Up and Down, Home and End, letter cycling with wraparound, Enter or Space activation, and Arrow Left or Right branch control. Escape closes the focused branch.
+`TreeView` supports keyboard navigation with Arrow Up and Down, Home and End, letter cycling with wraparound, Enter or Space activation, and Arrow Left or Right branch control. Escape closes the focused branch. Choose a built-in visual model with `model="aurora"`, `model="nocturne"`, `model="editorial"`, or `model="terminal"`; the default is `model="prism"`:
+
+```jsx
+import { TreeView } from 'prism-ui'
+
+const view = <TreeView model="aurora" items={items} />
+```
+
+The exported `treeViewModels` map contains each model's display name and description.
 
 ## Showcase
 

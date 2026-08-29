@@ -62,6 +62,7 @@ export {
   TreeBranchIcon,
   TreeLeafIcon,
   TreeToggleIcon,
+  treeViewModels,
   TreeView,
   TreeViewComponent,
   UnlockIcon,

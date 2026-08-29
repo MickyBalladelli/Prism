@@ -130,11 +130,21 @@ export interface TreeViewItem {
   children?: TreeViewItem[]
 }
 
+export type TreeViewModel = 'prism' | 'aurora' | 'nocturne' | 'editorial' | 'terminal'
+
+export interface TreeViewModelDefinition {
+  label: string
+  description: string
+}
+
+export const treeViewModels: Readonly<Record<TreeViewModel, TreeViewModelDefinition>>
+
 export interface TreeViewProps {
   items?: TreeViewItem[] | Signal<TreeViewItem[]>
   class?: string
   id?: string
   ariaLabel?: string
+  model?: TreeViewModel | Signal<TreeViewModel>
 }
 
 export function Box(props?: BoxProps): unknown

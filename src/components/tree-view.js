@@ -1,5 +1,6 @@
-import { component, html } from 'matrix'
+import { component, computed, html } from 'matrix'
 import { Badge } from './badge.js'
+import { normalizeTreeViewModel } from './tree-view-models.js'
 
 function renderMeta(meta) {
   return meta === undefined || meta === null
@@ -80,12 +81,16 @@ export function TreeView(props = {}) {
     items = [],
     class: classValue = '',
     id,
-    ariaLabel = 'Tree view'
+    ariaLabel = 'Tree view',
+    model = 'prism'
   } = props
 
   const itemList = items?.kind === 'signal' || items?.kind === 'computed'
     ? items.value
     : items
+  const modelValue = model?.kind === 'signal' || model?.kind === 'computed'
+    ? computed(() => normalizeTreeViewModel(model.value))
+    : normalizeTreeViewModel(model)
 
   const getVisibleEntries = root => [...root.querySelectorAll('.prism-tree-summary, .prism-tree-link')]
     .filter(entry => {
@@ -217,10 +222,10 @@ export function TreeView(props = {}) {
   }
 
   if (id === undefined) {
-    return html`<nav class="prism-tree-view ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemList.map(item => renderItem(item, handleKeyDown, handleToggle))}</ul></nav>`
+    return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemList.map(item => renderItem(item, handleKeyDown, handleToggle))}</ul></nav>`
   }
 
-  return html`<nav class="prism-tree-view ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemList.map(item => renderItem(item, handleKeyDown, handleToggle))}</ul></nav>`
+  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemList.map(item => renderItem(item, handleKeyDown, handleToggle))}</ul></nav>`
 }
 
 export const TreeViewComponent = props => component(TreeView, props)

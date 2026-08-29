@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, ImageIcon, Pulse, Select, SparkIcon, TextField, TreeView } from 'prism-ui'
+import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, ImageIcon, Pulse, Select, SparkIcon, TextField, TreeView, treeViewModels } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const componentInfo = {
@@ -46,7 +46,7 @@ const componentInfo = {
   'tree-view': {
     eyebrow: 'Navigation',
     title: 'TreeView',
-    description: 'Inspect nested navigation, active states, metadata chips, and branch expansion.'
+    description: 'Inspect nested navigation, active states, metadata chips, branch expansion, and five visual models.'
   }
 }
 
@@ -603,6 +603,13 @@ function TreeViewPlayground() {
   const activeItem = signal('button')
   const showMeta = signal(true)
   const expanded = signal(true)
+  const model = signal('prism')
+  const modelName = computed(() => treeViewModels[model.value]?.label ?? treeViewModels.prism.label)
+  const modelDescription = computed(() => treeViewModels[model.value]?.description ?? treeViewModels.prism.description)
+  const modelOptions = Object.entries(treeViewModels).map(([value, definition]) => ({
+    value,
+    label: definition.label
+  }))
 
   const items = computed(() => [
     {
@@ -666,10 +673,13 @@ function TreeViewPlayground() {
 
   return {
     preview: (
-      <TreeView class="component-tree-preview" ariaLabel="Tree view playground" items={items} />
+      <TreeView class="component-tree-preview" ariaLabel="Tree view playground" items={items} model={model} />
     ),
     controls: (
       <div class="settings-list">
+        <label class="setting-label" htmlFor="tree-model">Visual model</label>
+        <Select id="tree-model" value={model} options={modelOptions} />
+        <p class="tree-model-description"><strong>{modelName}</strong><span>{modelDescription}</span></p>
         <label class="setting-label" htmlFor="tree-active-item">Active item</label>
         <Select
           id="tree-active-item"
