@@ -12,7 +12,7 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '8',
+      meta: '9',
       expanded: true,
       children: [
         {
@@ -36,7 +36,7 @@ function createSidebarItems(link, activeKey) {
         },
         {
           label: 'Forms',
-          meta: '3',
+          meta: '4',
           expanded: true,
           children: [
             {
@@ -44,6 +44,12 @@ function createSidebarItems(link, activeKey) {
               href: '/components/text-field',
               onClick: link('/components/text-field'),
               active: activeKey === 'text-field'
+            },
+            {
+              label: 'Select',
+              href: '/components/select',
+              onClick: link('/components/select'),
+              active: activeKey === 'select'
             },
             {
               label: 'CheckBox',

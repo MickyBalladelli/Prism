@@ -24,11 +24,21 @@ const components = [
     details: ['Signal binding', 'Placeholder control', 'Required and disabled']
   },
   {
+    key: 'select',
+    path: '/components/select',
+    eyebrow: 'Forms',
+    title: 'Select',
+    mark: '03',
+    description: 'A styled option picker bound to a Matrix signal.',
+    highlights: ['Option lists', 'Reactive value', 'Native behavior'],
+    details: ['Label and value pairs', 'Disabled options', 'Required support']
+  },
+  {
     key: 'check-box',
     path: '/components/check-box',
     eyebrow: 'Forms',
     title: 'CheckBox',
-    mark: '03',
+    mark: '04',
     description: 'A checkbox that keeps its checked state reactive.',
     highlights: ['Writable state', 'Label pairing', 'Simple toggles'],
     details: ['Reactive checked value', 'Accessible label flow', 'Disabled support']
@@ -38,7 +48,7 @@ const components = [
     path: '/components/card',
     eyebrow: 'Layout',
     title: 'Card',
-    mark: '04',
+    mark: '05',
     description: 'A semantic article wrapper for standalone content.',
     highlights: ['Article semantics', 'Optional action footer', 'Composed content'],
     details: ['Structured layouts', 'Footer actions', 'Standalone sections']
@@ -48,7 +58,7 @@ const components = [
     path: '/components/button',
     eyebrow: 'Forms',
     title: 'Button',
-    mark: '05',
+    mark: '06',
     description: 'A button system with role variants, status states, and palette switching.',
     highlights: ['Seven variants', 'Pressed states', 'Palette-ready'],
     details: ['Primary to success', 'Hover and active motion', 'Theme-driven colors']
@@ -58,7 +68,7 @@ const components = [
     path: '/components/badge',
     eyebrow: 'Status',
     title: 'Badge',
-    mark: '06',
+    mark: '07',
     description: 'A compact count or state marker with optional change feedback.',
     highlights: ['Count-ready', 'Five tones', 'Change pulse'],
     details: ['Signal-friendly value', 'Semantic labels', 'Motion-aware']
@@ -68,7 +78,7 @@ const components = [
     path: '/components/pulse',
     eyebrow: 'Status',
     title: 'Pulse',
-    mark: '07',
+    mark: '08',
     description: 'A pulsating status marker for live health, progress, and attention states.',
     highlights: ['Four statuses', 'Three sizes', 'Motion-aware'],
     details: ['Success to error', 'Button-ready scale', 'Reduced-motion safe']
@@ -78,7 +88,7 @@ const components = [
     path: '/components/tree-view',
     eyebrow: 'Navigation',
     title: 'TreeView',
-    mark: '08',
+    mark: '09',
     description: 'A polished navigation tree with nested branches, active items, and metadata chips.',
     highlights: ['Nested branches', 'Meta chips', 'Active states'],
     details: ['Expandable groups', 'Tree markers', 'Navigation structure']

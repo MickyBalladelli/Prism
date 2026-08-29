@@ -267,23 +267,6 @@ h1 em {
   font-weight: 750;
 }
 
-.settings-list select {
-  width: 100%;
-  padding: .72rem .8rem;
-  border: 1px solid var(--prism-color-border-input);
-  border-radius: var(--prism-radius-control);
-  outline: none;
-  color: var(--prism-color-ink);
-  background: var(--prism-color-white);
-  font: inherit;
-  font-size: var(--prism-font-size-body);
-}
-
-.settings-list select:focus {
-  border-color: var(--prism-color-focus);
-  box-shadow: 0 0 0 .25rem var(--prism-color-focus-glow);
-}
-
 .settings-list label:not(.setting-label) {
   display: flex;
   align-items: center;
@@ -442,6 +425,34 @@ h1 em {
 
 .button-palette-option-teal .button-palette-swatch-tertiary {
   background: linear-gradient(135deg, #f59e0b, #f7b84a);
+}
+
+.select-playground {
+  display: grid;
+  gap: 1rem;
+}
+
+.select-demo-card {
+  display: grid;
+  gap: .8rem;
+  padding: 1.25rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: var(--prism-color-white);
+  box-shadow: 0 .35rem .9rem rgb(37 49 78 / 5%);
+}
+
+.select-demo-label {
+  margin: 0;
+  color: var(--prism-color-text-soft);
+  font-size: var(--prism-font-size-label);
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.select-demo-card .prism-select {
+  max-width: 24rem;
 }
 
 .badge-playground {

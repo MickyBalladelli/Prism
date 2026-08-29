@@ -4,6 +4,7 @@ export { Button, ButtonComponent } from './button.js'
 export { Card, CardComponent } from './card.js'
 export { CheckBox, CheckBoxComponent } from './check-box.js'
 export { Pulse, PulseComponent } from './pulse.js'
+export { Select, SelectComponent } from './select.js'
 export {
   EyeIcon,
   AlertIcon,

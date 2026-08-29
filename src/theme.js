@@ -516,6 +516,141 @@ export const prismTheme = globalCss(`
     cursor: not-allowed;
   }
 
+  .prism-select {
+    position: relative;
+    display: block;
+    width: 100%;
+  }
+
+  .prism-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    width: 100%;
+    padding: .72rem .8rem;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: var(--prism-radius-control);
+    outline: none;
+    color: var(--prism-color-ink);
+    background: var(--prism-color-white);
+    font: inherit;
+    font-size: var(--prism-font-size-body);
+    line-height: 1.2;
+    text-align: left;
+    cursor: pointer;
+    appearance: none;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+
+  .prism-select-trigger:hover:not(:disabled) {
+    border-color: var(--prism-color-border-strong);
+    background: var(--prism-color-surface-tint);
+  }
+
+  .prism-select-trigger:focus-visible {
+    border-color: var(--prism-color-focus);
+    box-shadow: 0 0 0 .25rem var(--prism-color-focus-glow);
+  }
+
+  .prism-select-trigger:disabled {
+    opacity: var(--prism-button-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  .prism-select-chevron {
+    width: .55rem;
+    height: .55rem;
+    flex: 0 0 .55rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-.15rem) rotate(45deg);
+    transition: transform .18s ease;
+  }
+
+  .prism-select-trigger[aria-expanded="true"] .prism-select-chevron {
+    transform: translateY(.15rem) rotate(225deg);
+  }
+
+  .prism-select-menu {
+    position: absolute;
+    z-index: 20;
+    display: grid;
+    gap: .2rem;
+    min-width: 100%;
+    max-width: min(20rem, calc(100vw - 1rem));
+    max-height: min(18rem, calc(100vh - 1rem));
+    padding: .35rem;
+    overflow: auto;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: var(--prism-radius-control);
+    background: var(--prism-color-white);
+    box-shadow: 0 .7rem 1.8rem rgb(37 49 78 / 15%), 0 .1rem .3rem rgb(37 49 78 / 8%);
+  }
+
+  .prism-select-menu-bottom {
+    top: calc(100% + .35rem);
+    right: 0;
+    left: 0;
+  }
+
+  .prism-select-menu-top {
+    right: 0;
+    bottom: calc(100% + .35rem);
+    left: 0;
+  }
+
+  .prism-select-menu-right {
+    top: 0;
+    left: calc(100% + .35rem);
+  }
+
+  .prism-select-menu-left {
+    top: 0;
+    right: calc(100% + .35rem);
+  }
+
+  .prism-select-option {
+    display: block;
+    width: 100%;
+    padding: .62rem .7rem;
+    border: 0;
+    border-radius: calc(var(--prism-radius-control) - .2rem);
+    color: var(--prism-color-text);
+    background: transparent;
+    font: inherit;
+    font-size: var(--prism-font-size-body);
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .prism-select-option:hover:not(:disabled),
+  .prism-select-option[aria-selected="true"] {
+    color: var(--prism-color-ink);
+    background: var(--prism-color-lavender-surface);
+  }
+
+  .prism-select-option:focus-visible {
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: -2px;
+  }
+
+  .prism-select-option:disabled {
+    opacity: .48;
+    cursor: not-allowed;
+  }
+
+  .prism-select-small .prism-select-trigger {
+    padding: .56rem .68rem;
+    font-size: var(--prism-font-size-small);
+  }
+
+  .prism-select-large .prism-select-trigger {
+    padding: .86rem .95rem;
+    font-size: var(--prism-font-size-copy);
+  }
+
   .prism-badge {
     display: inline-flex;
     align-items: center;

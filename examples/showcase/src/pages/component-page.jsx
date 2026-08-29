@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { Badge, Box, Button, Card, CheckBox, Pulse, TextField, TreeView } from 'prism-ui'
+import { Badge, Box, Button, Card, CheckBox, Pulse, Select, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const componentInfo = {
@@ -12,6 +12,11 @@ const componentInfo = {
     eyebrow: 'Forms',
     title: 'TextField',
     description: 'Play with the value, placeholder, required, and disabled props.'
+  },
+  select: {
+    eyebrow: 'Forms',
+    title: 'Select',
+    description: 'Choose one option from a list while keeping the selected value reactive.'
   },
   'check-box': {
     eyebrow: 'Forms',
@@ -69,17 +74,25 @@ function BoxPlayground() {
         <label class="setting-label" htmlFor="box-content">Content</label>
         <TextField id="box-content" value={content} placeholder="Box content" />
         <label class="setting-label" htmlFor="box-tone">Tone</label>
-        <select id="box-tone" value={tone} onChange={event => tone.value = event.currentTarget.value}>
-          <option value="lavender">Lavender</option>
-          <option value="mint">Mint</option>
-          <option value="peach">Peach</option>
-        </select>
+        <Select
+          id="box-tone"
+          value={tone}
+          options={[
+            { value: 'lavender', label: 'Lavender' },
+            { value: 'mint', label: 'Mint' },
+            { value: 'peach', label: 'Peach' }
+          ]}
+        />
         <label class="setting-label" htmlFor="box-density">Density</label>
-        <select id="box-density" value={density} onChange={event => density.value = event.currentTarget.value}>
-          <option value="compact">Compact</option>
-          <option value="comfortable">Comfortable</option>
-          <option value="airy">Airy</option>
-        </select>
+        <Select
+          id="box-density"
+          value={density}
+          options={[
+            { value: 'compact', label: 'Compact' },
+            { value: 'comfortable', label: 'Comfortable' },
+            { value: 'airy', label: 'Airy' }
+          ]}
+        />
         <CheckBox checked={showRole}>Add role="region"</CheckBox>
       </div>
     )
@@ -111,13 +124,68 @@ function TextFieldPlayground() {
         <label class="setting-label" htmlFor="field-placeholder">Placeholder</label>
         <TextField id="field-placeholder" value={placeholder} placeholder="Placeholder" />
         <label class="setting-label" htmlFor="field-size">Size</label>
-        <select id="field-size" value={size} onChange={event => size.value = event.currentTarget.value}>
-          <option value="small">Small</option>
-          <option value="medium">Medium</option>
-          <option value="large">Large</option>
-        </select>
+        <Select
+          id="field-size"
+          value={size}
+          options={[
+            { value: 'small', label: 'Small' },
+            { value: 'medium', label: 'Medium' },
+            { value: 'large', label: 'Large' }
+          ]}
+        />
         <CheckBox checked={required}>Required</CheckBox>
         <CheckBox checked={disabled}>Disabled</CheckBox>
+      </div>
+    )
+  }
+}
+
+function SelectPlayground() {
+  const value = signal('spirited-away')
+  const size = signal('medium')
+  const placement = signal('bottom')
+  const options = [
+    { value: 'spirited-away', label: 'Spirited Away' },
+    { value: 'moonlight', label: 'Moonlight' },
+    { value: 'parasite', label: 'Parasite' },
+    { value: 'arrival', label: 'Arrival' },
+    { value: 'grand-budapest-hotel', label: 'The Grand Budapest Hotel' }
+  ]
+  const selectedLabel = computed(() => options.find(option => option.value === value.value)?.label ?? 'Nothing selected')
+
+  return {
+    preview: (
+      <div class="select-playground">
+        <div class="select-demo-card">
+          <p class="select-demo-label">Movie night</p>
+          <Select value={value} options={options} size={size} placement={placement} />
+          <p class="playground-note">Selected movie: <strong>{selectedLabel}</strong></p>
+        </div>
+      </div>
+    ),
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="select-size">Size</label>
+        <Select
+          id="select-size"
+          value={size}
+          options={[
+            { value: 'small', label: 'Small' },
+            { value: 'medium', label: 'Medium' },
+            { value: 'large', label: 'Large' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="select-placement">Menu placement</label>
+        <Select
+          id="select-placement"
+          value={placement}
+          options={[
+            { value: 'bottom', label: 'Bottom — default' },
+            { value: 'top', label: 'Top' },
+            { value: 'right', label: 'Right' },
+            { value: 'left', label: 'Left' }
+          ]}
+        />
       </div>
     )
   }
@@ -409,19 +477,27 @@ function BadgePlayground() {
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="badge-tone">Tone</label>
-        <select id="badge-tone" value={tone} onChange={event => tone.value = event.currentTarget.value}>
-          <option value="neutral">Neutral</option>
-          <option value="success">Success</option>
-          <option value="info">Info</option>
-          <option value="warning">Warning</option>
-          <option value="error">Error</option>
-        </select>
+        <Select
+          id="badge-tone"
+          value={tone}
+          options={[
+            { value: 'neutral', label: 'Neutral' },
+            { value: 'success', label: 'Success' },
+            { value: 'info', label: 'Info' },
+            { value: 'warning', label: 'Warning' },
+            { value: 'error', label: 'Error' }
+          ]}
+        />
         <label class="setting-label" htmlFor="badge-size">Size</label>
-        <select id="badge-size" value={size} onChange={event => size.value = event.currentTarget.value}>
-          <option value="small">Small</option>
-          <option value="medium">Medium</option>
-          <option value="large">Large</option>
-        </select>
+        <Select
+          id="badge-size"
+          value={size}
+          options={[
+            { value: 'small', label: 'Small' },
+            { value: 'medium', label: 'Medium' },
+            { value: 'large', label: 'Large' }
+          ]}
+        />
       </div>
     )
   }
@@ -465,11 +541,15 @@ function PulsePlayground() {
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="pulse-size">Size</label>
-        <select id="pulse-size" value={size} onChange={event => size.value = event.currentTarget.value}>
-          <option value="small">Small — dense UI</option>
-          <option value="medium">Medium — default</option>
-          <option value="large">Large — hero status</option>
-        </select>
+        <Select
+          id="pulse-size"
+          value={size}
+          options={[
+            { value: 'small', label: 'Small — dense UI' },
+            { value: 'medium', label: 'Medium — default' },
+            { value: 'large', label: 'Large — hero status' }
+          ]}
+        />
       </div>
     )
   }
@@ -547,15 +627,20 @@ function TreeViewPlayground() {
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="tree-active-item">Active item</label>
-        <select id="tree-active-item" value={activeItem} onChange={event => activeItem.value = event.currentTarget.value}>
-          <option value="overview">Overview</option>
-          <option value="box">Box</option>
-          <option value="card">Card</option>
-          <option value="text-field">TextField</option>
-          <option value="check-box">CheckBox</option>
-          <option value="button">Button</option>
-          <option value="tree-view">TreeView</option>
-        </select>
+        <Select
+          id="tree-active-item"
+          value={activeItem}
+          options={[
+            { value: 'overview', label: 'Overview' },
+            { value: 'box', label: 'Box' },
+            { value: 'card', label: 'Card' },
+            { value: 'text-field', label: 'TextField' },
+            { value: 'select', label: 'Select' },
+            { value: 'check-box', label: 'CheckBox' },
+            { value: 'button', label: 'Button' },
+            { value: 'tree-view', label: 'TreeView' }
+          ]}
+        />
         <CheckBox checked={showMeta}>Show metadata chips</CheckBox>
         <CheckBox checked={expanded}>Expand sections</CheckBox>
       </div>
@@ -566,6 +651,7 @@ function TreeViewPlayground() {
 const playgrounds = {
   box: BoxPlayground,
   'text-field': TextFieldPlayground,
+  select: SelectPlayground,
   'check-box': CheckBoxPlayground,
   card: CardPlayground,
   button: ButtonPlayground,

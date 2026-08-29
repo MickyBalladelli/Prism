@@ -57,6 +57,30 @@ export interface CheckBoxProps {
   disabled?: boolean
 }
 
+export interface SelectOption {
+  value: string | number
+  label?: string
+  disabled?: boolean
+}
+
+export type SelectOptionInput = SelectOption | string | number
+export type SelectPlacement = 'bottom' | 'top' | 'left' | 'right'
+
+export interface SelectProps {
+  options?: SelectOptionInput[] | Signal<SelectOptionInput[]>
+  value?: string | Signal<string>
+  onChange?: (event: Event) => void
+  id?: string
+  name?: string
+  placeholder?: string
+  disabled?: boolean
+  required?: boolean
+  size?: 'small' | 'medium' | 'large' | Signal<'small' | 'medium' | 'large'>
+  placement?: SelectPlacement | Signal<SelectPlacement>
+  ariaLabel?: string
+  class?: string
+}
+
 export interface IconProps {
   class?: string
   size?: string | number
@@ -112,6 +136,7 @@ export function Card(props?: CardProps): unknown
 export function Badge(props?: BadgeProps): unknown
 export function TextField(props?: TextFieldProps): unknown
 export function CheckBox(props?: CheckBoxProps): unknown
+export function Select(props?: SelectProps): unknown
 export function TreeView(props?: TreeViewProps): unknown
 export function PrismMarkIcon(props?: IconProps): unknown
 export function EyeIcon(props?: IconProps): unknown
@@ -170,6 +195,7 @@ export function CardComponent(props?: CardProps): ComponentResult
 export function BadgeComponent(props?: BadgeProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
+export function SelectComponent(props?: SelectProps): ComponentResult
 export function TreeViewComponent(props?: TreeViewProps): ComponentResult
 export function PulseComponent(props?: PulseProps): ComponentResult
 export const prismTheme: StyleDefinition

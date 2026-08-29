@@ -66,6 +66,23 @@ import { TreeLeafIcon } from 'prism-ui/icons'
 const view = <TreeLeafIcon size="14" />
 ```
 
+## Select
+
+`Select` renders a styled listbox from an option list and keeps its selected value synchronized with a Matrix signal. It opens below by default, flips when there is not enough viewport space, and accepts `placement="top"`, `"right"`, or `"left"` when another direction is preferred:
+
+```jsx
+import { Select } from 'prism-ui'
+import { signal } from 'matrix'
+
+const view = Select({
+  value: signal('design'),
+  options: [
+    { value: 'design', label: 'Design systems' },
+    { value: 'research', label: 'User research' }
+  ]
+})
+```
+
 ## Badge
 
 `Badge` displays a compact count or state. Use a Matrix signal with `pulseOnChange` to briefly highlight a changing value:
@@ -107,4 +124,4 @@ npm run dev
 
 Vite watches the local Prism and Matrix source during development, so saved changes hot-reload without a manual build.
 
-Select `Show details` on any component card to open its playground page. Component pages expose live props and settings for `Box`, `TextField`, `CheckBox`, `Card`, and `Button`.
+Select `Show details` on any component card to open its playground page. Component pages expose live props and settings for `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, and `TreeView`.

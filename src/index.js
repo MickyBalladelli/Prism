@@ -51,6 +51,8 @@ export {
   PulseComponent,
   SearchIcon,
   SendIcon,
+  Select,
+  SelectComponent,
   SettingsIcon,
   ShareIcon,
   SparkIcon,
