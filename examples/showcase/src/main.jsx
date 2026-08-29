@@ -2,6 +2,7 @@ import { createRouter, mount, routerView } from 'matrix'
 import { prismTheme } from 'prism-ui'
 import { ComponentPage } from './pages/component-page.jsx'
 import { HomePage } from './pages/home-page.jsx'
+import { IconsPage } from './pages/icons-page.jsx'
 import { NotFoundPage } from './pages/not-found-page.jsx'
 import './style.css'
 
@@ -16,6 +17,8 @@ const withNavigation = Page => props => (
 
 router = createRouter([
   { path: '/', view: withNavigation(HomePage) },
+  { path: '/icons', view: withNavigation(IconsPage) },
+  { path: '/icons/:category', view: withNavigation(IconsPage) },
   { path: '/components/:name', view: withNavigation(ComponentPage) },
   { path: '*path', view: withNavigation(NotFoundPage) }
 ])

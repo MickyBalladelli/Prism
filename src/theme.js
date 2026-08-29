@@ -392,6 +392,11 @@ export const prismTheme = globalCss(`
 
   ${buttonPaletteRules}
 
+  .prism-icon {
+    display: block;
+    flex: 0 0 auto;
+  }
+
   .prism-button {
     display: inline-flex;
     align-items: center;
@@ -651,7 +656,7 @@ export const prismTheme = globalCss(`
 
   .prism-tree-details[open] > .prism-tree-summary .prism-tree-toggle-bar-vertical {
     opacity: 0;
-    transform: translate(-50%, -50%) scaleY(.45);
+    transform: scaleY(.45);
   }
 
   .prism-tree-marker,

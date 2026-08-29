@@ -39,6 +39,33 @@ import { prismTheme } from 'prism-ui'
 const view = <main use:style={prismTheme}>Prism content</main>
 ```
 
+## Icons
+
+Prism exports 49 original icon components in seven groups: Actions, Navigation, Communication, Status, Files, Workspace, and Data & Code. They are SVG components, inherit `currentColor`, and default to `1em`:
+
+```jsx
+import { Button, EyeIcon } from 'prism-ui'
+
+const view = (
+  <Button>
+    <EyeIcon />
+    Show details
+  </Button>
+)
+```
+
+The full icon list and usage examples are in the showcase under Icons. Every icon supports `size`, `class`, and optional `ariaLabel` props.
+
+Icons are decorative by default. Use `ariaLabel` when an icon carries meaning without visible text.
+
+Use `size` for a fixed size, or import directly from `prism-ui/icons`:
+
+```jsx
+import { TreeLeafIcon } from 'prism-ui/icons'
+
+const view = <TreeLeafIcon size="14" />
+```
+
 ## Showcase
 
 Run the Vite showcase:

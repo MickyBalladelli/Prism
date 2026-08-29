@@ -57,6 +57,12 @@ export interface CheckBoxProps {
   disabled?: boolean
 }
 
+export interface IconProps {
+  class?: string
+  size?: string | number
+  ariaLabel?: string
+}
+
 export interface TreeViewItem {
   label: string
   href?: string
@@ -80,6 +86,56 @@ export function Card(props?: CardProps): unknown
 export function TextField(props?: TextFieldProps): unknown
 export function CheckBox(props?: CheckBoxProps): unknown
 export function TreeView(props?: TreeViewProps): unknown
+export function PrismMarkIcon(props?: IconProps): unknown
+export function EyeIcon(props?: IconProps): unknown
+export function TreeToggleIcon(props?: IconProps): unknown
+export function TreeBranchIcon(props?: IconProps): unknown
+export function TreeLeafIcon(props?: IconProps): unknown
+export function LiveStatusIcon(props?: IconProps): unknown
+export function ListBulletIcon(props?: IconProps): unknown
+export function PlusIcon(props?: IconProps): unknown
+export function MinusIcon(props?: IconProps): unknown
+export function CloseIcon(props?: IconProps): unknown
+export function SearchIcon(props?: IconProps): unknown
+export function FilterIcon(props?: IconProps): unknown
+export function MoreHorizontalIcon(props?: IconProps): unknown
+export function ArrowUpIcon(props?: IconProps): unknown
+export function ArrowDownIcon(props?: IconProps): unknown
+export function ArrowLeftIcon(props?: IconProps): unknown
+export function ArrowRightIcon(props?: IconProps): unknown
+export function ChevronDownIcon(props?: IconProps): unknown
+export function ChevronRightIcon(props?: IconProps): unknown
+export function MailIcon(props?: IconProps): unknown
+export function ChatIcon(props?: IconProps): unknown
+export function BellIcon(props?: IconProps): unknown
+export function LinkIcon(props?: IconProps): unknown
+export function ShareIcon(props?: IconProps): unknown
+export function SendIcon(props?: IconProps): unknown
+export function CheckIcon(props?: IconProps): unknown
+export function AlertIcon(props?: IconProps): unknown
+export function InfoIcon(props?: IconProps): unknown
+export function HelpIcon(props?: IconProps): unknown
+export function LoadingIcon(props?: IconProps): unknown
+export function LockIcon(props?: IconProps): unknown
+export function UnlockIcon(props?: IconProps): unknown
+export function FileIcon(props?: IconProps): unknown
+export function FolderIcon(props?: IconProps): unknown
+export function GroupIcon(props?: IconProps): unknown
+export function ImageIcon(props?: IconProps): unknown
+export function DownloadIcon(props?: IconProps): unknown
+export function UploadIcon(props?: IconProps): unknown
+export function CopyIcon(props?: IconProps): unknown
+export function CalendarIcon(props?: IconProps): unknown
+export function ClockIcon(props?: IconProps): unknown
+export function MapPinIcon(props?: IconProps): unknown
+export function UserIcon(props?: IconProps): unknown
+export function SettingsIcon(props?: IconProps): unknown
+export function SparkIcon(props?: IconProps): unknown
+export function GridIcon(props?: IconProps): unknown
+export function ListIcon(props?: IconProps): unknown
+export function CodeIcon(props?: IconProps): unknown
+export function TerminalIcon(props?: IconProps): unknown
+export function EyeOffIcon(props?: IconProps): unknown
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function CardComponent(props?: CardProps): ComponentResult

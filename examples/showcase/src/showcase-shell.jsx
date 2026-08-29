@@ -1,4 +1,5 @@
 import { TreeView } from 'prism-ui'
+import { iconCategories, iconCount } from './icon-catalog.js'
 
 function createSidebarItems(link, activeKey) {
   return [
@@ -71,6 +72,26 @@ function createSidebarItems(link, activeKey) {
             }
           ]
         }
+      ]
+    },
+    {
+      label: 'Icons',
+      meta: String(iconCount),
+      expanded: true,
+      children: [
+        {
+          label: 'All icons',
+          href: '/icons',
+          onClick: link('/icons'),
+          active: activeKey === 'icons'
+        },
+        ...iconCategories.map(category => ({
+          label: category.label,
+          meta: String(category.icons.length),
+          href: `/icons/${category.key}`,
+          onClick: link(`/icons/${category.key}`),
+          active: activeKey === `icons-${category.key}`
+        }))
       ]
     }
   ]

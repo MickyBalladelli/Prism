@@ -15,6 +15,7 @@
   "exports": {
     ".": "./src/index.js",
     "./components": "./src/components/index.js",
+    "./icons": "./src/components/icons.js",
     "./theme": "./src/theme.js"
   }
 }
