@@ -2819,4 +2819,102 @@ export const prismTheme = globalCss(`
     background: rgb(91 224 148 / 14%);
     box-shadow: inset 3px 0 #5be094;
   }
+
+  .prism-tree-view.prism-tree-items-minimal {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .prism-tree-items-minimal .prism-tree-list,
+  .prism-tree-items-minimal .prism-tree-details {
+    gap: .08rem;
+  }
+
+  .prism-tree-items-minimal .prism-tree-list-nested {
+    margin-top: .2rem;
+  }
+
+  .prism-tree-items-minimal .prism-tree-summary,
+  .prism-tree-items-minimal .prism-tree-link,
+  .prism-tree-items-minimal .prism-tree-summary:not(.prism-tree-summary-active):hover,
+  .prism-tree-items-minimal .prism-tree-link:not(.prism-tree-link-active):hover,
+  .prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary:not(.prism-tree-summary-active) {
+    min-height: 2.2rem;
+    padding: .46rem .55rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .prism-tree-items-minimal .prism-tree-summary,
+  .prism-tree-items-minimal .prism-tree-link {
+    box-sizing: border-box;
+  }
+
+  .prism-tree-items-minimal .prism-tree-summary-active,
+  .prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active,
+  .prism-tree-items-minimal .prism-tree-link-active {
+    border: 1px solid var(--prism-color-lavender-border);
+    border-radius: .68rem;
+    background: var(--prism-color-lavender-surface);
+    box-shadow: 0 .28rem .72rem rgb(89 88 181 / 9%);
+  }
+
+  .prism-tree-items-minimal .prism-tree-summary:hover .prism-tree-label,
+  .prism-tree-items-minimal .prism-tree-link:hover .prism-tree-label,
+  .prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary .prism-tree-label,
+  .prism-tree-items-minimal .prism-tree-link-active .prism-tree-label {
+    color: var(--prism-color-action);
+  }
+
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-summary:hover .prism-tree-label,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-link:hover .prism-tree-label,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary .prism-tree-label,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-link-active .prism-tree-label {
+    color: #80d9ff;
+  }
+
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-summary-active,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-link-active {
+    border-color: rgb(128 217 255 / 48%);
+    background: rgb(42 61 106 / 78%);
+    box-shadow: 0 .3rem .8rem rgb(3 8 25 / 24%);
+  }
+
+  .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-summary-active,
+  .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active,
+  .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-link-active {
+    border-color: rgb(109 94 247 / 38%);
+    background: rgb(237 233 255 / 88%);
+    box-shadow: 0 .3rem .8rem rgb(109 94 247 / 10%);
+  }
+
+  .prism-tree-model-editorial.prism-tree-items-minimal .prism-tree-summary-active,
+  .prism-tree-model-editorial.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active,
+  .prism-tree-model-editorial.prism-tree-items-minimal .prism-tree-link-active {
+    border-color: var(--prism-color-peach-border);
+    background: rgb(255 240 234 / 72%);
+    box-shadow: 0 .28rem .72rem rgb(180 91 62 / 8%);
+  }
+
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-summary:hover .prism-tree-label,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-link:hover .prism-tree-label,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary .prism-tree-label,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-link-active .prism-tree-label {
+    color: #5be094;
+  }
+
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-summary-active,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-link-active {
+    border-color: rgb(91 224 148 / 38%);
+    background: rgb(91 224 148 / 11%);
+    box-shadow: 0 .28rem .72rem rgb(4 14 13 / 20%);
+  }
 `)

@@ -147,6 +147,8 @@ import { TreeView } from 'prism-ui'
 const view = <TreeView model="aurora" items={items} />
 ```
 
+Use `itemVariant="minimal"` for large or dense trees without a box around every row. The default `itemVariant="framed"` keeps stronger visual separation.
+
 Use `onRender` to customize each branch and leaf label. It receives the item and a context with `type`, `selected`, `expanded`, and `depth`, so you can render text, icons, or richer rows.
 
 The exported `treeViewModels` map contains each model's display name and description.

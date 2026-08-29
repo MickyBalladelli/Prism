@@ -2,6 +2,10 @@ import { component, computed, html } from 'matrix'
 import { Badge } from './badge.js'
 import { normalizeTreeViewModel } from '../theme.js'
 
+const itemVariants = new Set(['framed', 'minimal'])
+
+const normalizeItemVariant = value => itemVariants.has(value) ? value : 'framed'
+
 function renderMeta(meta) {
   return meta === undefined || meta === null
     ? null
@@ -52,6 +56,7 @@ function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
     children = [],
     expanded = true,
     active = false,
+    onClick,
     meta
   } = item
   const summaryClass = active
@@ -61,7 +66,7 @@ function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
   return html`
     <li class="prism-tree-branch">
       <details class="prism-tree-details" ?open=${expanded} @toggle=${onToggle}>
-        <summary class="${summaryClass}" role="treeitem" aria-expanded="${expanded}" @keydown=${onKeyDown}>
+        <summary class="${summaryClass}" role="treeitem" aria-expanded="${expanded}" @click=${onClick} @keydown=${onKeyDown}>
           <span class="prism-tree-entry-copy">
             <span class="prism-tree-toggle" aria-hidden="true">
               <span class="prism-tree-toggle-bar prism-tree-toggle-bar-horizontal"></span>
@@ -93,6 +98,7 @@ export function TreeView(props = {}) {
     id,
     ariaLabel = 'Tree view',
     model = 'prism',
+    itemVariant = 'framed',
     onRender
   } = props
 
@@ -100,6 +106,9 @@ export function TreeView(props = {}) {
   const modelValue = model?.kind === 'signal' || model?.kind === 'computed'
     ? computed(() => normalizeTreeViewModel(model.value))
     : normalizeTreeViewModel(model)
+  const itemVariantValue = itemVariant?.kind === 'signal' || itemVariant?.kind === 'computed'
+    ? computed(() => normalizeItemVariant(itemVariant.value))
+    : normalizeItemVariant(itemVariant)
 
   const getVisibleEntries = root => [...root.querySelectorAll('.prism-tree-summary, .prism-tree-link')]
     .filter(entry => {
@@ -236,10 +245,10 @@ export function TreeView(props = {}) {
   })
 
   if (id === undefined) {
-    return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
+    return html`<nav class="prism-tree-view prism-tree-model-${modelValue} prism-tree-items-${itemVariantValue} ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
   }
 
-  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
+  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} prism-tree-items-${itemVariantValue} ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
 }
 
 export const TreeViewComponent = props => component(TreeView, props)

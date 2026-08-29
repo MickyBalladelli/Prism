@@ -293,6 +293,7 @@ export interface TreeViewRenderContext {
 }
 
 export type TreeViewModel = 'prism' | 'aurora' | 'nocturne' | 'editorial' | 'terminal'
+export type TreeViewItemVariant = 'framed' | 'minimal'
 
 export interface TreeViewModelDefinition {
   label: string
@@ -307,6 +308,7 @@ export interface TreeViewProps {
   id?: string
   ariaLabel?: string
   model?: TreeViewModel | Signal<TreeViewModel>
+  itemVariant?: TreeViewItemVariant | Signal<TreeViewItemVariant>
   onRender?: (item: TreeViewItem, context: TreeViewRenderContext) => unknown
 }
 

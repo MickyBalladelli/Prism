@@ -989,63 +989,44 @@ function TreeViewPlayground() {
   const showMeta = signal(true)
   const expanded = signal(true)
   const renderMode = signal('text')
+  const itemVariant = signal('minimal')
+  const selectedItem = signal('Button')
 
-  const items = computed(() => [
-    {
-      label: 'Overview',
-      meta: showMeta.value ? 'Home' : undefined
-    },
-    {
-      label: 'Components',
-      expanded: expanded.value,
-      meta: showMeta.value ? '7' : undefined,
-      children: [
-        {
-          label: 'Layout',
-          expanded: expanded.value,
-          meta: showMeta.value ? '2' : undefined,
-          children: [
-            {
-              label: 'Box'
-            },
-            {
-              label: 'Card'
-            }
-          ]
-        },
-        {
-          label: 'Forms',
-          expanded: expanded.value,
-          meta: showMeta.value ? '4' : undefined,
-          children: [
-            {
-              label: 'TextField'
-            },
-            {
-              label: 'Select'
-            },
-            {
-              label: 'CheckBox'
-            },
-            {
-              label: 'Button',
-              active: true
-            }
-          ]
-        },
-        {
-          label: 'Navigation',
-          expanded: expanded.value,
-          meta: showMeta.value ? '1' : undefined,
-          children: [
-            {
-              label: 'TreeView'
-            }
-          ]
-        }
-      ]
-    }
-  ])
+  const items = computed(() => {
+    const item = (label, details = {}) => ({
+      ...details,
+      label,
+      active: selectedItem.value === label,
+      onClick: () => selectedItem.value = label
+    })
+
+    return [
+      item('Overview', {
+        meta: showMeta.value ? 'Home' : undefined
+      }),
+      item('Components', {
+        expanded: expanded.value,
+        meta: showMeta.value ? '7' : undefined,
+        children: [
+          item('Layout', {
+            expanded: expanded.value,
+            meta: showMeta.value ? '2' : undefined,
+            children: [item('Box'), item('Card')]
+          }),
+          item('Forms', {
+            expanded: expanded.value,
+            meta: showMeta.value ? '4' : undefined,
+            children: [item('TextField'), item('Select'), item('CheckBox'), item('Button')]
+          }),
+          item('Navigation', {
+            expanded: expanded.value,
+            meta: showMeta.value ? '1' : undefined,
+            children: [item('TreeView')]
+          })
+        ]
+      })
+    ]
+  })
 
   const renderTreeItem = (item, context) => {
     if (renderMode.value === 'text') {
@@ -1071,15 +1052,25 @@ function TreeViewPlayground() {
     '  ariaLabel: "Tree view playground",',
     '  items,',
     '  model,',
+    '  itemVariant,',
     '  onRender: renderTreeItem',
     '})'
-  ), { ...playgroundRuntime, items, model: showcaseThemeModel, renderTreeItem })
+  ), { ...playgroundRuntime, items, model: showcaseThemeModel, itemVariant, renderTreeItem })
 
   return {
     code: codePreview.code,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
+        <label class="setting-label" htmlFor="tree-item-variant">Item treatment</label>
+        <Select
+          id="tree-item-variant"
+          value={itemVariant}
+          options={[
+            { value: 'minimal', label: 'Minimal — best for dense trees' },
+            { value: 'framed', label: 'Framed — stronger separation' }
+          ]}
+        />
         <label class="setting-label" htmlFor="tree-render-mode">Custom item rendering</label>
         <Select
           id="tree-render-mode"
@@ -1092,6 +1083,7 @@ function TreeViewPlayground() {
         />
         <CheckBox checked={showMeta}>Show metadata chips</CheckBox>
         <CheckBox checked={expanded}>Expand sections</CheckBox>
+        <p class="playground-note">Selected item: <strong>{selectedItem}</strong></p>
         <p class="playground-note">Keyboard: ↑↓ move, type a letter to cycle, ←→ open or close, Enter or Space activates.</p>
       </div>
     )
