@@ -1027,20 +1027,6 @@ h2 {
   width: min(100%, 24rem);
 }
 
-.tree-model-description {
-  display: grid;
-  gap: .18rem;
-  margin: -.2rem 0 .25rem;
-  color: var(--prism-color-text-subtle);
-  font-size: var(--prism-font-size-body-small);
-  line-height: 1.45;
-}
-
-.tree-model-description strong {
-  color: var(--prism-color-ink);
-  font-size: var(--prism-font-size-body);
-}
-
 .prism-theme-model-nocturne .showcase-theme-picker,
 .prism-theme-model-terminal .showcase-theme-picker {
   box-shadow: 0 .45rem 1.1rem rgb(0 0 0 / 24%);
