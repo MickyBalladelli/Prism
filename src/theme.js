@@ -2771,6 +2771,11 @@ export const prismTheme = globalCss(`
     gap: .35rem;
   }
 
+  /* display:grid on details disables the UA hide-when-closed behavior */
+  .prism-tree-details:not([open]) > :not(summary) {
+    display: none;
+  }
+
   .prism-tree-summary::-webkit-details-marker {
     display: none;
   }

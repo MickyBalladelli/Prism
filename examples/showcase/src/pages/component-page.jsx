@@ -1402,35 +1402,43 @@ function TreeViewPlayground() {
   const selectedItem = signal('Button')
 
   const items = computed(() => {
-    const item = (label, details = {}) => ({
+    const leaf = (label, details = {}) => ({
       ...details,
       label,
       active: selectedItem.value === label,
-      onClick: () => selectedItem.value = label
+      onClick: () => {
+        selectedItem.value = label
+      }
+    })
+
+    const branch = (label, details = {}) => ({
+      ...details,
+      label,
+      active: selectedItem.value === label
     })
 
     return [
-      item('Overview', {
+      leaf('Overview', {
         meta: showMeta.value ? 'Home' : undefined
       }),
-      item('Components', {
+      branch('Components', {
         expanded: expanded.value,
         meta: showMeta.value ? '7' : undefined,
         children: [
-          item('Layout', {
+          branch('Layout', {
             expanded: expanded.value,
             meta: showMeta.value ? '2' : undefined,
-            children: [item('Box'), item('Card')]
+            children: [leaf('Box'), leaf('Card')]
           }),
-          item('Forms', {
+          branch('Forms', {
             expanded: expanded.value,
             meta: showMeta.value ? '4' : undefined,
-            children: [item('TextField'), item('Select'), item('CheckBox'), item('Button')]
+            children: [leaf('TextField'), leaf('Select'), leaf('CheckBox'), leaf('Button')]
           }),
-          item('Navigation', {
+          branch('Navigation', {
             expanded: expanded.value,
             meta: showMeta.value ? '1' : undefined,
-            children: [item('TreeView')]
+            children: [leaf('TreeView')]
           })
         ]
       })

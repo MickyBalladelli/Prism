@@ -32,13 +32,14 @@ body {
   box-shadow: none;
 }
 
-.showcase-app-background .prism-background-layer,
-.showcase-app-background .prism-background-wash {
+/* Only the app shell layers — not nested Background previews in the playground. */
+.showcase-app-background > .prism-background-layer,
+.showcase-app-background > .prism-background-wash {
   position: fixed;
   z-index: 0;
 }
 
-.showcase-app-background .prism-background-content {
+.showcase-app-background > .prism-background-content {
   position: relative;
   z-index: 1;
   min-height: 100dvh;

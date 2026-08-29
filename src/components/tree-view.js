@@ -63,10 +63,27 @@ function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
     ? 'prism-tree-summary prism-tree-summary-active'
     : 'prism-tree-summary'
 
+  const handleSummaryClick = event => {
+    // Always cancel the UA summary toggle. If onClick rebuilds the tree while this
+    // click is still dispatching, the browser would otherwise toggle the replacement
+    // <details> and close a branch that was mounted with open=true.
+    event.preventDefault()
+    onClick?.(event)
+
+    if (!event.currentTarget.isConnected) {
+      return
+    }
+
+    const details = event.currentTarget.parentElement
+    if (details?.tagName === 'DETAILS') {
+      details.open = !details.open
+    }
+  }
+
   return html`
     <li class="prism-tree-branch">
-      <details class="prism-tree-details" ?open=${expanded} @toggle=${onToggle}>
-        <summary class="${summaryClass}" role="treeitem" aria-expanded="${expanded}" @click=${onClick} @keydown=${onKeyDown}>
+      <details class="prism-tree-details" .open=${expanded} @toggle=${onToggle}>
+        <summary class="${summaryClass}" role="treeitem" aria-expanded="${expanded}" @click=${handleSummaryClick} @keydown=${onKeyDown}>
           <span class="prism-tree-entry-copy">
             <span class="prism-tree-toggle" aria-hidden="true">
               <span class="prism-tree-toggle-bar prism-tree-toggle-bar-horizontal"></span>
