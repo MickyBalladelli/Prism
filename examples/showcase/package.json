@@ -1,0 +1,17 @@
+{
+  "name": "prism-ui-showcase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "matrix": "file:../../../Matrix",
+    "prism-ui": "file:../.."
+  },
+  "devDependencies": {
+    "vite": "^8.2.2"
+  }
+}

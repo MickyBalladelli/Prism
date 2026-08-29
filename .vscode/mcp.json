@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "chromeDevtools": {
+      "type": "stdio",
+      "command": "/Users/micky/.nvm/versions/node/v22.23.1/bin/npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--autoConnect"
+      ],
+      "env": {
+        "PATH": "/Users/micky/.nvm/versions/node/v22.23.1/bin:/usr/local/bin:/usr/bin:/bin"
+      }
+    }
+  }
+}
