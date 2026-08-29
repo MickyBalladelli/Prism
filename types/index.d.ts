@@ -402,6 +402,8 @@ export function Table<Row = Record<string, unknown>>(props?: TableProps<Row>): u
 export function parseTableSettings(value: TableSettings | string | null | undefined): TableSettings | null
 export function serializeTableSettings(settings: TableSettings): string
 export function TreeView(props?: TreeViewProps): unknown
+export function PrismIcon(props?: IconProps): unknown
+export function MatrixIcon(props?: IconProps): unknown
 export function PrismMarkIcon(props?: IconProps): unknown
 export function EyeIcon(props?: IconProps): unknown
 export function TreeToggleIcon(props?: IconProps): unknown

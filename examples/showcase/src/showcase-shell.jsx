@@ -1,5 +1,5 @@
 import { html } from 'matrix'
-import { FileIcon, FolderIcon, Header, TreeView } from 'prism-ui'
+import { FileIcon, FolderIcon, Header, MatrixIcon, PrismIcon, TreeView } from 'prism-ui'
 import { iconCategories, iconCount } from './icon-catalog.js'
 import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'
 
@@ -222,9 +222,21 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
 
   return (
     <div class="showcase-shell">
-      <Header class="showcase-header" ariaLabel="Prism UI" trailing={<ThemePicker />}>
+      <Header
+        class="showcase-header"
+        ariaLabel="Prism UI"
+        trailing={(
+          <div class="showcase-header-actions">
+            <span class="showcase-matrix-badge" title="Powered by Matrix">
+              {MatrixIcon({ size: '1.35rem' })}
+              <span><small>Powered by</small><strong>Matrix</strong></span>
+            </span>
+            <ThemePicker />
+          </div>
+        )}
+      >
         <a class="showcase-header-brand" href="/" onClick={link('/')}>
-          <span class="sidebar-brand-dot" aria-hidden="true"></span>
+          <span class="showcase-prism-mark" aria-hidden="true">{PrismIcon({ size: '1.8rem' })}</span>
           <span class="showcase-header-brand-copy">
             <strong>prism ui</strong>
             <small>Component explorer</small>

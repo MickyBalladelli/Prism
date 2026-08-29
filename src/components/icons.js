@@ -1,5 +1,7 @@
 import { html } from 'matrix'
 
+export { MatrixIcon, PrismIcon } from './brand-icons.js'
+
 function getIconProps(props = {}) {
   const {
     class: classValue = '',

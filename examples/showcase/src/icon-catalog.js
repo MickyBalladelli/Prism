@@ -31,10 +31,11 @@ import {
   LockIcon,
   MailIcon,
   MapPinIcon,
+  MatrixIcon,
   MinusIcon,
   MoreHorizontalIcon,
   PlusIcon,
-  PrismMarkIcon,
+  PrismIcon,
   SearchIcon,
   SendIcon,
   SettingsIcon,
@@ -105,7 +106,8 @@ export const iconCategories = [
     iconEntry('CopyIcon', CopyIcon, 'Duplicate a value, file, or resource.')
   ]),
   iconCategory('workspace', 'Workspace', 'Everyday objects that orient people inside a product.', [
-    iconEntry('PrismMarkIcon', PrismMarkIcon, 'Prism brand mark for product chrome.'),
+    iconEntry('PrismIcon', PrismIcon, 'Faceted Prism brand mark with a split-light signature.'),
+    iconEntry('MatrixIcon', MatrixIcon, 'Connected Matrix runtime mark built from composable nodes.'),
     iconEntry('CalendarIcon', CalendarIcon, 'Date, schedule, or event.'),
     iconEntry('ClockIcon', ClockIcon, 'Time, duration, or recent activity.'),
     iconEntry('MapPinIcon', MapPinIcon, 'Place, location, or address.'),

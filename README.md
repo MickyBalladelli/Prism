@@ -75,7 +75,7 @@ const view = <main use:style={prismTheme}>Prism content</main>
 
 ## Icons
 
-Prism exports 49 original icon components in seven groups: Actions, Navigation, Communication, Status, Files, Workspace, and Data & Code. They are SVG components, inherit `currentColor`, and default to `1em`:
+Prism exports an original icon set in seven groups: Actions, Navigation, Communication, Status, Files, Workspace, and Data & Code. UI glyphs inherit `currentColor`; the Prism and Matrix brand marks retain their signature colors. Every icon defaults to `1em`:
 
 ```jsx
 import { Button, EyeIcon } from 'prism-ui'
@@ -91,6 +91,14 @@ const view = (
 The full icon list and usage examples are in the showcase under Icons. Every icon supports `size`, `class`, and optional `ariaLabel` props.
 
 Icons are decorative by default. Use `ariaLabel` when an icon carries meaning without visible text.
+
+Use `PrismIcon` for Prism product identity and `MatrixIcon` when crediting the Matrix runtime:
+
+```jsx
+import { MatrixIcon, PrismIcon } from 'prism-ui'
+
+const brands = <div>{PrismIcon({ size: 28 })}{MatrixIcon({ size: 28 })}</div>
+```
 
 Use `size` for a fixed size, or import directly from `prism-ui/icons`:
 
