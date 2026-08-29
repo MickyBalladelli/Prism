@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Button, CheckBox, CodeViewer, TextField, TreeView } from '../src/index.js'
+import { Box, Button, Card, CheckBox, CodeViewer, TextField, TreeView } from '../src/index.js'
 import { signal } from 'matrix'
 
 test('components expose Matrix templates', () => {
@@ -54,4 +54,19 @@ test('CodeViewer uses themed class names and supports line number toggles', () =
     && Array.isArray(value.value)
     && value.value.some(item => item?.values?.includes?.('keyword')))
   assert.equal(Boolean(highlightedTokens), true)
+})
+
+test('Box and Card support sticky layout props', () => {
+  const box = Box({ children: 'Sticky box', sticky: true, stickyTop: '1.5rem' })
+  const card = Card({ children: 'Sticky card', sticky: true, stickyTop: '2rem' })
+
+  const boxStyle = box.values.find(value => value?.kind === 'computed' && typeof value.value === 'object' && value.value.position === 'sticky')
+  const cardStyle = card.values.find(value => value?.kind === 'computed' && typeof value.value === 'object' && value.value.position === 'sticky')
+
+  assert.equal(boxStyle?.value.position, 'sticky')
+  assert.equal(boxStyle?.value.top, '1.5rem')
+  assert.equal(boxStyle?.value.alignSelf, 'start')
+  assert.equal(cardStyle?.value.position, 'sticky')
+  assert.equal(cardStyle?.value.top, '2rem')
+  assert.equal(cardStyle?.value.alignSelf, 'start')
 })

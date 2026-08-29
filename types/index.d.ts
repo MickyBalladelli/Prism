@@ -6,6 +6,8 @@ export interface BoxProps {
   id?: string
   role?: string
   style?: string | Record<string, string>
+  sticky?: boolean | Signal<boolean>
+  stickyTop?: string | Signal<string>
 }
 
 export interface CardProps extends BoxProps {

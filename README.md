@@ -29,7 +29,7 @@ const button = Button({
 ```
 
 Components accept Matrix signals for `value` and `checked`, keeping controls synchronized in both directions. `TextField` supports `small`, `medium`, and `large` sizes.
-`Card` renders an `<article>`, accepts the same layout props as `Box`, and can render an `actions` footer.
+`Box` and `Card` support `sticky` and `stickyTop` for parent-bounded sticky layout, and `Card` can also render an `actions` footer.
 
 `CodeViewer` renders editable, syntax-colored code with optional line numbers and a copy button:
 
