@@ -45,7 +45,7 @@ export function Select(props = {}) {
   const selectedValue = value?.kind === 'signal'
     ? value
     : signal(isReactiveValue(value) ? value.value : value)
-  const currentPlacement = signal(normalizePlacement(isReactiveValue(placement) ? placement.value : placement))
+  const currentPlacement = signal('bottom')
   const sizeValue = isReactiveValue(size) ? size : size || 'medium'
   const optionList = isReactiveValue(options)
     ? computed(() => (options.value ?? []).map(normalizeOption))
@@ -186,7 +186,7 @@ export function Select(props = {}) {
   const optionMarkup = computed(() => {
     const selected = String(selectedValue.value ?? '')
 
-    return readOptions().map(option => html`<button type="button" class="${baseClassName}-option" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" ?disabled=${option.disabled} @click=${event => selectOption(option, event)}>${option.label}</button>`)
+    return readOptions().map(option => html`<button type="button" class="${baseClassName}-option" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" ?disabled=${option.disabled} .onclick=${event => selectOption(option, event)}>${option.label}</button>`)
   })
 
   const listboxId = id === undefined ? undefined : `${id}-listbox`
