@@ -19,9 +19,9 @@ const components = [
     eyebrow: 'Layout',
     title: 'Label',
     mark: '14',
-    description: 'Typographic labels with size, typeface, and a contrast lock that stays readable over motion.',
-    highlights: ['Size and typeface', 'Always-visible lock', 'Works over animation'],
-    details: ['Four sizes', 'Sans, serif, and mono', 'Readable on Veil and Sanctum']
+    description: 'Typographic labels with size, typeface, and a character outline that stays readable over motion.',
+    highlights: ['Size and typeface', 'Always-visible outline', 'Works over animation'],
+    details: ['Four sizes', 'Sans, serif, and mono', 'Light or dark character borders']
   },
   {
     key: 'box',

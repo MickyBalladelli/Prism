@@ -48,7 +48,7 @@ const view = Background({
 })
 ```
 
-`Label` sets size, typeface, and weight. Set `alwaysVisible` when the copy sits on a moving background so contrast stays locked on Veil, Sanctum, or a solid surface.
+`Label` sets size, typeface, and weight. Set `alwaysVisible` to draw a contrasting border around each character so dark type stays readable on a light field, and the reverse.
 
 `CodeViewer` renders editable, syntax-colored code with optional line numbers and a copy button:
 

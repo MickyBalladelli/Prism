@@ -12,7 +12,7 @@ const componentInfo = {
   label: {
     eyebrow: 'Layout',
     title: 'Label',
-    description: 'Set size, typeface, and weight, then lock contrast so the words stay readable over any motion behind them.'
+    description: 'Set size, typeface, and weight, then outline each character so the words stay readable over any motion behind them.'
   },
   box: {
     eyebrow: 'Layout',
@@ -143,7 +143,7 @@ function BackgroundPlayground() {
     '  minHeight: "20rem",',
     '  children: html`<div class="background-demo-stage">',
     '    <p class="eyebrow">Ambient layer</p>',
-    '    ${Label({ size: "display", font: "sans", weight: "semibold", alwaysVisible: true, children: headline })}',
+    '    ${Label({ size: "large", font: "sans", weight: "medium", alwaysVisible: true, children: headline })}',
     '    <p class="background-demo-copy">The animation stays behind the content, so the surface can hold real UI, copy, and actions.</p>',
     '    <div class="background-demo-badges">',
     '      <span>Palette: ${palette}</span>',
@@ -223,9 +223,9 @@ function BackgroundPlayground() {
 
 function LabelPlayground() {
   const copy = signal('Always in focus')
-  const size = signal('display')
+  const size = signal('large')
   const font = signal('sans')
-  const weight = signal('semibold')
+  const weight = signal('medium')
   const alwaysVisible = signal(true)
   const animation = signal('sanctum')
   const codePreview = createCodePreview(codeLines(
@@ -246,7 +246,7 @@ function LabelPlayground() {
     '      alwaysVisible,',
     '      children: copy',
     '    })}',
-    '    <p class="label-demo-copy">Switch Veil and Sanctum. The locked label keeps its contrast on both recipes.</p>',
+    '    <p class="label-demo-copy">Switch Veil and Sanctum. Dark letters with a light outline, no plate behind them.</p>',
     '  </div>`',
     '})'
   ), { ...playgroundRuntime, copy, size, font, weight, alwaysVisible, animation })
@@ -300,7 +300,7 @@ function LabelPlayground() {
           ]}
         />
         <CheckBox checked={alwaysVisible}>Always visible</CheckBox>
-        <p class="playground-note">Turn the lock off to see the same type drop into the animation. Turn it on to keep a readable plate on any recipe.</p>
+        <p class="playground-note">Always visible draws a light border around each character. There is no background box. Turn it off to drop back to plain type.</p>
       </div>
     )
   }

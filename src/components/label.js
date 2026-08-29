@@ -84,11 +84,15 @@ export function Label(props = {}) {
     lineHeight
   })
 
+  const content = computed(() => readValue(alwaysVisible, false)
+    ? html`<span class="${baseClassName}-halo" aria-hidden="true">${children}</span><span class="${baseClassName}-face">${children}</span>`
+    : children)
+
   if (htmlFor !== undefined) {
-    return html`<label class="${classNames}" id="${id}" for="${htmlFor}" style="${styleValue}">${children}</label>`
+    return html`<label class="${classNames}" id="${id}" for="${htmlFor}" style="${styleValue}">${content}</label>`
   }
 
-  return html`<span class="${classNames}" id="${id}" style="${styleValue}">${children}</span>`
+  return html`<span class="${classNames}" id="${id}" style="${styleValue}">${content}</span>`
 }
 
 export const LabelComponent = props => component(Label, props)
