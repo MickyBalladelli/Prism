@@ -534,11 +534,11 @@ h1 em {
 .component-card {
   display: flex;
   flex-direction: column;
-  min-height: 24rem;
+  min-height: 22rem;
   padding: 1.5rem;
   border: 1px solid var(--prism-color-border);
   border-radius: var(--prism-radius-card);
-  background: var(--prism-color-surface-card);
+  background: linear-gradient(180deg, var(--prism-color-surface-card), var(--prism-color-white-strong));
   box-shadow: var(--prism-shadow-card);
 }
 
@@ -546,7 +546,7 @@ h1 em {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
 }
 
 h2 {
@@ -569,49 +569,63 @@ h2 {
 
 .card-copy {
   min-height: 3.25rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.35rem;
   color: var(--prism-color-text-soft);
   font-size: var(--prism-font-size-card-copy);
   line-height: 1.55;
 }
 
-.box-preview {
+.component-summary {
+  display: grid;
+  gap: .9rem;
+}
+
+.component-badges {
   display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.component-badge {
+  display: inline-flex;
   align-items: center;
-  gap: .85rem;
-  padding: 1rem;
-  border: 1px dashed var(--prism-color-border-strong);
-  border-radius: var(--prism-radius-preview);
-  background: var(--prism-color-surface-tint);
+  min-height: 1.8rem;
+  padding: .28rem .58rem;
+  border: 1px solid var(--prism-color-border-input);
+  border-radius: 999px;
+  color: var(--prism-color-text);
+  background: var(--prism-color-white);
+  font-size: var(--prism-font-size-micro);
+  font-weight: 760;
+  letter-spacing: .03em;
 }
 
-.card-preview {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  border: 1px solid var(--prism-color-border);
-  border-radius: var(--prism-radius-preview);
-  background: var(--prism-color-surface-tint);
+.component-points {
+  display: grid;
+  gap: .48rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.card-preview .eyebrow {
-  margin-bottom: .35rem;
-}
-
-.card-preview strong,
-.card-preview span {
-  display: block;
-}
-
-.card-preview strong {
-  margin-bottom: .25rem;
-  font-size: var(--prism-font-size-body);
-}
-
-.card-preview span {
+.component-points li {
+  position: relative;
+  padding-left: .95rem;
   color: var(--prism-color-text-subtle);
-  font-size: var(--prism-font-size-label);
-  line-height: 1.4;
+  font-size: var(--prism-font-size-body-small);
+  line-height: 1.45;
+}
+
+.component-points li::before {
+  position: absolute;
+  top: .42rem;
+  left: 0;
+  width: .38rem;
+  height: .38rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--prism-color-action), var(--prism-color-accent-bright));
+  box-shadow: 0 0 0 .14rem var(--prism-color-focus-glow);
+  content: '';
 }
 
 .card-details {

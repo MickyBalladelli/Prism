@@ -1,33 +1,67 @@
-import { signal } from 'matrix'
-import { Box, Button, Card, CheckBox, TextField, TreeView } from 'prism-ui'
+import { Card } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { ShowDetailsButton } from '../show-details-button.jsx'
 
-const name = signal('')
-const updates = signal(true)
-const buttonMessage = signal('Ready to click')
-const treePreviewItems = [
+const components = [
   {
-    label: 'Overview',
-    active: true,
-    meta: 'Home'
+    key: 'box',
+    path: '/components/box',
+    eyebrow: 'Layout',
+    title: 'Box',
+    mark: '01',
+    description: 'A simple div wrapper for grouping content and layout styles.',
+    highlights: ['Structure first', 'Flexible wrapper', 'Semantic-ready'],
+    details: ['Content grouping', 'Class hooks', 'Role support']
   },
   {
-    label: 'Components',
-    meta: '6',
-    expanded: true,
-    children: [
-      {
-        label: 'Forms',
-        meta: '3',
-        expanded: true,
-        children: [
-          { label: 'Button' },
-          { label: 'TextField' },
-          { label: 'CheckBox' }
-        ]
-      }
-    ]
+    key: 'text-field',
+    path: '/components/text-field',
+    eyebrow: 'Forms',
+    title: 'TextField',
+    mark: '02',
+    description: 'A text input bound to a Matrix signal.',
+    highlights: ['Reactive input', 'Three sizes', 'Validation states'],
+    details: ['Signal binding', 'Placeholder control', 'Required and disabled']
+  },
+  {
+    key: 'check-box',
+    path: '/components/check-box',
+    eyebrow: 'Forms',
+    title: 'CheckBox',
+    mark: '03',
+    description: 'A checkbox that keeps its checked state reactive.',
+    highlights: ['Writable state', 'Label pairing', 'Simple toggles'],
+    details: ['Reactive checked value', 'Accessible label flow', 'Disabled support']
+  },
+  {
+    key: 'card',
+    path: '/components/card',
+    eyebrow: 'Layout',
+    title: 'Card',
+    mark: '04',
+    description: 'A semantic article wrapper for standalone content.',
+    highlights: ['Article semantics', 'Optional action footer', 'Composed content'],
+    details: ['Structured layouts', 'Footer actions', 'Standalone sections']
+  },
+  {
+    key: 'button',
+    path: '/components/button',
+    eyebrow: 'Forms',
+    title: 'Button',
+    mark: '05',
+    description: 'A button system with role variants, status states, and palette switching.',
+    highlights: ['Seven variants', 'Pressed states', 'Palette-ready'],
+    details: ['Primary to success', 'Hover and active motion', 'Theme-driven colors']
+  },
+  {
+    key: 'tree-view',
+    path: '/components/tree-view',
+    eyebrow: 'Navigation',
+    title: 'TreeView',
+    mark: '06',
+    description: 'A polished navigation tree with nested branches, active items, and metadata chips.',
+    highlights: ['Nested branches', 'Meta chips', 'Active states'],
+    details: ['Expandable groups', 'Tree markers', 'Navigation structure']
   }
 ]
 
@@ -42,121 +76,33 @@ export function HomePage({ link }) {
         </header>
 
         <section class="component-grid" aria-label="Prism components">
-          <Card
-            class="component-card"
-            actions={<ShowDetailsButton onClick={link('/components/box')} />}
-          >
-            <div class="card-heading">
-              <div>
-                <p class="eyebrow">Layout</p>
-                <h2>Box</h2>
+          {components.map(component => (
+            <Card
+              class="component-card"
+              actions={<ShowDetailsButton onClick={link(component.path)} />}
+            >
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">{component.eyebrow}</p>
+                  <h2>{component.title}</h2>
+                </div>
+                <span class="component-mark">{component.mark}</span>
               </div>
-              <span class="component-mark">01</span>
-            </div>
-            <p class="card-copy">A simple div wrapper for grouping content and layout styles.</p>
-            <Box class="box-preview">
-              <span class="box-preview-icon">✦</span>
-              <div>
-                <strong>Content lives here</strong>
-                <span>Box can hold text, templates, and other Prism components.</span>
+              <p class="card-copy">{component.description}</p>
+              <div class="component-summary">
+                <div class="component-badges" aria-label={`${component.title} highlights`}>
+                  {component.highlights.map(item => (
+                    <span class="component-badge">{item}</span>
+                  ))}
+                </div>
+                <ul class="component-points" aria-label={`${component.title} details`}>
+                  {component.details.map(item => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
               </div>
-            </Box>
-          </Card>
-
-          <Card
-            class="component-card"
-            actions={<ShowDetailsButton onClick={link('/components/text-field')} />}
-          >
-            <div class="card-heading">
-              <div>
-                <p class="eyebrow">Forms</p>
-                <h2>TextField</h2>
-              </div>
-              <span class="component-mark">02</span>
-            </div>
-            <p class="card-copy">A text input bound to a Matrix signal.</p>
-            <label class="field-label" htmlFor="name-field">Your name</label>
-            <TextField
-              id="name-field"
-              value={name}
-              placeholder="Type something"
-            />
-          </Card>
-
-          <Card
-            class="component-card"
-            actions={<ShowDetailsButton onClick={link('/components/check-box')} />}
-          >
-            <div class="card-heading">
-              <div>
-                <p class="eyebrow">Forms</p>
-                <h2>CheckBox</h2>
-              </div>
-              <span class="component-mark">03</span>
-            </div>
-            <p class="card-copy">A checkbox that keeps its checked state reactive.</p>
-            <div class="checkbox-preview">
-              <CheckBox id="updates-checkbox" checked={updates}>
-                Send me design updates
-              </CheckBox>
-            </div>
-          </Card>
-
-          <Card
-            class="component-card"
-            actions={<ShowDetailsButton onClick={link('/components/card')} />}
-          >
-            <div class="card-heading">
-              <div>
-                <p class="eyebrow">Layout</p>
-                <h2>Card</h2>
-              </div>
-              <span class="component-mark">04</span>
-            </div>
-            <p class="card-copy">A semantic article wrapper for standalone content.</p>
-            <Card class="card-preview">
-              <p class="eyebrow">Nested Card</p>
-              <strong>Content with meaning</strong>
-              <span>Card renders as an article element.</span>
             </Card>
-          </Card>
-
-          <Card
-            class="component-card"
-            actions={<ShowDetailsButton onClick={link('/components/button')} />}
-          >
-            <div class="card-heading">
-              <div>
-                <p class="eyebrow">Forms</p>
-                <h2>Button</h2>
-              </div>
-              <span class="component-mark">05</span>
-            </div>
-            <p class="card-copy">A button with Matrix event handling and disabled state.</p>
-            <div class="button-preview">
-              <Button
-                onClick={() => buttonMessage.value = 'Button clicked'}
-              >
-                Click me
-              </Button>
-              <span>{buttonMessage}</span>
-            </div>
-          </Card>
-
-          <Card
-            class="component-card"
-            actions={<ShowDetailsButton onClick={link('/components/tree-view')} />}
-          >
-            <div class="card-heading">
-              <div>
-                <p class="eyebrow">Navigation</p>
-                <h2>TreeView</h2>
-              </div>
-              <span class="component-mark">06</span>
-            </div>
-            <p class="card-copy">A polished navigation tree with nested branches, active items, and metadata chips.</p>
-            <TreeView class="tree-card-preview" items={treePreviewItems} ariaLabel="Tree view preview" />
-          </Card>
+          ))}
         </section>
 
         <footer class="footer">
