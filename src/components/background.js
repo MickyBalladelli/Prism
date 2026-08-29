@@ -20,6 +20,11 @@ const palettes = Object.freeze({
   })
 })
 
+const animations = Object.freeze({
+  veil: 0,
+  sanctum: 1
+})
+
 const vertexSource = `
 attribute vec2 position;
 void main() {
@@ -33,6 +38,7 @@ uniform vec2 uResolution;
 uniform float uTime;
 uniform float uIntensity;
 uniform float uGrain;
+uniform float uMode;
 uniform vec3 uBase;
 uniform vec3 uAccent;
 uniform vec3 uGlow;
@@ -53,17 +59,34 @@ void main() {
   vec3 ray = normalize(vec3(frag * 2.0, 0.0) - vec3(uResolution.xy, uResolution.y));
   vec4 color = vec4(0.0);
   float z = 0.0;
-  for (int i = 0; i < 20; i++) {
-    vec3 p = z * ray;
-    float d = 4.0;
-    for (int j = 0; j < 6; j++) {
-      d += d;
-      p = p.yzx + sin(p * d - uTime) / d;
+
+  if (uMode < 0.5) {
+    for (int i = 0; i < 20; i++) {
+      vec3 p = z * ray;
+      float d = 4.0;
+      for (int j = 0; j < 6; j++) {
+        d += d;
+        p = p.yzx + sin(p * d - uTime) / d;
+      }
+      z += 0.1 - length(p) / 9.0;
+      color += z * z * vec4(2.0 - sin(p * 5.0), 0.0) / (0.001 + length(vec4(sin(p * 33.0) / 99.0, p.x)));
     }
-    z += 0.1 - length(p) / 9.0;
-    color += z * z * vec4(2.0 - sin(p * 5.0), 0.0) / (0.001 + length(vec4(sin(p * 33.0) / 99.0, p.x)));
+    color = cubicTanh(color / 400.0);
+  } else {
+    for (int i = 0; i < 30; i++) {
+      vec3 p = z * ray;
+      vec3 t = p;
+      float d = 4.0;
+      for (int j = 0; j < 6; j++) {
+        d /= 0.8;
+        p += sin(p.yzx * d + z + uTime) / d;
+      }
+      z += (3.0 - length(p.xz)) / 9.0;
+      color += vec4(9.0, 7.0, 4.0, 1.0) / (abs(t.x * (t.y - 0.8)) + abs(t.z + 3.0) * 0.5 + 0.001);
+    }
+    color = cubicTanh((color * color) / 300000.0);
   }
-  color = cubicTanh(color / 400.0);
+
   vec3 shade = max(color.rgb, 0.0) * uIntensity;
   vec3 mapped = uBase + shade.x * uAccent + shade.y * uGlow + shade.z * mix(uAccent, uGlow, 0.45);
   mapped += (hash(frag + uTime * 18.0) - 0.5) * uGrain;
@@ -80,6 +103,10 @@ const readValue = (value, fallback) => isReactive(value)
 const normalizePalette = value => Object.prototype.hasOwnProperty.call(palettes, value)
   ? value
   : 'midnight'
+
+const normalizeAnimation = value => Object.prototype.hasOwnProperty.call(animations, value)
+  ? value
+  : 'veil'
 
 const clamp = (value, minimum, maximum) => Math.min(Math.max(value, minimum), maximum)
 
@@ -166,13 +193,20 @@ function createContentStyleValue(props) {
   })
 }
 
+function prefersReducedMotion() {
+  return typeof matchMedia === 'function'
+    && matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function isMotionEnabled(animated) {
+  return Boolean(readValue(animated, true)) && !prefersReducedMotion()
+}
+
 function readAnimationState(props) {
   const colors = props.colors?.value ?? { base: '#071427', accent: '#3657d6', glow: '#7ac7ff' }
-  const prefersReducedMotion = typeof matchMedia === 'function'
-    && matchMedia('(prefers-reduced-motion: reduce)').matches
 
   return {
-    animated: Boolean(readValue(props.animated, true)) && !prefersReducedMotion,
+    animation: normalizeAnimation(readValue(props.animation, 'veil')),
     speed: normalizeNumber(props.speed, 1, 0, 4),
     intensity: normalizeNumber(props.intensity, 1, 0.2, 4),
     grain: normalizeNumber(props.grain, 0.018, 0, 0.12),
@@ -203,6 +237,7 @@ function renderFallback(canvas, time, options) {
   const logicalWidth = width / ratio
   const logicalHeight = height / ratio
   const pulse = time * 0.00032 * (options.speed || 1)
+  const sanctum = options.animation === 'sanctum'
 
   context.setTransform(1, 0, 0, 1, 0, 0)
   context.clearRect(0, 0, width, height)
@@ -210,8 +245,12 @@ function renderFallback(canvas, time, options) {
   context.fillStyle = options.base
   context.fillRect(0, 0, logicalWidth, logicalHeight)
 
-  const driftX = 0.52 + Math.sin(pulse) * 0.22
-  const driftY = 0.38 + Math.cos(pulse * 0.85) * 0.2
+  const driftX = sanctum
+    ? 0.5 + Math.sin(pulse * 0.55) * 0.08
+    : 0.52 + Math.sin(pulse) * 0.22
+  const driftY = sanctum
+    ? 0.42 + Math.cos(pulse * 0.4) * 0.06
+    : 0.38 + Math.cos(pulse * 0.85) * 0.2
   const glow = context.createRadialGradient(
     logicalWidth * driftX,
     logicalHeight * driftY,
@@ -318,6 +357,7 @@ function startWebglAnimation(canvas, props) {
   const timeLocation = gl.getUniformLocation(program, 'uTime')
   const intensityLocation = gl.getUniformLocation(program, 'uIntensity')
   const grainLocation = gl.getUniformLocation(program, 'uGrain')
+  const modeLocation = gl.getUniformLocation(program, 'uMode')
   const baseLocation = gl.getUniformLocation(program, 'uBase')
   const accentLocation = gl.getUniformLocation(program, 'uAccent')
   const glowLocation = gl.getUniformLocation(program, 'uGlow')
@@ -334,11 +374,11 @@ function startWebglAnimation(canvas, props) {
     gl.uniform1f(timeLocation, time * 0.001 * options.speed)
     gl.uniform1f(intensityLocation, options.intensity)
     gl.uniform1f(grainLocation, options.grain)
+    gl.uniform1f(modeLocation, animations[options.animation])
     gl.uniform3f(baseLocation, base[0], base[1], base[2])
     gl.uniform3f(accentLocation, accent[0], accent[1], accent[2])
     gl.uniform3f(glowLocation, glow[0], glow[1], glow[2])
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
-    return options.animated
   }
 
   return {
@@ -358,19 +398,16 @@ function attachBackgroundAnimation(canvas, props) {
   let renderer = startWebglAnimation(canvas, props)
   const render = time => {
     if (renderer) {
-      return renderer.render(time)
+      renderer.render(time)
+      return
     }
-    const options = readAnimationState(props)
-    renderFallback(canvas, time, options)
-    return options.animated
+    renderFallback(canvas, time, readAnimationState(props))
   }
 
   let frame = 0
   const tick = time => {
-    const animated = render(time)
-    if (animated) {
-      frame = requestAnimationFrame(tick)
-    }
+    render(time)
+    frame = requestAnimationFrame(tick)
   }
 
   const observer = typeof ResizeObserver === 'function'
@@ -402,6 +439,7 @@ export function Background(props = {}) {
     style,
     contentStyle,
     palette = 'midnight',
+    animation = 'veil',
     animated = true,
     speed = 1,
     intensity = 1,
@@ -424,6 +462,8 @@ export function Background(props = {}) {
   const classNames = computed(() => [
     baseClassName,
     `${baseClassName}-${normalizePalette(readValue(palette, 'midnight'))}`,
+    `${baseClassName}-${normalizeAnimation(readValue(animation, 'veil'))}`,
+    isMotionEnabled(animated) ? `${baseClassName}-live` : `${baseClassName}-static`,
     classValue
   ].filter(Boolean).join(' '))
 
@@ -432,10 +472,18 @@ export function Background(props = {}) {
     contentClass
   ].filter(Boolean).join(' '))
 
+  const motionLayer = computed(() => isMotionEnabled(animated)
+    ? component(BackgroundCanvas, { animation, speed, intensity, grain, colors })
+    : null)
+
+  const washLayer = computed(() => isMotionEnabled(animated)
+    ? html`<span class="${baseClassName}-wash" aria-hidden="true"></span>`
+    : null)
+
   return html`
     <section class="${classNames}" id="${id}" role="${role}" style="${styleValue}" aria-label="${ariaLabel}">
-      ${component(BackgroundCanvas, { animated, speed, intensity, grain, colors })}
-      <span class="${baseClassName}-wash" aria-hidden="true"></span>
+      ${motionLayer}
+      ${washLayer}
       <div class="${contentClassNames}" style="${contentStyleValue}">${children}</div>
     </section>
   `

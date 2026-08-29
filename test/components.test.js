@@ -76,18 +76,45 @@ test('Box and Card support sticky layout props', () => {
 test('Background exposes a reusable animated surface', () => {
   const background = Background({
     palette: 'aurora',
-    animated: false,
     intensity: 1.4,
     children: 'Backdrop'
   })
 
-  assert.equal(background.values.includes('prism-background'), true)
-
   const styleValue = background.values.find(value => value?.kind === 'computed' && typeof value.value === 'object' && value.value['--prism-background-accent'])
   assert.equal(styleValue?.value['--prism-background-accent'], '#6d5ef7')
 
-  const canvasLayer = background.values.find(value => value?.render && value?.props)
-  assert.equal(typeof canvasLayer?.render, 'function')
-  assert.equal(canvasLayer?.props.animated, false)
-  assert.equal(canvasLayer?.props.intensity, 1.4)
+  const classNames = background.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-live'))
+  assert.equal(classNames?.value.includes('prism-background'), true)
+  assert.equal(classNames?.value.includes('prism-background-aurora'), true)
+
+  const canvasLayer = background.values.find(value => value?.kind === 'computed' && value.value?.render)
+  assert.equal(typeof canvasLayer?.value.render, 'function')
+  assert.equal(canvasLayer?.value.props.intensity, 1.4)
+  assert.equal(classNames?.value.includes('prism-background-veil'), true)
+})
+
+test('Background can switch named motion recipes', () => {
+  const background = Background({
+    animation: 'sanctum',
+    children: 'Backdrop'
+  })
+
+  const classNames = background.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-sanctum'))
+  assert.equal(classNames?.value.includes('prism-background-sanctum'), true)
+
+  const canvasLayer = background.values.find(value => value?.kind === 'computed' && value.value?.render)
+  assert.equal(canvasLayer?.value.props.animation, 'sanctum')
+})
+
+test('Background removes the motion layer when animation is off', () => {
+  const background = Background({
+    palette: 'aurora',
+    animated: false,
+    children: 'Backdrop'
+  })
+
+  const classNames = background.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-static'))
+  assert.equal(classNames?.value.includes('prism-background-aurora'), true)
+
+  assert.equal(background.values.some(value => value?.kind === 'computed' && value.value?.render), false)
 })

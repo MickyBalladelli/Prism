@@ -9,9 +9,9 @@ const components = [
     eyebrow: 'Layout',
     title: 'Background',
     mark: '13',
-    description: 'A reusable animated backdrop with Prism-toned palettes and an overlay content slot.',
-    highlights: ['Layered motion', 'Theme-friendly palettes', 'Content stays readable'],
-    details: ['Animated or still', 'Adjustable intensity and veil', 'Works as a real layout surface']
+    description: 'A reusable animated backdrop with named motion recipes, Prism-toned palettes, and an overlay content slot.',
+    highlights: ['Named animations', 'Theme-friendly palettes', 'Content stays readable'],
+    details: ['Veil and Sanctum recipes', 'Toggle the motion layer', 'Works as a real layout surface']
   },
   {
     key: 'box',

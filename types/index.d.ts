@@ -11,6 +11,7 @@ export interface BoxProps {
 }
 
 export type BackgroundPalette = 'midnight' | 'aurora' | 'tide'
+export type BackgroundAnimation = 'veil' | 'sanctum'
 
 export interface BackgroundProps {
   children?: unknown
@@ -21,6 +22,7 @@ export interface BackgroundProps {
   style?: string | Record<string, string>
   contentStyle?: string | Record<string, string>
   palette?: BackgroundPalette | Signal<BackgroundPalette>
+  animation?: BackgroundAnimation | Signal<BackgroundAnimation>
   animated?: boolean | Signal<boolean>
   speed?: number | Signal<number>
   intensity?: number | Signal<number>

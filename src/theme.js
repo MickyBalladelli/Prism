@@ -1297,6 +1297,11 @@ export const prismTheme = globalCss(`
     border-color: rgb(91 224 148 / 18%);
   }
 
+  .prism-background-static .prism-background-layer,
+  .prism-background-static .prism-background-wash {
+    display: none;
+  }
+
   .prism-popup-layer {
     position: fixed;
     z-index: 200;

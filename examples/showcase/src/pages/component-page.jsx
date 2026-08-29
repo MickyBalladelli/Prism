@@ -7,7 +7,7 @@ const componentInfo = {
   background: {
     eyebrow: 'Layout',
     title: 'Background',
-    description: 'Shape a reusable animated backdrop with dark palettes, layered glow, and an overlay content slot.'
+    description: 'Shape a reusable animated backdrop with named motion recipes, dark palettes, and an overlay content slot.'
   },
   box: {
     eyebrow: 'Layout',
@@ -121,6 +121,7 @@ function createCodePreview(initialCode, scope = {}) {
 function BackgroundPlayground() {
   const headline = signal('Deep focus, soft glow')
   const palette = signal('midnight')
+  const animation = signal('veil')
   const animated = signal(true)
   const speed = signal(1)
   const intensity = signal(1.15)
@@ -128,6 +129,7 @@ function BackgroundPlayground() {
   const codePreview = createCodePreview(codeLines(
     'Background({',
     '  palette,',
+    '  animation,',
     '  animated,',
     '  speed,',
     '  intensity,',
@@ -139,7 +141,7 @@ function BackgroundPlayground() {
     '    <p class="background-demo-copy">The animation stays behind the content, so the surface can hold real UI, copy, and actions.</p>',
     '    <div class="background-demo-badges">',
     '      <span>Palette: ${palette}</span>',
-    '      <span>${animated ? "Animated" : "Still frame"}</span>',
+    '      <span>${animated ? animation : "Solid surface"}</span>',
     '      <span>Intensity × ${intensity}</span>',
     '    </div>',
     '    <div class="background-demo-actions">',
@@ -148,7 +150,7 @@ function BackgroundPlayground() {
     '    </div>',
     '  </div>`',
     '})'
-  ), { ...playgroundRuntime, headline, palette, animated, speed, intensity, overlayOpacity })
+  ), { ...playgroundRuntime, headline, palette, animation, animated, speed, intensity, overlayOpacity })
 
   return {
     code: codePreview.code,
@@ -165,6 +167,15 @@ function BackgroundPlayground() {
             { value: 'midnight', label: 'Midnight — Prism blue' },
             { value: 'aurora', label: 'Aurora — violet glow' },
             { value: 'tide', label: 'Tide — teal current' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="background-animation">Animation</label>
+        <Select
+          id="background-animation"
+          value={animation}
+          options={[
+            { value: 'veil', label: 'Veil — sine cloud drift' },
+            { value: 'sanctum', label: 'Sanctum — gilded hall' }
           ]}
         />
         <CheckBox checked={animated}>Animate background</CheckBox>
