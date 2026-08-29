@@ -390,7 +390,9 @@ function BadgePlayground() {
             <p class="badge-live-title">Unread messages</p>
             <p class="badge-live-description">Change the number to see the badge respond.</p>
           </div>
-          <Badge value={count} tone={tone} size={size} pulseOnChange />
+          <span class="badge-value-slot">
+            <Badge value={count} tone={tone} size={size} pulseOnChange />
+          </span>
           <Button variant="secondary" onClick={() => count.update(value => value + 1)}>
             Add message
           </Button>
@@ -439,7 +441,7 @@ function PulsePlayground() {
         <div class="pulse-mode-examples" role="group" aria-label="Pulse animation examples">
           <div class="pulse-mode-card">
             <p class="pulse-mode-label">Once</p>
-            {oncePulse}
+            <span class="pulse-example-slot">{oncePulse}</span>
             <Button variant="secondary" onClick={() => oncePulseTrigger.update(value => value + 1)}>
               Pulse once
             </Button>

@@ -493,8 +493,15 @@ h1 em {
   line-height: 1.45;
 }
 
-.badge-live-card .prism-badge {
+.badge-live-card .badge-value-slot {
   justify-self: center;
+}
+
+.badge-value-slot,
+.pulse-example-slot {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
 }
 
 .badge-live-card .prism-button {
@@ -553,6 +560,10 @@ h1 em {
 
 .pulse-mode-card .prism-button {
   justify-self: start;
+}
+
+.pulse-example-slot {
+  min-height: 1.8rem;
 }
 
 .pulse-status-strip {
