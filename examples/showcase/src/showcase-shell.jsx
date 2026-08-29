@@ -74,9 +74,15 @@ function createSidebarItems(link, activeKey) {
         },
         {
           label: 'Status',
-          meta: '1',
+          meta: '2',
           expanded: true,
           children: [
+            {
+              label: 'Badge',
+              href: '/components/badge',
+              onClick: link('/components/badge'),
+              active: activeKey === 'badge'
+            },
             {
               label: 'Pulse',
               href: '/components/pulse',

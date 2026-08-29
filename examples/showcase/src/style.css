@@ -444,6 +444,73 @@ h1 em {
   background: linear-gradient(135deg, #f59e0b, #f7b84a);
 }
 
+.badge-playground {
+  display: grid;
+  gap: 1rem;
+}
+
+.badge-live-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: var(--prism-color-white);
+  box-shadow: 0 .35rem .9rem rgb(37 49 78 / 5%);
+}
+
+.badge-live-copy,
+.badge-variant-strip {
+  display: grid;
+  gap: .55rem;
+}
+
+.badge-mode-label,
+.badge-live-title,
+.badge-live-description {
+  margin: 0;
+}
+
+.badge-mode-label {
+  color: var(--prism-color-text-soft);
+  font-size: var(--prism-font-size-label);
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.badge-live-title {
+  color: var(--prism-color-ink);
+  font-size: var(--prism-font-size-lead);
+  font-weight: 760;
+}
+
+.badge-live-description {
+  color: var(--prism-color-text-subtle);
+  font-size: var(--prism-font-size-small);
+  line-height: 1.45;
+}
+
+.badge-live-card .prism-badge {
+  justify-self: center;
+}
+
+.badge-live-card .prism-button {
+  justify-self: end;
+}
+
+.badge-variant-strip {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  justify-items: center;
+  padding: .9rem 1rem;
+  border: 1px dashed var(--prism-color-border-strong);
+  border-radius: var(--prism-radius-surface);
+  background: var(--prism-color-surface-tint);
+}
+
 .pulse-playground {
   display: grid;
   gap: 1.1rem;
@@ -1304,6 +1371,8 @@ input[type="text"]:required:invalid {
   .button-variant-preview,
   .button-status-preview,
   .button-palette-selector,
+  .badge-live-card,
+  .badge-variant-strip,
   .pulse-mode-examples,
   .pulse-status-strip {
     grid-template-columns: 1fr;

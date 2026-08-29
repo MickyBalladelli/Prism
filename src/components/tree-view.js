@@ -1,9 +1,10 @@
 import { component, html } from 'matrix'
+import { Badge } from './badge.js'
 
 function renderMeta(meta) {
   return meta === undefined || meta === null
     ? null
-    : html`<span class="prism-tree-meta">${meta}</span>`
+    : component(Badge, { value: meta, pulseOnChange: true, class: 'prism-tree-meta' })
 }
 
 function renderLeaf(item = {}) {

@@ -54,6 +54,16 @@ const components = [
     details: ['Primary to success', 'Hover and active motion', 'Theme-driven colors']
   },
   {
+    key: 'badge',
+    path: '/components/badge',
+    eyebrow: 'Status',
+    title: 'Badge',
+    mark: '06',
+    description: 'A compact count or state marker with optional change feedback.',
+    highlights: ['Count-ready', 'Five tones', 'Change pulse'],
+    details: ['Signal-friendly value', 'Semantic labels', 'Motion-aware']
+  },
+  {
     key: 'pulse',
     path: '/components/pulse',
     eyebrow: 'Status',

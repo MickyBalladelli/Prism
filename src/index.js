@@ -1,4 +1,6 @@
 export {
+  Badge,
+  BadgeComponent,
   Box,
   BoxComponent,
   Button,

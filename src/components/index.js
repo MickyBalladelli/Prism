@@ -1,4 +1,5 @@
 export { Box, BoxComponent } from './box.js'
+export { Badge, BadgeComponent } from './badge.js'
 export { Button, ButtonComponent } from './button.js'
 export { Card, CardComponent } from './card.js'
 export { CheckBox, CheckBoxComponent } from './check-box.js'

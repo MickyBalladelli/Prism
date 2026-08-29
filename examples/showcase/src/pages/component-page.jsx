@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { Box, Button, Card, CheckBox, Pulse, TextField, TreeView } from 'prism-ui'
+import { Badge, Box, Button, Card, CheckBox, Pulse, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const componentInfo = {
@@ -27,6 +27,11 @@ const componentInfo = {
     eyebrow: 'Forms',
     title: 'Button',
     description: 'Change the label, compare core and feedback variants, try three palettes, and test the click behavior.'
+  },
+  badge: {
+    eyebrow: 'Status',
+    title: 'Badge',
+    description: 'Show compact counts and states, with an optional pulse when a reactive value changes.'
   },
   pulse: {
     eyebrow: 'Status',
@@ -371,6 +376,55 @@ function ButtonPlayground() {
   }
 }
 
+function BadgePlayground() {
+  const count = signal(12)
+  const tone = signal('info')
+  const size = signal('large')
+
+  return {
+    preview: (
+      <div class="badge-playground">
+        <div class="badge-live-card">
+          <div class="badge-live-copy">
+            <p class="badge-mode-label">Reactive count</p>
+            <p class="badge-live-title">Unread messages</p>
+            <p class="badge-live-description">Change the number to see the badge respond.</p>
+          </div>
+          <Badge value={count} tone={tone} size={size} pulseOnChange />
+          <Button variant="secondary" onClick={() => count.update(value => value + 1)}>
+            Add message
+          </Button>
+        </div>
+        <div class="badge-variant-strip" role="group" aria-label="Badge tone examples">
+          <Badge tone="neutral">Neutral</Badge>
+          <Badge tone="success">Ready</Badge>
+          <Badge tone="info">Info</Badge>
+          <Badge tone="warning">Review</Badge>
+          <Badge tone="error">Alert</Badge>
+        </div>
+      </div>
+    ),
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="badge-tone">Tone</label>
+        <select id="badge-tone" value={tone} onChange={event => tone.value = event.currentTarget.value}>
+          <option value="neutral">Neutral</option>
+          <option value="success">Success</option>
+          <option value="info">Info</option>
+          <option value="warning">Warning</option>
+          <option value="error">Error</option>
+        </select>
+        <label class="setting-label" htmlFor="badge-size">Size</label>
+        <select id="badge-size" value={size} onChange={event => size.value = event.currentTarget.value}>
+          <option value="small">Small</option>
+          <option value="medium">Medium</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
+    )
+  }
+}
+
 function PulsePlayground() {
   const size = signal('large')
   const oncePulseTrigger = signal(0)
@@ -513,6 +567,7 @@ const playgrounds = {
   'check-box': CheckBoxPlayground,
   card: CardPlayground,
   button: ButtonPlayground,
+  badge: BadgePlayground,
   pulse: PulsePlayground,
   'tree-view': TreeViewPlayground
 }

@@ -516,6 +516,92 @@ export const prismTheme = globalCss(`
     cursor: not-allowed;
   }
 
+  .prism-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.45rem;
+    min-height: 1.35rem;
+    padding: .18rem .46rem;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: 999px;
+    color: var(--prism-color-text-soft);
+    background: var(--prism-color-white);
+    font-size: var(--prism-font-size-micro);
+    font-weight: 760;
+    letter-spacing: .04em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .prism-badge-neutral {
+    color: var(--prism-color-text-soft);
+    background: var(--prism-color-white);
+  }
+
+  .prism-badge-success {
+    border-color: var(--prism-color-success-glow);
+    color: var(--prism-color-success);
+    background: rgb(83 198 157 / 9%);
+  }
+
+  .prism-badge-info {
+    border-color: rgb(14 165 233 / 24%);
+    color: var(--prism-color-information);
+    background: rgb(14 165 233 / 9%);
+  }
+
+  .prism-badge-warning {
+    border-color: rgb(245 158 11 / 27%);
+    color: var(--prism-color-warning);
+    background: rgb(245 158 11 / 11%);
+  }
+
+  .prism-badge-error {
+    border-color: rgb(239 68 68 / 25%);
+    color: var(--prism-color-error);
+    background: rgb(239 68 68 / 9%);
+  }
+
+  .prism-badge-small {
+    min-height: 1.2rem;
+    padding: .13rem .38rem;
+    font-size: .62rem;
+  }
+
+  .prism-badge-large {
+    min-height: 2rem;
+    padding: .3rem .72rem;
+    font-size: var(--prism-font-size-ui);
+  }
+
+  .prism-badge-pulse {
+    animation: prism-badge-pulse .72s cubic-bezier(.2, .8, .3, 1);
+  }
+
+  @keyframes prism-badge-pulse {
+    0% {
+      box-shadow: 0 0 0 0 transparent;
+      transform: scale(1);
+    }
+
+    38% {
+      box-shadow: 0 0 0 .32rem var(--prism-color-focus-glow);
+      transform: scale(1.12);
+    }
+
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prism-badge-pulse {
+      animation: none;
+    }
+  }
+
   .prism-pulse {
     display: inline-flex;
     align-items: center;
@@ -806,21 +892,6 @@ export const prismTheme = globalCss(`
     height: .42rem;
     flex-basis: .42rem;
     box-shadow: 0 0 0 .16rem rgb(78 115 234 / 12%);
-  }
-
-  .prism-tree-meta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 1.45rem;
-    padding: .18rem .46rem;
-    border: 1px solid var(--prism-color-border-input);
-    border-radius: 999px;
-    color: var(--prism-color-text-soft);
-    background: var(--prism-color-white);
-    font-size: var(--prism-font-size-micro);
-    font-weight: 760;
-    letter-spacing: .04em;
   }
 
   .prism-tree-link-active {

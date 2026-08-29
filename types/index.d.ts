@@ -63,6 +63,19 @@ export interface IconProps {
   ariaLabel?: string
 }
 
+export type BadgeTone = 'neutral' | 'success' | 'info' | 'warning' | 'error'
+export type BadgeSize = 'small' | 'medium' | 'large'
+
+export interface BadgeProps {
+  value?: string | number | Signal<string | number>
+  children?: unknown
+  tone?: BadgeTone | Signal<BadgeTone>
+  size?: BadgeSize | Signal<BadgeSize>
+  pulseOnChange?: boolean
+  class?: string
+  ariaLabel?: string
+}
+
 export type PulseStatus = 'success' | 'info' | 'warning' | 'error' | 'off'
 export type PulseSize = 'small' | 'medium' | 'large'
 export type PulseAnimation = 'once' | 'continuous'
@@ -96,6 +109,7 @@ export interface TreeViewProps {
 export function Box(props?: BoxProps): unknown
 export function Button(props?: ButtonProps): unknown
 export function Card(props?: CardProps): unknown
+export function Badge(props?: BadgeProps): unknown
 export function TextField(props?: TextFieldProps): unknown
 export function CheckBox(props?: CheckBoxProps): unknown
 export function TreeView(props?: TreeViewProps): unknown
@@ -153,6 +167,7 @@ export function Pulse(props?: PulseProps): unknown
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function CardComponent(props?: CardProps): ComponentResult
+export function BadgeComponent(props?: BadgeProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
 export function TreeViewComponent(props?: TreeViewProps): ComponentResult
