@@ -2,11 +2,21 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 
 const prismRoot = fileURLToPath(new URL('../..', import.meta.url))
+const matrixJsx = {
+  runtime: 'automatic',
+  importSource: '@mickyballadelli/matrix'
+}
 
 export default defineConfig({
-  esbuild: {
-    jsx: 'automatic',
-    jsxImportSource: '@mickyballadelli/matrix'
+  oxc: {
+    jsx: matrixJsx
+  },
+  optimizeDeps: {
+    rolldownOptions: {
+      transform: {
+        jsx: matrixJsx
+      }
+    }
   },
   resolve: {
     dedupe: ['@mickyballadelli/matrix'],

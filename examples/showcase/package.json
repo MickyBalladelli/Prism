@@ -8,10 +8,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mickyballadelli/matrix": "0.1.0-alpha.0",
+    "@mickyballadelli/matrix": "^0.1.0-alpha.1",
     "prism-ui": "file:../.."
   },
   "devDependencies": {
     "vite": "^8.2.2"
+  },
+  "allowScripts": {
+    "@mickyballadelli/matrix@0.1.0-alpha.1": true
   }
 }
