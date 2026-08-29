@@ -24,10 +24,75 @@ input {
   font: inherit;
 }
 
-.app-shell {
-  width: min(100% - 3rem, 72rem);
+.showcase-frame {
+  display: grid;
+  grid-template-columns: 18rem minmax(0, 1fr);
+  gap: 1.25rem;
+  width: min(100% - 2rem, 92rem);
   margin: 0 auto;
-  padding: 4rem 0 2rem;
+  padding: 1.25rem 0 2rem;
+  align-items: start;
+}
+
+.showcase-sidebar {
+  position: sticky;
+  top: 1.2rem;
+  display: grid;
+  gap: 1rem;
+  padding: 1.1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: 1.45rem;
+  background: linear-gradient(180deg, var(--prism-color-surface-card), var(--prism-color-surface-glass));
+  box-shadow: var(--prism-shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.showcase-main {
+  min-width: 0;
+}
+
+.sidebar-brand {
+  display: grid;
+  gap: .3rem;
+}
+
+.sidebar-brand-row {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.sidebar-brand-dot {
+  width: .65rem;
+  height: .65rem;
+  border-radius: 50%;
+  background: var(--prism-color-accent-bright);
+  box-shadow: 0 0 0 .3rem var(--prism-color-accent-glow);
+}
+
+.sidebar-brand-name {
+  color: var(--prism-color-ink);
+  font-size: var(--prism-font-size-small);
+  font-weight: 840;
+  letter-spacing: .18em;
+  text-transform: lowercase;
+}
+
+.sidebar-brand-copy {
+  margin: 0;
+  color: var(--prism-color-text-subtle);
+  font-size: var(--prism-font-size-ui);
+  line-height: 1.5;
+}
+
+.showcase-tree {
+  padding-top: .15rem;
+}
+
+.app-shell {
+  width: min(100%, 72rem);
+  margin: 0;
+  padding: 2.5rem 0 2rem;
 }
 
 .hero {
@@ -759,6 +824,21 @@ input[type="text"]:required:invalid {
   width: 2rem;
   height: 1px;
   background: var(--prism-color-border-strong);
+}
+
+@media (max-width: 980px) {
+  .showcase-frame {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .showcase-sidebar {
+    position: static;
+  }
+
+  .app-shell {
+    padding-top: 1.2rem;
+  }
 }
 
 @media (max-width: 800px) {

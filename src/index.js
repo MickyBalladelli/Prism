@@ -8,6 +8,8 @@ export {
   CheckBox,
   CheckBoxComponent,
   TextField,
-  TextFieldComponent
+  TextFieldComponent,
+  TreeView,
+  TreeViewComponent
 } from './components/index.js'
 export { prismTheme, prismThemeValues } from './theme.js'

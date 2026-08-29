@@ -510,4 +510,156 @@ export const prismTheme = globalCss(`
     opacity: var(--prism-button-disabled-opacity);
     cursor: not-allowed;
   }
+
+  .prism-tree-view {
+    color: var(--prism-color-text);
+  }
+
+  .prism-tree-list {
+    display: grid;
+    gap: .35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .prism-tree-list-nested {
+    margin: .45rem 0 0 1rem;
+    padding-left: .85rem;
+    border-left: 1px solid var(--prism-color-border-faint);
+  }
+
+  .prism-tree-branch,
+  .prism-tree-leaf {
+    list-style: none;
+  }
+
+  .prism-tree-details {
+    display: grid;
+    gap: .35rem;
+  }
+
+  .prism-tree-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .prism-tree-summary::marker {
+    content: '';
+  }
+
+  .prism-tree-summary,
+  .prism-tree-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    width: 100%;
+    min-height: 2.4rem;
+    padding: .58rem .68rem;
+    border: 1px solid var(--prism-color-border);
+    border-radius: .95rem;
+    color: inherit;
+    background: linear-gradient(180deg, var(--prism-color-white-strong), var(--prism-color-white-tint));
+    box-shadow: 0 .22rem .58rem rgb(37 49 78 / 5%);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease, color .18s ease;
+  }
+
+  .prism-tree-summary:hover,
+  .prism-tree-link:hover {
+    border-color: var(--prism-color-border-strong);
+    box-shadow: 0 .38rem .92rem rgb(37 49 78 / 9%);
+    transform: translateY(-1px);
+  }
+
+  .prism-tree-summary:focus-visible,
+  .prism-tree-link:focus-visible {
+    outline: 3px solid var(--prism-color-focus-glow);
+    outline-offset: 3px;
+  }
+
+  .prism-tree-details[open] > .prism-tree-summary {
+    border-color: var(--prism-color-lavender-border);
+    background: linear-gradient(180deg, var(--prism-color-white), var(--prism-color-lavender-surface));
+    box-shadow: 0 .45rem .95rem rgb(89 88 181 / 10%);
+  }
+
+  .prism-tree-entry-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: .62rem;
+    min-width: 0;
+  }
+
+  .prism-tree-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--prism-color-ink);
+    font-size: var(--prism-font-size-body);
+    font-weight: 700;
+    letter-spacing: -.01em;
+  }
+
+  .prism-tree-chevron {
+    width: .52rem;
+    height: .52rem;
+    margin-top: -.08rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    color: var(--prism-color-text-subtle);
+    transform: rotate(-45deg);
+    transition: transform .18s ease, color .18s ease, opacity .18s ease;
+    opacity: .72;
+  }
+
+  .prism-tree-details[open] .prism-tree-chevron {
+    color: var(--prism-color-action);
+    transform: rotate(45deg) translateY(-1px);
+    opacity: 1;
+  }
+
+  .prism-tree-marker,
+  .prism-tree-dot {
+    width: .5rem;
+    height: .5rem;
+    flex: 0 0 .5rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--prism-color-action), var(--prism-color-accent-bright));
+    box-shadow: 0 0 0 .22rem var(--prism-color-focus-glow);
+  }
+
+  .prism-tree-dot {
+    width: .42rem;
+    height: .42rem;
+    flex-basis: .42rem;
+    box-shadow: 0 0 0 .16rem rgb(78 115 234 / 12%);
+  }
+
+  .prism-tree-meta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.45rem;
+    padding: .18rem .46rem;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: 999px;
+    color: var(--prism-color-text-soft);
+    background: var(--prism-color-white);
+    font-size: var(--prism-font-size-micro);
+    font-weight: 760;
+    letter-spacing: .04em;
+  }
+
+  .prism-tree-link-active {
+    border-color: var(--prism-color-lavender-border);
+    background: linear-gradient(180deg, var(--prism-color-white), var(--prism-color-lavender-surface));
+    box-shadow: 0 .52rem 1rem rgb(89 88 181 / 11%);
+  }
+
+  .prism-tree-link-active .prism-tree-label {
+    color: var(--prism-color-ink);
+  }
 `)

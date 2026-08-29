@@ -1,5 +1,6 @@
 import { computed, html, signal } from 'matrix'
 import { Box, Button, Card, CheckBox, TextField } from 'prism-ui'
+import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const componentInfo = {
   box: {
@@ -374,46 +375,50 @@ export function ComponentPage({ name, link }) {
 
   if (!info || !createPlayground) {
     return (
-      <main class="app-shell empty-page">
-        <a class="back-link" href="/" onClick={link('/')}>← Back to components</a>
-        <h1>Component not found</h1>
-        <p class="hero-copy">Prism does not have a page for this component yet.</p>
-      </main>
+      <ShowcaseShell link={link}>
+        <main class="app-shell empty-page">
+          <a class="back-link" href="/" onClick={link('/')}>← Back to components</a>
+          <h1>Component not found</h1>
+          <p class="hero-copy">Prism does not have a page for this component yet.</p>
+        </main>
+      </ShowcaseShell>
     )
   }
 
   const playground = createPlayground()
 
   return (
-    <main class="app-shell detail-page">
-      <a class="back-link" href="/" onClick={link('/')}>← Back to components</a>
-      <header class="detail-header">
-        <p class="eyebrow">{info.eyebrow}</p>
-        <h1>{info.title}</h1>
-        <p class="hero-copy">{info.description}</p>
-      </header>
+    <ShowcaseShell activeKey={name} link={link}>
+      <main class="app-shell detail-page">
+        <a class="back-link" href="/" onClick={link('/')}>← Back to components</a>
+        <header class="detail-header">
+          <p class="eyebrow">{info.eyebrow}</p>
+          <h1>{info.title}</h1>
+          <p class="hero-copy">{info.description}</p>
+        </header>
 
-      <section class="detail-layout" aria-label={`${info.title} playground`}>
-        <Card class="detail-stage">
-          <div class="stage-heading">
-            <div>
-              <p class="eyebrow">Live preview</p>
-              <h2>{info.title} in action</h2>
+        <section class="detail-layout" aria-label={`${info.title} playground`}>
+          <Card class="detail-stage">
+            <div class="stage-heading">
+              <div>
+                <p class="eyebrow">Live preview</p>
+                <h2>{info.title} in action</h2>
+              </div>
+              <span class="live-dot">Live</span>
             </div>
-            <span class="live-dot">Live</span>
-          </div>
-          <div class="preview-surface">
-            {playground.preview}
-          </div>
-        </Card>
+            <div class="preview-surface">
+              {playground.preview}
+            </div>
+          </Card>
 
-        <Card class="settings-card">
-          <p class="eyebrow">Props & settings</p>
-          <h2>Play with it</h2>
-          <p class="settings-copy">Change a setting. Preview updates instantly.</p>
-          {playground.controls}
-        </Card>
-      </section>
-    </main>
+          <Card class="settings-card">
+            <p class="eyebrow">Props & settings</p>
+            <h2>Play with it</h2>
+            <p class="settings-copy">Change a setting. Preview updates instantly.</p>
+            {playground.controls}
+          </Card>
+        </section>
+      </main>
+    </ShowcaseShell>
   )
 }

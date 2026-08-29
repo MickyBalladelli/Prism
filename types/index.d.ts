@@ -57,15 +57,34 @@ export interface CheckBoxProps {
   disabled?: boolean
 }
 
+export interface TreeViewItem {
+  label: string
+  href?: string
+  onClick?: (event: MouseEvent) => void
+  active?: boolean
+  expanded?: boolean
+  meta?: string
+  children?: TreeViewItem[]
+}
+
+export interface TreeViewProps {
+  items?: TreeViewItem[]
+  class?: string
+  id?: string
+  ariaLabel?: string
+}
+
 export function Box(props?: BoxProps): unknown
 export function Button(props?: ButtonProps): unknown
 export function Card(props?: CardProps): unknown
 export function TextField(props?: TextFieldProps): unknown
 export function CheckBox(props?: CheckBoxProps): unknown
+export function TreeView(props?: TreeViewProps): unknown
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function CardComponent(props?: CardProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
+export function TreeViewComponent(props?: TreeViewProps): ComponentResult
 export const prismTheme: StyleDefinition
 export const prismThemeValues: PrismThemeValues

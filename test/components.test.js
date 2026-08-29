@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Button, CheckBox, TextField } from '../src/index.js'
+import { Button, CheckBox, TextField, TreeView } from '../src/index.js'
 import { signal } from 'matrix'
 
 test('components expose Matrix templates', () => {
@@ -11,6 +11,7 @@ test('components expose Matrix templates', () => {
   const tertiaryButton = Button({ children: 'Soon', variant: 'tertiary' })
   const errorButton = Button({ children: 'Delete', variant: 'error' })
   const successButton = Button({ children: 'Saved', variant: 'success' })
+  const treeView = TreeView({ items: [{ label: 'Overview' }, { label: 'Forms', children: [{ label: 'Button' }] }] })
 
   assert.equal(typeof text, 'object')
   assert.equal(typeof checkbox, 'object')
@@ -19,12 +20,14 @@ test('components expose Matrix templates', () => {
   assert.equal(typeof tertiaryButton, 'object')
   assert.equal(typeof errorButton, 'object')
   assert.equal(typeof successButton, 'object')
+  assert.equal(typeof treeView, 'object')
   assert.equal(text.values.length, 9)
   assert.equal(button.values.includes('primary'), true)
   assert.equal(secondaryButton.values.includes('secondary'), true)
   assert.equal(tertiaryButton.values.includes('tertiary'), true)
   assert.equal(errorButton.values.includes('error'), true)
   assert.equal(successButton.values.includes('success'), true)
+  assert.equal(treeView.values[1], 'Tree view')
 })
 
 test('components accept writable signals', () => {
