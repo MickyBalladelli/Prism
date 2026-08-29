@@ -63,6 +63,17 @@ export interface IconProps {
   ariaLabel?: string
 }
 
+export type PulseStatus = 'success' | 'info' | 'warning' | 'error' | 'off'
+export type PulseSize = 'small' | 'medium' | 'large'
+
+export interface PulseProps {
+  status?: PulseStatus | Signal<PulseStatus>
+  size?: PulseSize | Signal<PulseSize>
+  class?: string
+  ariaLabel?: string
+  children?: unknown
+}
+
 export interface TreeViewItem {
   label: string
   href?: string
@@ -136,11 +147,13 @@ export function ListIcon(props?: IconProps): unknown
 export function CodeIcon(props?: IconProps): unknown
 export function TerminalIcon(props?: IconProps): unknown
 export function EyeOffIcon(props?: IconProps): unknown
+export function Pulse(props?: PulseProps): unknown
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function CardComponent(props?: CardProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
 export function TreeViewComponent(props?: TreeViewProps): ComponentResult
+export function PulseComponent(props?: PulseProps): ComponentResult
 export const prismTheme: StyleDefinition
 export const prismThemeValues: PrismThemeValues

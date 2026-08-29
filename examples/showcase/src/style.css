@@ -444,6 +444,36 @@ h1 em {
   background: linear-gradient(135deg, #f59e0b, #f7b84a);
 }
 
+.pulse-playground {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.pulse-status-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+  align-items: center;
+  justify-items: stretch;
+  padding: 1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: var(--prism-color-white);
+  box-shadow: 0 .35rem .9rem rgb(37 49 78 / 6%);
+}
+
+.pulse-status-strip .prism-pulse {
+  justify-content: flex-start;
+  min-height: 1.8rem;
+  padding: .25rem .4rem;
+  font-size: var(--prism-font-size-small);
+}
+
+.pulse-status-strip .pulse-example-active {
+  font-weight: 860;
+  transform: translateY(-1px) scale(1.03);
+}
+
 .playground-box {
   display: flex;
   flex-direction: column;
@@ -1227,7 +1257,8 @@ input[type="text"]:required:invalid {
 
   .button-variant-preview,
   .button-status-preview,
-  .button-palette-selector {
+  .button-palette-selector,
+  .pulse-status-strip {
     grid-template-columns: 1fr;
   }
 }

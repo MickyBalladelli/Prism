@@ -45,6 +45,8 @@ export {
   MoreHorizontalIcon,
   PlusIcon,
   PrismMarkIcon,
+  Pulse,
+  PulseComponent,
   SearchIcon,
   SendIcon,
   SettingsIcon,

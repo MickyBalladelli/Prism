@@ -54,11 +54,21 @@ const components = [
     details: ['Primary to success', 'Hover and active motion', 'Theme-driven colors']
   },
   {
+    key: 'pulse',
+    path: '/components/pulse',
+    eyebrow: 'Status',
+    title: 'Pulse',
+    mark: '07',
+    description: 'A pulsating status marker for live health, progress, and attention states.',
+    highlights: ['Four statuses', 'Three sizes', 'Motion-aware'],
+    details: ['Success to error', 'Button-ready scale', 'Reduced-motion safe']
+  },
+  {
     key: 'tree-view',
     path: '/components/tree-view',
     eyebrow: 'Navigation',
     title: 'TreeView',
-    mark: '06',
+    mark: '08',
     description: 'A polished navigation tree with nested branches, active items, and metadata chips.',
     highlights: ['Nested branches', 'Meta chips', 'Active states'],
     details: ['Expandable groups', 'Tree markers', 'Navigation structure']

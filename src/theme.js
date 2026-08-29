@@ -516,6 +516,112 @@ export const prismTheme = globalCss(`
     cursor: not-allowed;
   }
 
+  .prism-pulse {
+    display: inline-flex;
+    align-items: center;
+    gap: .52rem;
+    min-height: 1.5rem;
+    color: var(--prism-color-information);
+    font-size: var(--prism-font-size-body);
+    font-weight: 760;
+    line-height: 1;
+  }
+
+  .prism-pulse-success {
+    color: var(--prism-color-success);
+  }
+
+  .prism-pulse-info {
+    color: var(--prism-color-information);
+  }
+
+  .prism-pulse-warning {
+    color: var(--prism-color-warning);
+  }
+
+  .prism-pulse-error {
+    color: var(--prism-color-error);
+  }
+
+  .prism-pulse-off {
+    color: var(--prism-color-text-subtle);
+  }
+
+  .prism-pulse-mark {
+    position: relative;
+    display: inline-grid;
+    width: 1.8rem;
+    height: 1.8rem;
+    flex: 0 0 1.8rem;
+    place-items: center;
+  }
+
+  .prism-pulse-mark::before,
+  .prism-pulse-mark::after {
+    position: absolute;
+    inset: 0;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    content: '';
+    opacity: 0;
+    transform: scale(.55);
+    animation: prism-pulse-ring 2.6s cubic-bezier(.2, .7, .3, 1) infinite;
+  }
+
+  .prism-pulse-mark::after {
+    animation-delay: 1.3s;
+  }
+
+  .prism-pulse-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    width: 1.8rem;
+    height: 1.8rem;
+    color: currentColor;
+    transform: translate(-50%, -50%);
+  }
+
+  .prism-pulse-small .prism-pulse-icon {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  .prism-pulse-large .prism-pulse-icon {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .prism-pulse-off .prism-pulse-mark::before,
+  .prism-pulse-off .prism-pulse-mark::after {
+    opacity: .16;
+    transform: scale(1);
+    animation: none;
+  }
+
+  @keyframes prism-pulse-ring {
+    0% {
+      opacity: .5;
+      transform: scale(.55);
+    }
+
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prism-pulse-mark::before,
+    .prism-pulse-mark::after {
+      opacity: .25;
+      transform: scale(1);
+      animation: none;
+    }
+  }
+
   .prism-tree-view {
     color: var(--prism-color-text);
   }

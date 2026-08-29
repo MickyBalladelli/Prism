@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { Box, Button, Card, CheckBox, TextField, TreeView } from 'prism-ui'
+import { Box, Button, Card, CheckBox, Pulse, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const componentInfo = {
@@ -27,6 +27,11 @@ const componentInfo = {
     eyebrow: 'Forms',
     title: 'Button',
     description: 'Change the label, compare core and feedback variants, try three palettes, and test the click behavior.'
+  },
+  pulse: {
+    eyebrow: 'Status',
+    title: 'Pulse',
+    description: 'Tune a living status marker for healthy, informative, cautionary, and failing states.'
   },
   'tree-view': {
     eyebrow: 'Navigation',
@@ -366,6 +371,44 @@ function ButtonPlayground() {
   }
 }
 
+function PulsePlayground() {
+  const status = signal('success')
+  const size = signal('large')
+  const exampleClass = nextStatus => computed(() => status.value === nextStatus ? 'pulse-example-active' : '')
+
+  return {
+    preview: (
+      <div class="pulse-playground">
+        <div class="pulse-status-strip" role="group" aria-label="Pulse status examples">
+          <Pulse status="success" size={size} class={exampleClass('success')}>Healthy</Pulse>
+          <Pulse status="info" size={size} class={exampleClass('info')}>Syncing</Pulse>
+          <Pulse status="warning" size={size} class={exampleClass('warning')}>Review</Pulse>
+          <Pulse status="error" size={size} class={exampleClass('error')}>Offline</Pulse>
+          <Pulse status="off" size={size} class={exampleClass('off')}>Off</Pulse>
+        </div>
+      </div>
+    ),
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="pulse-status">Status</label>
+        <select id="pulse-status" value={status} onChange={event => status.value = event.currentTarget.value}>
+          <option value="success">Success</option>
+          <option value="info">Info</option>
+          <option value="warning">Warning</option>
+          <option value="error">Error</option>
+          <option value="off">Off</option>
+        </select>
+        <label class="setting-label" htmlFor="pulse-size">Size</label>
+        <select id="pulse-size" value={size} onChange={event => size.value = event.currentTarget.value}>
+          <option value="small">Small — dense UI</option>
+          <option value="medium">Medium — default</option>
+          <option value="large">Large — hero status</option>
+        </select>
+      </div>
+    )
+  }
+}
+
 function TreeViewPlayground() {
   const activeItem = signal('button')
   const showMeta = signal(true)
@@ -460,6 +503,7 @@ const playgrounds = {
   'check-box': CheckBoxPlayground,
   card: CardPlayground,
   button: ButtonPlayground,
+  pulse: PulsePlayground,
   'tree-view': TreeViewPlayground
 }
 

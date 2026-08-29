@@ -66,6 +66,22 @@ import { TreeLeafIcon } from 'prism-ui/icons'
 const view = <TreeLeafIcon size="14" />
 ```
 
+## Pulse
+
+`Pulse` turns the TreeView branch mark into a living status signal. It supports `success`, `info`, `warning`, `error`, and `off` states, plus `small`, `medium`, and `large` sizes. The `off` state is muted and does not animate:
+
+```jsx
+import { Pulse } from 'prism-ui'
+
+const view = (
+  <Pulse status="success" size="medium">
+    Service healthy
+  </Pulse>
+)
+```
+
+Use `ariaLabel` when the pulse has no visible label. The animation respects `prefers-reduced-motion`.
+
 ## Showcase
 
 Run the Vite showcase:
