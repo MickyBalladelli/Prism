@@ -13,7 +13,7 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '10',
+      meta: '12',
       expanded: true,
       children: [
         {
@@ -99,8 +99,21 @@ function createSidebarItems(link, activeKey) {
           ]
         },
         {
-          label: 'Data & Code',
+          label: 'Overlay',
           meta: '1',
+          expanded: true,
+          children: [
+            {
+              label: 'Popup',
+              href: '/components/popup',
+              onClick: link('/components/popup'),
+              active: activeKey === 'popup'
+            }
+          ]
+        },
+        {
+          label: 'Data & Code',
+          meta: '2',
           expanded: true,
           children: [
             {
@@ -108,6 +121,12 @@ function createSidebarItems(link, activeKey) {
               href: '/components/code-viewer',
               onClick: link('/components/code-viewer'),
               active: activeKey === 'code-viewer'
+            },
+            {
+              label: 'Table',
+              href: '/components/table',
+              onClick: link('/components/table'),
+              active: activeKey === 'table'
             }
           ]
         }

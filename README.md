@@ -151,6 +151,48 @@ Use `onRender` to customize each branch and leaf label. It receives the item and
 
 The exported `treeViewModels` map contains each model's display name and description.
 
+## Popup
+
+`Popup` renders a focused, accessible dialog with a backdrop, Escape dismissal, trapped keyboard focus, and automatic focus restoration. It supports `small`, `medium`, `large`, and `full` sizes plus `center`, `top`, and `bottom` placement:
+
+```jsx
+import { Popup } from 'prism-ui'
+import { signal } from 'matrix'
+
+const open = signal(false)
+
+const view = <Popup
+  open={open}
+  eyebrow="Table state"
+  title="Serialized settings"
+  size="large"
+>
+  Settings go here
+</Popup>
+```
+
+Use `closeOnBackdrop`, `closeOnEscape`, `showClose`, and `restoreFocus` to control dismissal. `children` and `footer` can be values or callback slots receiving a `close(reason, event)` function.
+
+## Table
+
+`Table` is a rich data surface with global and per-column filtering, stable sorting, pagination, Max rows, selection, sticky headers, pinned columns, drag ordering, keyboard-friendly resizing, density modes, loading and empty states, custom cell and header rendering, and CSV export:
+
+```jsx
+import { Table } from 'prism-ui'
+
+const view = <Table
+  title="Campaigns"
+  rows={campaigns}
+  columns={columns}
+  pageSize={10}
+  pageSizeOptions={[10, 20, 50, 'all']}
+  selectable
+  exportable
+/>
+```
+
+Use `storageKey` to persist table shape automatically, including widths, order, visibility, left or right pinning, sort, page size, and density. Use `settings` to restore it yourself. `onSettingsChange` receives both the settings object and stable serialized JSON. `serializeTableSettings` and `parseTableSettings` are exported for storage, URLs, or server-side user preferences.
+
 ## Showcase
 
 Run the Vite showcase:
@@ -163,4 +205,4 @@ npm run dev
 
 Vite watches the local Prism and Matrix source during development, so saved changes hot-reload without a manual build.
 
-Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, and `CodeViewer`.
+Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, `CodeViewer`, `Popup`, and `Table`.

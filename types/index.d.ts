@@ -82,6 +82,34 @@ export interface CodeViewerProps {
   onCopy?: (code: string, event: MouseEvent) => void
 }
 
+export type PopupSize = 'small' | 'medium' | 'large' | 'full'
+export type PopupPlacement = 'center' | 'top' | 'bottom'
+
+export interface PopupSlotContext {
+  close: (reason?: string, event?: Event) => void
+}
+
+export type PopupContent = string | number | boolean | object | null
+
+export interface PopupProps {
+  open?: boolean | Signal<boolean>
+  title?: unknown
+  eyebrow?: unknown
+  children?: PopupContent | ((context: PopupSlotContext) => PopupContent)
+  footer?: PopupContent | ((context: PopupSlotContext) => PopupContent)
+  size?: PopupSize | Signal<PopupSize>
+  placement?: PopupPlacement | Signal<PopupPlacement>
+  showClose?: boolean | Signal<boolean>
+  closeOnBackdrop?: boolean | Signal<boolean>
+  closeOnEscape?: boolean | Signal<boolean>
+  restoreFocus?: boolean | Signal<boolean>
+  class?: string
+  id?: string
+  ariaLabel?: string
+  ariaDescription?: unknown
+  onClose?: (reason: string, event?: Event) => void
+}
+
 export interface SelectOption {
   value: string | number
   label?: string
@@ -111,6 +139,104 @@ export interface SelectProps {
   placement?: SelectPlacement | Signal<SelectPlacement>
   ariaLabel?: string
   class?: string
+}
+
+export type TableDensity = 'compact' | 'comfortable' | 'spacious'
+export type TableSortDirection = 'asc' | 'desc'
+export type TablePageSize = number | 'all' | 'max'
+export type TableCellAlignment = 'start' | 'center' | 'end'
+export type TablePinnedSide = 'left' | 'right'
+
+export interface TableSort {
+  key: string
+  direction: TableSortDirection
+}
+
+export interface TableRenderContext<Row = Record<string, unknown>> {
+  rowIndex: number
+  column: TableColumn<Row>
+  selected: boolean
+}
+
+export interface TableColumn<Row = Record<string, unknown>> {
+  key: string
+  header?: unknown
+  accessor?: keyof Row | string | ((row: Row, rowIndex: number) => unknown)
+  render?: (value: unknown, row: Row, context: TableRenderContext<Row>) => unknown
+  renderHeader?: (column: TableColumn<Row>, context: { sort: TableSortDirection | 'none' }) => unknown
+  searchText?: (value: unknown, row: Row) => string
+  compare?: (left: unknown, right: unknown, leftRow: Row, rightRow: Row) => number
+  filter?: (value: unknown, expected: unknown, row: Row) => boolean
+  fallback?: unknown
+  width?: number | string
+  minWidth?: number
+  maxWidth?: number
+  align?: TableCellAlignment
+  pinned?: TablePinnedSide
+  sortable?: boolean
+  searchable?: boolean
+  resizable?: boolean
+  reorderable?: boolean
+  pinnable?: boolean
+  hideable?: boolean
+  exportable?: boolean
+  hidden?: boolean
+  class?: string
+}
+
+export interface TableSettings {
+  version?: 1
+  columnOrder?: string[]
+  columnWidths?: Record<string, number>
+  hiddenColumns?: string[]
+  pinnedColumns?: Record<string, TablePinnedSide | 'none'>
+  sort?: TableSort | null
+  pageSize?: number | 'all'
+  density?: TableDensity
+}
+
+export interface TableProps<Row = Record<string, unknown>> {
+  rows?: Row[] | Signal<Row[]>
+  columns?: TableColumn<Row>[] | Signal<TableColumn<Row>[]>
+  rowKey?: keyof Row | string | ((row: Row, rowIndex: number) => string | number)
+  filter?: string | Signal<string>
+  filterPlaceholder?: string
+  page?: number | Signal<number>
+  pageSize?: TablePageSize | Signal<TablePageSize>
+  pageSizeOptions?: TablePageSize[]
+  sort?: TableSort
+  selectedKeys?: Array<string | number> | Signal<Array<string | number>>
+  columnFilters?: Record<string, unknown> | Signal<Record<string, unknown>>
+  settings?: TableSettings | string
+  storageKey?: string
+  title?: unknown
+  description?: unknown
+  toolbar?: unknown
+  searchable?: boolean | Signal<boolean>
+  sortable?: boolean | Signal<boolean>
+  resizable?: boolean | Signal<boolean>
+  reorderable?: boolean | Signal<boolean>
+  selectable?: boolean | Signal<boolean>
+  paginated?: boolean | Signal<boolean>
+  exportable?: boolean | Signal<boolean>
+  showSettings?: boolean | Signal<boolean>
+  stickyHeader?: boolean | Signal<boolean>
+  striped?: boolean | Signal<boolean>
+  hoverable?: boolean | Signal<boolean>
+  loading?: boolean | Signal<boolean>
+  density?: TableDensity | Signal<TableDensity>
+  emptyMessage?: unknown
+  class?: string
+  id?: string
+  ariaLabel?: string
+  onRowClick?: (row: Row, context: { key: string, rowIndex: number, event: MouseEvent | KeyboardEvent }) => void
+  onSelectionChange?: (keys: string[], rows: Row[]) => void
+  onSortChange?: (sort: TableSort | null) => void
+  onPageChange?: (page: number) => void
+  onPageSizeChange?: (pageSize: number | 'all') => void
+  onColumnOrderChange?: (keys: string[]) => void
+  onColumnResize?: (key: string, width: number) => void
+  onSettingsChange?: (settings: TableSettings, serialized: string) => void
 }
 
 export interface IconProps {
@@ -191,7 +317,11 @@ export function Badge(props?: BadgeProps): unknown
 export function TextField(props?: TextFieldProps): unknown
 export function CheckBox(props?: CheckBoxProps): unknown
 export function CodeViewer(props?: CodeViewerProps): unknown
+export function Popup(props?: PopupProps): unknown
 export function Select(props?: SelectProps): unknown
+export function Table<Row = Record<string, unknown>>(props?: TableProps<Row>): unknown
+export function parseTableSettings(value: TableSettings | string | null | undefined): TableSettings | null
+export function serializeTableSettings(settings: TableSettings): string
 export function TreeView(props?: TreeViewProps): unknown
 export function PrismMarkIcon(props?: IconProps): unknown
 export function EyeIcon(props?: IconProps): unknown
@@ -251,7 +381,9 @@ export function BadgeComponent(props?: BadgeProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
 export function CodeViewerComponent(props?: CodeViewerProps): ComponentResult
+export function PopupComponent(props?: PopupProps): ComponentResult
 export function SelectComponent(props?: SelectProps): ComponentResult
+export function TableComponent<Row = Record<string, unknown>>(props?: TableProps<Row>): ComponentResult
 export function TreeViewComponent(props?: TreeViewProps): ComponentResult
 export function PulseComponent(props?: PulseProps): ComponentResult
 export const prismTheme: StyleDefinition

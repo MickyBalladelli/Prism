@@ -102,6 +102,26 @@ const components = [
     description: 'An editable syntax-colored code surface with line numbers and one-click copying.',
     highlights: ['Live editing', 'Syntax colors', 'Copy action'],
     details: ['Line-number gutter', 'Custom token colors', 'Keyboard-friendly source']
+  },
+  {
+    key: 'table',
+    path: '/components/table',
+    eyebrow: 'Data & Code',
+    title: 'Table',
+    mark: '11',
+    description: 'A high-performance data surface with rich cells and durable user settings.',
+    highlights: ['Rich columns', 'Resize + reorder', 'Settings as JSON'],
+    details: ['Search, sort, and paginate', 'Selection and CSV export', 'Pinned columns and density modes']
+  },
+  {
+    key: 'popup',
+    path: '/components/popup',
+    eyebrow: 'Overlay',
+    title: 'Popup',
+    mark: '12',
+    description: 'An accessible dialog surface for focused decisions, details, and workflows.',
+    highlights: ['Focus trapped', 'Four sizes', 'Three placements'],
+    details: ['Backdrop and Escape dismissal', 'Flexible body and footer slots', 'Automatic focus restoration']
   }
 ]
 
