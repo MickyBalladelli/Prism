@@ -140,23 +140,58 @@ export const prismThemeValues = Object.freeze({
 export const treeViewModels = Object.freeze({
   prism: Object.freeze({
     label: 'Prism',
-    description: 'Floating glass tiles with the original Prism glow.'
+    description: 'Floating glass tiles with the original Prism glow.',
+    background: Object.freeze({
+      palette: 'midnight',
+      animation: 'veil',
+      baseColor: '#cdd8ee',
+      accentColor: '#3657d6',
+      glowColor: '#7ac7ff'
+    })
   }),
   aurora: Object.freeze({
     label: 'Aurora',
-    description: 'Soft iridescent light, generous spacing, and dreamy color.'
+    description: 'Soft iridescent light, generous spacing, and dreamy color.',
+    background: Object.freeze({
+      palette: 'aurora',
+      animation: 'meridian',
+      baseColor: '#d9d4f0',
+      accentColor: '#6958de',
+      glowColor: '#58bfc6'
+    })
   }),
   nocturne: Object.freeze({
     label: 'Nocturne',
-    description: 'A deep night-sky surface with cool luminous accents.'
+    description: 'A deep night-sky surface with cool luminous accents.',
+    background: Object.freeze({
+      palette: 'midnight',
+      animation: 'veil',
+      baseColor: '#080d1b',
+      accentColor: '#7b8dff',
+      glowColor: '#59c8ee'
+    })
   }),
   editorial: Object.freeze({
     label: 'Editorial',
-    description: 'Quiet paper, strong typography, and a precise reading rhythm.'
+    description: 'Quiet paper, strong typography, and a precise reading rhythm.',
+    background: Object.freeze({
+      palette: 'tide',
+      animation: 'silk',
+      baseColor: '#e8dfd2',
+      accentColor: '#2e6878',
+      glowColor: '#df7654'
+    })
   }),
   terminal: Object.freeze({
     label: 'Terminal',
-    description: 'A focused command-deck treatment for technical navigation.'
+    description: 'A focused command-deck treatment for technical navigation.',
+    background: Object.freeze({
+      palette: 'tide',
+      animation: 'zephyr',
+      baseColor: '#07100e',
+      accentColor: '#45d483',
+      glowColor: '#ffbd72'
+    })
   })
 })
 
@@ -1232,6 +1267,45 @@ export const prismTheme = globalCss(`
 
   .prism-code-token-punctuation {
     color: var(--prism-code-punctuation);
+  }
+
+  .prism-header {
+    z-index: 40;
+    width: 100%;
+    border-bottom: 1px solid rgb(255 255 255 / 12%);
+    background: color-mix(in srgb, var(--prism-color-surface-glass, #f7f4ff) 72%, transparent);
+    box-shadow: 0 .45rem 1.6rem rgb(5 11 29 / 12%);
+    backdrop-filter: blur(22px) saturate(1.25);
+  }
+
+  .prism-header-sticky {
+    z-index: 40;
+  }
+
+  .prism-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.7rem;
+    padding: .7rem 1.2rem;
+  }
+
+  .prism-header-start,
+  .prism-header-end {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    min-width: 0;
+  }
+
+  .prism-header-start {
+    flex: 1 1 auto;
+  }
+
+  .prism-header-end {
+    flex: 0 1 auto;
+    justify-content: flex-end;
   }
 
   .prism-background {

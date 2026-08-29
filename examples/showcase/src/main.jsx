@@ -1,10 +1,10 @@
 import { createRouter, mount, routerView } from 'matrix'
-import { prismTheme } from 'prism-ui'
+import { Background, prismTheme } from 'prism-ui'
 import { ComponentPage } from './pages/component-page.jsx'
 import { HomePage } from './pages/home-page.jsx'
 import { IconsPage } from './pages/icons-page.jsx'
 import { NotFoundPage } from './pages/not-found-page.jsx'
-import { showcaseThemeClass } from './theme-picker.jsx'
+import { showcaseBackgroundAccentColor, showcaseBackgroundAnimated, showcaseBackgroundBaseColor, showcaseBackgroundGlowColor, showcaseBackgroundPalette, showcaseBackgroundRecipe, showcaseThemeClass } from './theme-picker.jsx'
 import './style.css'
 
 let router
@@ -30,6 +30,22 @@ const appView = routerView(router)
 
 mount(() => (
   <div class={showcaseThemeClass} use:style={prismTheme}>
-    {appView}
+    <Background
+      class="showcase-app-background"
+      palette={showcaseBackgroundPalette}
+      animation={showcaseBackgroundRecipe}
+      animated={showcaseBackgroundAnimated}
+      baseColor={showcaseBackgroundBaseColor}
+      accentColor={showcaseBackgroundAccentColor}
+      glowColor={showcaseBackgroundGlowColor}
+      intensity={0.85}
+      overlayOpacity={0.2}
+      minHeight="100dvh"
+      padding="0"
+      radius="0"
+      ariaLabel="Prism UI"
+    >
+      {appView}
+    </Background>
   </div>
 ), document.querySelector('#app'))

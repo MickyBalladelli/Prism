@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, ImageIcon, Label, MoreHorizontalIcon, Popup, Pulse, Select, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
+import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, Popup, Pulse, Select, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
@@ -13,6 +13,11 @@ const componentInfo = {
     eyebrow: 'Layout',
     title: 'Label',
     description: 'Set size, typeface, and weight, then outline each character so the words stay readable over any motion behind them.'
+  },
+  header: {
+    eyebrow: 'Layout',
+    title: 'Header',
+    description: 'A sticky application bar with a leading slot and a trailing slot for tools like theme controls.'
   },
   box: {
     eyebrow: 'Layout',
@@ -93,6 +98,7 @@ const playgroundRuntime = {
   CodeViewer,
   FileIcon,
   FolderIcon,
+  Header,
   ImageIcon,
   Label,
   MoreHorizontalIcon,
@@ -359,6 +365,59 @@ function LabelPlayground() {
   }
 }
 
+function HeaderPlayground() {
+  const title = signal('prism ui')
+  const eyebrow = signal('Component explorer')
+  const sticky = signal(true)
+  const stickyTop = signal('0px')
+  const showTrailing = signal(true)
+  const trailingLabel = computed(() => showTrailing.value ? 'Theme model' : 'Hidden')
+  const trailing = computed(() => showTrailing.value
+    ? html`<span class="header-demo-chip">${trailingLabel}</span>`
+    : null)
+  const codePreview = createCodePreview(codeLines(
+    'html`',
+    '  <div class="playground-header-frame">',
+    '    ${Header({',
+    '      sticky,',
+    '      stickyTop,',
+    '      trailing,',
+    '      children: html`<span class="header-demo-brand"><strong>${title}</strong><small>${eyebrow}</small></span>`',
+    '    })}',
+    '    <article class="header-demo-panel"><strong>Scroll the preview</strong><span>The Header stays pinned to the top of this frame while the rest of the surface moves.</span></article>',
+    '    <article class="header-demo-panel"><strong>Trailing slot</strong><span>Put tools, theme pickers, or actions in trailing. The bar stays readable over motion.</span></article>',
+    '    <article class="header-demo-panel"><strong>App chrome</strong><span>This is the same Header used at the top of the showcase.</span></article>',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, Header, title, eyebrow, sticky, stickyTop, trailing, trailingLabel })
+
+  return {
+    code: codePreview.code,
+    preview: codePreview.preview,
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="header-title">Title</label>
+        <TextField id="header-title" value={title} placeholder="Title" />
+        <label class="setting-label" htmlFor="header-eyebrow">Eyebrow</label>
+        <TextField id="header-eyebrow" value={eyebrow} placeholder="Eyebrow" />
+        <CheckBox checked={sticky}>Sticky to top</CheckBox>
+        <label class="setting-label" htmlFor="header-sticky-top">Sticky top</label>
+        <Select
+          id="header-sticky-top"
+          value={stickyTop}
+          options={[
+            { value: '0px', label: '0px — flush to top' },
+            { value: '.75rem', label: '.75rem — compact offset' },
+            { value: '1.5rem', label: '1.5rem — roomy offset' }
+          ]}
+        />
+        <CheckBox checked={showTrailing}>Show trailing slot</CheckBox>
+        <p class="playground-note">Sticky is on by default. Scroll the live preview to keep the bar in view.</p>
+      </div>
+    )
+  }
+}
+
 function BoxPlayground() {
   const content = signal('Live Box content')
   const tone = signal('lavender')
@@ -444,26 +503,23 @@ function BoxPlayground() {
 
 function TextFieldPlayground() {
   const value = signal('Ada Lovelace')
-  const placeholder = signal('Type your name')
   const required = signal(false)
   const disabled = signal(false)
   const size = signal('medium')
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="field-playground">',
-    '    ${TextField({ value, placeholder, required, disabled, size })}',
+    '    ${TextField({ value, placeholder: "Type your name", required, disabled, size })}',
     '    <p class="playground-note">Current value: <strong>${value}</strong></p>',
     '  </div>',
     '`'
-  ), { ...playgroundRuntime, value, placeholder, required, disabled, size })
+  ), { ...playgroundRuntime, value, required, disabled, size })
 
   return {
     code: codePreview.code,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
-        <label class="setting-label" htmlFor="field-placeholder">Placeholder</label>
-        <TextField id="field-placeholder" value={placeholder} placeholder="Placeholder" />
         <label class="setting-label" htmlFor="field-size">Size</label>
         <Select
           id="field-size"
@@ -1340,6 +1396,7 @@ function TreeViewPlayground() {
 const playgrounds = {
   background: BackgroundPlayground,
   label: LabelPlayground,
+  header: HeaderPlayground,
   box: BoxPlayground,
   'text-field': TextFieldPlayground,
   select: SelectPlayground,

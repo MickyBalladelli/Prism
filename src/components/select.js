@@ -171,7 +171,7 @@ export function Select(props = {}) {
         ? available.bottom
         : Math.max(available.top, available.bottom)
 
-    menu.style.maxHeight = `${Math.max(4, Math.min(288, availableHeight))}px`
+    menu.style.maxHeight = `${Math.min(288, Math.max(8, availableHeight))}px`
     currentPlacement.value = nextPlacement
   }
 

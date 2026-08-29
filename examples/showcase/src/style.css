@@ -11,9 +11,9 @@
 }
 
 .showcase-app {
-  min-height: 100vh;
+  min-height: 100dvh;
   color: var(--prism-color-ink);
-  background: var(--prism-color-page);
+  background: transparent;
   transition: background-color .3s ease, color .3s ease;
 }
 
@@ -21,14 +21,118 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(circle at 15% 10%, var(--prism-color-white-strong), transparent 28rem),
-    var(--prism-color-page);
+  background: var(--prism-color-page);
+}
+
+.showcase-app-background.prism-background {
+  min-height: 100dvh;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.showcase-app-background .prism-background-layer,
+.showcase-app-background .prism-background-wash {
+  position: fixed;
+  z-index: 0;
+}
+
+.showcase-app-background .prism-background-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  padding: 0;
 }
 
 button,
 input {
   font: inherit;
+}
+
+.showcase-header.prism-header {
+  border-bottom-color: rgb(255 255 255 / 10%);
+}
+
+.showcase-header .prism-header-bar {
+  width: min(100% - 2rem, 92rem);
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.showcase-header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.showcase-header-brand-copy {
+  display: grid;
+  gap: .12rem;
+  min-width: 0;
+}
+
+.showcase-header-brand-copy strong {
+  color: var(--prism-color-ink);
+  font-size: var(--prism-font-size-small);
+  font-weight: 840;
+  letter-spacing: .18em;
+  text-transform: lowercase;
+}
+
+.showcase-header-brand-copy small {
+  color: var(--prism-color-text-subtle);
+  font-size: var(--prism-font-size-micro);
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.showcase-settings-button {
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: 0 0 2.4rem;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--prism-color-border);
+  border-radius: .8rem;
+  color: var(--prism-color-ink);
+  background: color-mix(in srgb, var(--prism-color-surface-glass) 82%, transparent);
+  box-shadow: 0 .25rem .8rem rgb(5 11 29 / 8%);
+  cursor: pointer;
+  transition: border-color .18s ease, color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.showcase-settings-button:hover {
+  border-color: var(--prism-color-focus);
+  color: var(--prism-color-action);
+  background: var(--prism-color-lavender-surface);
+  transform: translateY(-1px);
+}
+
+.showcase-settings-button:focus-visible {
+  outline: 2px solid var(--prism-color-focus);
+  outline-offset: 2px;
+}
+
+.showcase-settings-popup.prism-popup-panel {
+  overflow: visible;
+}
+
+.showcase-settings-popup .prism-popup-body {
+  overflow: visible;
+}
+
+.showcase-settings-popup .prism-select-menu {
+  z-index: 30;
+}
+
+.showcase-settings-list {
+  gap: .7rem;
 }
 
 .showcase-frame {
@@ -37,61 +141,13 @@ input {
   gap: 1.25rem;
   width: min(100% - 2rem, 92rem);
   margin: 0 auto;
-  padding: 1.25rem 0 2rem;
+  padding: 1.15rem 0 2rem;
   align-items: start;
-}
-
-.showcase-topbar {
-  display: flex;
-  grid-column: 1 / -1;
-  justify-content: flex-end;
-}
-
-.showcase-theme-picker {
-  display: grid;
-  grid-template-columns: auto minmax(8.5rem, 11rem);
-  gap: .7rem;
-  align-items: center;
-  width: min(100%, 21rem);
-  padding: .45rem;
-  border: 1px solid var(--prism-color-border);
-  border-radius: calc(var(--prism-radius-control) + .35rem);
-  background: var(--prism-color-surface-glass);
-  box-shadow: 0 .35rem 1rem rgb(37 49 78 / 7%);
-  backdrop-filter: blur(16px);
-}
-
-.showcase-theme-copy {
-  display: grid;
-  gap: .1rem;
-  min-width: 0;
-  padding-left: .5rem;
-}
-
-.showcase-theme-label {
-  color: var(--prism-color-text-subtle);
-  font-size: var(--prism-font-size-micro);
-  font-weight: 800;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.showcase-theme-copy strong {
-  overflow: hidden;
-  color: var(--prism-color-ink);
-  font-size: var(--prism-font-size-small);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.showcase-theme-picker .prism-select-trigger {
-  padding: .55rem .65rem;
-  font-size: var(--prism-font-size-small);
 }
 
 .showcase-sidebar {
   position: sticky;
-  top: 1.2rem;
+  top: 5.4rem;
   display: grid;
   gap: 1rem;
   padding: 1.1rem;
@@ -883,6 +939,74 @@ h1 em {
   line-height: 1.6;
 }
 
+.playground-header-frame {
+  display: grid;
+  gap: .85rem;
+  width: min(100%, 30rem);
+  max-height: 18rem;
+  overflow: auto;
+  border: 1px solid var(--prism-color-border);
+  border-radius: calc(var(--prism-radius-surface) + .1rem);
+  background: linear-gradient(180deg, var(--prism-color-white), var(--prism-color-surface-tint));
+  box-shadow: inset 0 1px 0 var(--prism-color-white-strong);
+}
+
+.playground-header-frame .prism-header {
+  border-radius: calc(var(--prism-radius-surface) + .05rem);
+}
+
+.header-demo-brand {
+  display: grid;
+  gap: .12rem;
+}
+
+.header-demo-brand strong {
+  color: var(--prism-color-ink);
+  font-size: var(--prism-font-size-small);
+  font-weight: 820;
+  letter-spacing: .12em;
+  text-transform: lowercase;
+}
+
+.header-demo-brand small {
+  color: var(--prism-color-text-subtle);
+  font-size: var(--prism-font-size-micro);
+  font-weight: 700;
+}
+
+.header-demo-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: .4rem .7rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: 999px;
+  color: var(--prism-color-ink);
+  background: var(--prism-color-white);
+  font-size: var(--prism-font-size-micro);
+  font-weight: 780;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.header-demo-panel {
+  display: grid;
+  gap: .35rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: 1rem;
+  background: var(--prism-color-white);
+}
+
+.header-demo-panel strong {
+  color: var(--prism-color-ink);
+}
+
+.header-demo-panel span {
+  color: var(--prism-color-text-soft);
+  font-size: var(--prism-font-size-small);
+  line-height: 1.5;
+}
+
 .playground-box-frame {
   width: min(100%, 30rem);
   max-height: 18rem;
@@ -1594,19 +1718,6 @@ h2 {
   font-size: .7em;
   font-weight: 650;
   letter-spacing: .02em;
-}
-
-.prism-theme-model-nocturne .showcase-theme-picker,
-.prism-theme-model-terminal .showcase-theme-picker {
-  box-shadow: 0 .45rem 1.1rem rgb(0 0 0 / 24%);
-}
-
-.prism-theme-model-nocturne .showcase-theme-picker {
-  background: rgb(18 27 53 / 88%);
-}
-
-.prism-theme-model-terminal .showcase-theme-picker {
-  background: rgb(13 24 21 / 92%);
 }
 
 .box-preview-icon {

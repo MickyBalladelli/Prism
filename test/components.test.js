@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Background, Box, Button, Card, CheckBox, CodeViewer, Label, TextField, TreeView } from '../src/index.js'
+import { Background, Box, Button, Card, CheckBox, CodeViewer, Header, Label, TextField, TreeView } from '../src/index.js'
 import { signal } from 'matrix'
 
 test('components expose Matrix templates', () => {
@@ -22,6 +22,8 @@ test('components expose Matrix templates', () => {
   assert.equal(typeof tertiaryButton, 'object')
   assert.equal(typeof errorButton, 'object')
   assert.equal(typeof successButton, 'object')
+  const header = Header({ children: 'Prism', trailing: 'Theme' })
+  assert.equal(typeof header, 'object')
   assert.equal(typeof treeView, 'object')
   assert.equal(text.values.length, 9)
   assert.equal(button.values.includes('primary'), true)
@@ -71,6 +73,14 @@ test('Box and Card support sticky layout props', () => {
   assert.equal(cardStyle?.value.position, 'sticky')
   assert.equal(cardStyle?.value.top, '2rem')
   assert.equal(cardStyle?.value.alignSelf, 'start')
+})
+
+test('Header is sticky to the top by default', () => {
+  const header = Header({ children: 'Prism' })
+  const styleValue = header.values.find(value => value?.kind === 'computed' && typeof value.value === 'object' && value.value.position === 'sticky')
+
+  assert.equal(styleValue?.value.position, 'sticky')
+  assert.equal(styleValue?.value.top, '0px')
 })
 
 test('Background exposes a reusable animated surface', () => {

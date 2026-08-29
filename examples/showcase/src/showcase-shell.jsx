@@ -1,7 +1,7 @@
 import { html } from 'matrix'
-import { FileIcon, FolderIcon, TreeView } from 'prism-ui'
+import { FileIcon, FolderIcon, Header, TreeView } from 'prism-ui'
 import { iconCategories, iconCount } from './icon-catalog.js'
-import { ThemePicker, showcaseThemeModel } from './theme-picker.jsx'
+import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'
 
 function sidebarItemDetail(item, context) {
   if (context.type === 'branch') {
@@ -40,12 +40,12 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '14',
+      meta: '15',
       expanded: true,
       children: [
         {
           label: 'Layout',
-          meta: '4',
+          meta: '5',
           expanded: true,
           children: [
             {
@@ -61,6 +61,13 @@ function createSidebarItems(link, activeKey) {
               onClick: link('/components/label'),
               active: activeKey === 'label',
               detail: 'Readable over motion'
+            },
+            {
+              label: 'Header',
+              href: '/components/header',
+              onClick: link('/components/header'),
+              active: activeKey === 'header',
+              detail: 'Sticky app bar'
             },
             {
               label: 'Box',
@@ -214,21 +221,23 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
   const items = createSidebarItems(link, activeKey)
 
   return (
-    <div class="showcase-frame">
-      <div class="showcase-topbar">
-        <ThemePicker />
+    <div class="showcase-shell">
+      <Header class="showcase-header" ariaLabel="Prism UI" trailing={<ThemePicker />}>
+        <a class="showcase-header-brand" href="/" onClick={link('/')}>
+          <span class="sidebar-brand-dot" aria-hidden="true"></span>
+          <span class="showcase-header-brand-copy">
+            <strong>prism ui</strong>
+            <small>Component explorer</small>
+          </span>
+        </a>
+      </Header>
+      <SettingsPopup />
+      <div class="showcase-frame">
+        <aside class="showcase-sidebar">
+          <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
+        </aside>
+        <div class="showcase-main">{children}</div>
       </div>
-      <aside class="showcase-sidebar">
-        <div class="sidebar-brand">
-          <div class="sidebar-brand-row">
-            <span class="sidebar-brand-dot" aria-hidden="true"></span>
-            <span class="sidebar-brand-name">prism ui</span>
-          </div>
-          <p class="sidebar-brand-copy">Component explorer</p>
-        </div>
-        <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
-      </aside>
-      <div class="showcase-main">{children}</div>
     </div>
   )
 }

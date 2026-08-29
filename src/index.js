@@ -1,4 +1,6 @@
 export {
+  Header,
+  HeaderComponent,
   Background,
   BackgroundComponent,
   Badge,

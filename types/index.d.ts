@@ -63,6 +63,18 @@ export interface BackgroundProps {
   ariaLabel?: string
 }
 
+export interface HeaderProps {
+  children?: unknown
+  trailing?: unknown
+  class?: string
+  id?: string
+  role?: string
+  style?: string | Record<string, string>
+  sticky?: boolean | Signal<boolean>
+  stickyTop?: string | Signal<string>
+  ariaLabel?: string
+}
+
 export interface CardProps extends BoxProps {
   actions?: unknown
 }
@@ -348,9 +360,18 @@ export interface TreeViewRenderContext {
 export type TreeViewModel = 'prism' | 'aurora' | 'nocturne' | 'editorial' | 'terminal'
 export type TreeViewItemVariant = 'framed' | 'minimal'
 
+export interface ThemeBackgroundRecipe {
+  palette: BackgroundPalette
+  animation: BackgroundAnimation
+  baseColor: string
+  accentColor: string
+  glowColor: string
+}
+
 export interface TreeViewModelDefinition {
   label: string
   description: string
+  background: ThemeBackgroundRecipe
 }
 
 export const treeViewModels: Readonly<Record<TreeViewModel, TreeViewModelDefinition>>
@@ -367,6 +388,7 @@ export interface TreeViewProps {
 
 export function Label(props?: LabelProps): unknown
 export function Background(props?: BackgroundProps): unknown
+export function Header(props?: HeaderProps): unknown
 export function Box(props?: BoxProps): unknown
 export function Button(props?: ButtonProps): unknown
 export function Card(props?: CardProps): unknown
@@ -433,6 +455,7 @@ export function EyeOffIcon(props?: IconProps): unknown
 export function Pulse(props?: PulseProps): unknown
 export function LabelComponent(props?: LabelProps): ComponentResult
 export function BackgroundComponent(props?: BackgroundProps): ComponentResult
+export function HeaderComponent(props?: HeaderProps): ComponentResult
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function CardComponent(props?: CardProps): ComponentResult

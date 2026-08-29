@@ -24,6 +24,16 @@ const components = [
     details: ['Four sizes', 'Sans, serif, and mono', 'Light or dark character borders']
   },
   {
+    key: 'header',
+    path: '/components/header',
+    eyebrow: 'Layout',
+    title: 'Header',
+    mark: '15',
+    description: 'A sticky application bar with a leading slot and a trailing slot for tools.',
+    highlights: ['Sticky by default', 'Leading and trailing', 'App chrome'],
+    details: ['Pins to the top', 'Brand and tools', 'Works over animation']
+  },
+  {
     key: 'box',
     path: '/components/box',
     eyebrow: 'Layout',

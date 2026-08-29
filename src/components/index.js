@@ -1,3 +1,4 @@
+export { Header, HeaderComponent } from './header.js'
 export { Background, BackgroundComponent } from './background.js'
 export { Box, BoxComponent } from './box.js'
 export { Badge, BadgeComponent } from './badge.js'
