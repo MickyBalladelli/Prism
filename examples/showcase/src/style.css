@@ -235,9 +235,29 @@ h1 em {
   accent-color: var(--prism-color-action);
 }
 
+.button-variant-group {
+  display: grid;
+  gap: .75rem;
+}
+
+.button-group-label {
+  margin: 0;
+  color: var(--prism-color-text-soft);
+  font-size: var(--prism-font-size-label);
+  font-weight: 780;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
 .button-variant-preview {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .9rem;
+}
+
+.button-status-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: .9rem;
 }
 
@@ -767,6 +787,7 @@ input[type="text"]:required:invalid {
   }
 
   .button-variant-preview,
+  .button-status-preview,
   .button-palette-selector {
     grid-template-columns: 1fr;
   }

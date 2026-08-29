@@ -25,7 +25,7 @@ const componentInfo = {
   button: {
     eyebrow: 'Forms',
     title: 'Button',
-    description: 'Change the label, switch variants, try three palettes, and test the click behavior.'
+    description: 'Change the label, compare core and feedback variants, try three palettes, and test the click behavior.'
   }
 }
 
@@ -185,6 +185,22 @@ function ButtonPlayground() {
       return 'Tertiary'
     }
 
+    if (variant.value === 'error') {
+      return 'Error'
+    }
+
+    if (variant.value === 'warning') {
+      return 'Warning'
+    }
+
+    if (variant.value === 'information') {
+      return 'Information'
+    }
+
+    if (variant.value === 'success') {
+      return 'Success'
+    }
+
     return 'Primary'
   })
   const paletteName = computed(() => {
@@ -207,36 +223,84 @@ function ButtonPlayground() {
   return {
     preview: (
       <div class="button-playground" data-prism-palette={palette}>
-        <div class="button-variant-preview" role="group" aria-label="Button variants in action">
-          <div class="button-variant-card">
-            <p class="button-variant-label">Primary</p>
-            <Button
-              variant="primary"
-              disabled={disabled}
-              onClick={() => handleVariantClick('primary')}
-            >
-              {label}
-            </Button>
+        <div class="button-variant-group">
+          <p class="button-group-label">Core roles</p>
+          <div class="button-variant-preview" role="group" aria-label="Button variants in action">
+            <div class="button-variant-card">
+              <p class="button-variant-label">Primary</p>
+              <Button
+                variant="primary"
+                disabled={disabled}
+                onClick={() => handleVariantClick('primary')}
+              >
+                {label}
+              </Button>
+            </div>
+            <div class="button-variant-card">
+              <p class="button-variant-label">Secondary</p>
+              <Button
+                variant="secondary"
+                disabled={disabled}
+                onClick={() => handleVariantClick('secondary')}
+              >
+                {label}
+              </Button>
+            </div>
+            <div class="button-variant-card">
+              <p class="button-variant-label">Tertiary</p>
+              <Button
+                variant="tertiary"
+                disabled={disabled}
+                onClick={() => handleVariantClick('tertiary')}
+              >
+                {label}
+              </Button>
+            </div>
           </div>
-          <div class="button-variant-card">
-            <p class="button-variant-label">Secondary</p>
-            <Button
-              variant="secondary"
-              disabled={disabled}
-              onClick={() => handleVariantClick('secondary')}
-            >
-              {label}
-            </Button>
-          </div>
-          <div class="button-variant-card">
-            <p class="button-variant-label">Tertiary</p>
-            <Button
-              variant="tertiary"
-              disabled={disabled}
-              onClick={() => handleVariantClick('tertiary')}
-            >
-              {label}
-            </Button>
+        </div>
+        <div class="button-variant-group">
+          <p class="button-group-label">Feedback states</p>
+          <div class="button-status-preview" role="group" aria-label="Feedback button states">
+            <div class="button-variant-card">
+              <p class="button-variant-label">Error</p>
+              <Button
+                variant="error"
+                disabled={disabled}
+                onClick={() => handleVariantClick('error')}
+              >
+                {label}
+              </Button>
+            </div>
+            <div class="button-variant-card">
+              <p class="button-variant-label">Warning</p>
+              <Button
+                variant="warning"
+                disabled={disabled}
+                onClick={() => handleVariantClick('warning')}
+              >
+                {label}
+              </Button>
+            </div>
+            <div class="button-variant-card">
+              <p class="button-variant-label">Information</p>
+              <Button
+                variant="information"
+                disabled={disabled}
+                onClick={() => handleVariantClick('information')}
+              >
+                {label}
+              </Button>
+            </div>
+            <div class="button-variant-card">
+              <p class="button-variant-label">Success</p>
+              <Button
+                variant="success"
+                disabled={disabled}
+                onClick={() => handleVariantClick('success')}
+              >
+                {label}
+              </Button>
+            </div>
           </div>
         </div>
         <p class="playground-note">Palette: <strong>{paletteName}</strong></p>
