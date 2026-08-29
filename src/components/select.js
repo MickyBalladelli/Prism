@@ -1,4 +1,4 @@
-import { component, computed, html, signal } from 'matrix'
+import { component, computed, html, signal } from '@mickyballadelli/matrix'
 
 const baseClassName = 'prism-select'
 const placementValues = new Set(['bottom', 'top', 'left', 'right'])

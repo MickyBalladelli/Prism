@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "matrix": "file:../../../Matrix",
+    "@mickyballadelli/matrix": "0.1.0-alpha.0",
     "prism-ui": "file:../.."
   },
   "devDependencies": {

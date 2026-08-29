@@ -1,5 +1,5 @@
-import { computed, html, signal } from 'matrix'
-import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, Popup, Pulse, Select, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
+import { computed, html, signal } from '@mickyballadelli/matrix'
+import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, SettingsIcon, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
@@ -47,7 +47,7 @@ const componentInfo = {
   button: {
     eyebrow: 'Forms',
     title: 'Button',
-    description: 'Change the label, compare core and feedback variants, try three palettes, and test the click behavior.'
+    description: 'Compose text and icons, choose their order, then tune size, shape, state, width, variant, and palette.'
   },
   badge: {
     eyebrow: 'Status',
@@ -96,15 +96,19 @@ const playgroundRuntime = {
   Card,
   CheckBox,
   CodeViewer,
+  DownloadIcon,
   FileIcon,
   FolderIcon,
   Header,
   ImageIcon,
   Label,
   MoreHorizontalIcon,
+  PlusIcon,
   Popup,
   Pulse,
   Select,
+  SendIcon,
+  SettingsIcon,
   SparkIcon,
   Table,
   TextField,
@@ -697,81 +701,119 @@ function CardPlayground() {
 }
 
 function ButtonPlayground() {
-  const label = signal('Press me')
-  const disabled = signal(false)
-  const clickCount = signal(0)
+  const label = signal('Launch project')
+  const showLabel = signal(true)
+  const iconName = signal('spark')
+  const iconPosition = signal('start')
   const variant = signal('primary')
+  const size = signal('large')
+  const shape = signal('rounded')
+  const fullWidth = signal(false)
+  const loading = signal(false)
+  const loadingLabel = signal('Launching project')
+  const pressed = signal(false)
+  const disabled = signal(false)
+  const ariaLabel = signal('Launch project')
   const palette = signal('cobalt')
-  const variantName = computed(() => {
-    if (variant.value === 'secondary') {
-      return 'Secondary'
-    }
-
-    if (variant.value === 'tertiary') {
-      return 'Tertiary'
-    }
-
-    if (variant.value === 'error') {
-      return 'Error'
-    }
-
-    if (variant.value === 'warning') {
-      return 'Warning'
-    }
-
-    if (variant.value === 'information') {
-      return 'Information'
-    }
-
-    if (variant.value === 'success') {
-      return 'Success'
-    }
-
-    return 'Primary'
-  })
-  const paletteName = computed(() => {
-    if (palette.value === 'iris') {
-      return 'Iris'
-    }
-
-    if (palette.value === 'teal') {
-      return 'Teal'
-    }
-
-    return 'Cobalt'
-  })
-
-  const handleVariantClick = nextVariant => {
-    variant.value = nextVariant
-    clickCount.update(value => value + 1)
+  const clickCount = signal(0)
+  const buttonIcons = {
+    spark: SparkIcon,
+    plus: PlusIcon,
+    send: SendIcon,
+    download: DownloadIcon,
+    settings: SettingsIcon
   }
+  const buttonIcon = computed(() => {
+    const Icon = buttonIcons[iconName.value]
+    return Icon ? Icon({ size: '1em' }) : undefined
+  })
+  const variantName = computed(() => ({
+    primary: 'Primary',
+    secondary: 'Secondary',
+    tertiary: 'Tertiary',
+    error: 'Error',
+    warning: 'Warning',
+    information: 'Information',
+    success: 'Success'
+  })[variant.value] || 'Primary')
+  const iconNameLabel = computed(() => ({
+    none: 'No icon',
+    spark: 'Spark',
+    plus: 'Plus',
+    send: 'Send',
+    download: 'Download',
+    settings: 'Settings'
+  })[iconName.value] || 'No icon')
 
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="button-playground" data-prism-palette="${palette}">',
-    '    <div class="button-variant-group">',
-    '      <p class="button-group-label">Core roles</p>',
-    '      <div class="button-variant-preview" role="group" aria-label="Button variants in action">',
-    '        ${Button({ variant: "primary", disabled, onClick: () => handleVariantClick("primary"), children: label })}',
-    '        ${Button({ variant: "secondary", disabled, onClick: () => handleVariantClick("secondary"), children: label })}',
-    '        ${Button({ variant: "tertiary", disabled, onClick: () => handleVariantClick("tertiary"), children: label })}',
+    '    <section class="button-composer">',
+    '      <div class="button-composer-head">',
+    '        <div>',
+    '          <p class="button-group-label">Live composition</p>',
+    '          <h3>One button, every voice.</h3>',
+    '          <p>Remove the text, move the icon, or turn the action into a loading state.</p>',
+    '        </div>',
+    '        <span class="button-click-count"><strong>${clickCount}</strong> clicks</span>',
     '      </div>',
-    '    </div>',
-    '    <div class="button-variant-group">',
-    '      <p class="button-group-label">Feedback states</p>',
-    '      <div class="button-status-preview" role="group" aria-label="Feedback button states">',
-    '        ${Button({ variant: "error", disabled, onClick: () => handleVariantClick("error"), children: label })}',
-    '        ${Button({ variant: "warning", disabled, onClick: () => handleVariantClick("warning"), children: label })}',
-    '        ${Button({ variant: "information", disabled, onClick: () => handleVariantClick("information"), children: label })}',
-    '        ${Button({ variant: "success", disabled, onClick: () => handleVariantClick("success"), children: label })}',
+    '      <div class="button-demo-well">',
+    '        ${Button({',
+    '          class: "button-live-example",',
+    '          label,',
+    '          showLabel,',
+    '          icon: buttonIcon,',
+    '          iconPosition,',
+    '          variant,',
+    '          size,',
+    '          shape,',
+    '          fullWidth,',
+    '          loading,',
+    '          loadingLabel,',
+    '          pressed,',
+    '          disabled,',
+    '          ariaLabel,',
+    '          onClick: () => clickCount.update(value => value + 1)',
+    '        })}',
     '      </div>',
-    '    </div>',
-    '    <p class="playground-note">Palette: <strong>${paletteName}</strong></p>',
-    '    <p class="playground-note">Last clicked: <strong>${variantName}</strong></p>',
-    '    <p class="playground-note">Clicks: <strong>${clickCount}</strong></p>',
+    '      <div class="button-composer-meta" aria-label="Current button configuration">',
+    '        <span>${variantName}</span>',
+    '        <span>${size}</span>',
+    '        <span>${shape}</span>',
+    '        <span>${iconNameLabel}</span>',
+    '      </div>',
+    '      <div class="button-recipe-shelf">',
+    '        <p class="button-group-label">Composition recipes</p>',
+    '        <div class="button-recipe-row" role="group" aria-label="Button composition examples">',
+    '          ${Button({ variant: "secondary", size: "small", label: "Text only" })}',
+    '          ${Button({ variant: "tertiary", size: "small", label: "Create", icon: PlusIcon({ size: "1em" }) })}',
+    '          ${Button({ variant: "information", size: "small", label: "Send", icon: SendIcon({ size: "1em" }), iconPosition: "end" })}',
+    '          ${Button({ variant: "secondary", size: "small", shape: "pill", label: "Settings", showLabel: false, icon: SettingsIcon({ size: "1em" }), ariaLabel: "Settings" })}',
+    '        </div>',
+    '      </div>',
+    '    </section>',
     '  </div>',
     '`'
-  ), { ...playgroundRuntime, palette, label, disabled, handleVariantClick, paletteName, variantName, clickCount })
+  ), {
+    ...playgroundRuntime,
+    ariaLabel,
+    buttonIcon,
+    clickCount,
+    disabled,
+    fullWidth,
+    iconNameLabel,
+    iconPosition,
+    label,
+    loading,
+    loadingLabel,
+    palette,
+    pressed,
+    shape,
+    showLabel,
+    size,
+    variant,
+    variantName
+  })
 
   return {
     code: codePreview.code,
@@ -780,6 +822,71 @@ function ButtonPlayground() {
       <div class="settings-list">
         <label class="setting-label" htmlFor="button-label">Label</label>
         <TextField id="button-label" value={label} placeholder="Button label" />
+        <CheckBox checked={showLabel}>Show label</CheckBox>
+        <label class="setting-label" htmlFor="button-icon">Icon</label>
+        <Select
+          id="button-icon"
+          value={iconName}
+          options={[
+            { value: 'none', label: 'No icon' },
+            { value: 'spark', label: 'Spark' },
+            { value: 'plus', label: 'Plus' },
+            { value: 'send', label: 'Send' },
+            { value: 'download', label: 'Download' },
+            { value: 'settings', label: 'Settings' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="button-icon-position">Icon position</label>
+        <Select
+          id="button-icon-position"
+          value={iconPosition}
+          options={[
+            { value: 'start', label: 'Start' },
+            { value: 'end', label: 'End' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="button-variant">Variant</label>
+        <Select
+          id="button-variant"
+          value={variant}
+          options={[
+            { value: 'primary', label: 'Primary' },
+            { value: 'secondary', label: 'Secondary' },
+            { value: 'tertiary', label: 'Tertiary' },
+            { value: 'success', label: 'Success' },
+            { value: 'information', label: 'Information' },
+            { value: 'warning', label: 'Warning' },
+            { value: 'error', label: 'Error' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="button-size">Size</label>
+        <Select
+          id="button-size"
+          value={size}
+          options={[
+            { value: 'small', label: 'Small' },
+            { value: 'medium', label: 'Medium' },
+            { value: 'large', label: 'Large' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="button-shape">Shape</label>
+        <Select
+          id="button-shape"
+          value={shape}
+          options={[
+            { value: 'rounded', label: 'Rounded' },
+            { value: 'pill', label: 'Pill' },
+            { value: 'square', label: 'Square' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="button-aria-label">Accessible label</label>
+        <TextField id="button-aria-label" value={ariaLabel} placeholder="Required for icon-only buttons" />
+        <label class="setting-label" htmlFor="button-loading-label">Loading label</label>
+        <TextField id="button-loading-label" value={loadingLabel} placeholder="Loading" />
+        <CheckBox checked={fullWidth}>Full width</CheckBox>
+        <CheckBox checked={loading}>Loading</CheckBox>
+        <CheckBox checked={pressed}>Pressed</CheckBox>
+        <CheckBox checked={disabled}>Disabled</CheckBox>
         <p class="setting-label button-palette-label">Palette</p>
         <div class="button-palette-selector" role="group" aria-label="Button palette selector">
           <button
@@ -822,7 +929,6 @@ function ButtonPlayground() {
             </span>
           </button>
         </div>
-        <CheckBox checked={disabled}>Disabled</CheckBox>
       </div>
     )
   }

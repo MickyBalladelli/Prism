@@ -4,7 +4,7 @@ Small UI components for [Matrix](https://github.com/MickyBalladelli/Matrix).
 
 ```js
 import { Box, Button, Card, CheckBox, TextField } from 'prism-ui'
-import { signal } from 'matrix'
+import { signal } from '@mickyballadelli/matrix'
 
 const name = signal('')
 const enabled = signal(true)
@@ -28,6 +28,29 @@ const button = Button({
 })
 ```
 
+`Button` can compose a label and icon without hand-written wrappers. Use `iconPosition` to place the icon at the `start` or `end`, or set `showLabel: false` for an icon-only action. Icon-only buttons should always include `ariaLabel`.
+
+```jsx
+import { Button, SendIcon, SettingsIcon } from 'prism-ui'
+
+const send = Button({
+  label: 'Send message',
+  icon: SendIcon(),
+  iconPosition: 'end',
+  size: 'large',
+  shape: 'pill'
+})
+
+const settings = Button({
+  label: 'Settings',
+  showLabel: false,
+  icon: SettingsIcon(),
+  ariaLabel: 'Settings'
+})
+```
+
+Use `variant`, `size`, `shape`, `fullWidth`, `loading`, `loadingLabel`, `pressed`, and `disabled` to control presentation and state. `children` remains supported as the label.
+
 Components accept Matrix signals for `value` and `checked`, keeping controls synchronized in both directions. `TextField` supports `small`, `medium`, and `large` sizes.
 `Box` and `Card` support `sticky` and `stickyTop` for parent-bounded sticky layout, and `Card` can also render an `actions` footer.
 
@@ -36,7 +59,7 @@ Components accept Matrix signals for `value` and `checked`, keeping controls syn
 `Background` renders a reusable animated backdrop with an overlay content slot. Use `palette`, `animation` (`veil`, `mist`, `sanctum`, `silk`, `halo`, `ember`, `orbit`, `gossamer`, `meridian`, `bloom`, `current`, `opal`, or `zephyr`), `animated`, `speed`, `intensity`, `grain`, `overlayOpacity`, `minHeight`, `height`, `padding`, and `radius` to tune the surface:
 
 ```jsx
-import { html } from 'matrix'
+import { html } from '@mickyballadelli/matrix'
 import { Background, Button, Label } from 'prism-ui'
 
 const view = Background({
@@ -56,7 +79,7 @@ const view = Background({
 
 ```jsx
 import { CodeViewer } from 'prism-ui'
-import { signal } from 'matrix'
+import { signal } from '@mickyballadelli/matrix'
 
 const source = signal('const answer = 42')
 
@@ -114,7 +137,7 @@ const view = <TreeLeafIcon size="14" />
 
 ```jsx
 import { Select } from 'prism-ui'
-import { signal } from 'matrix'
+import { signal } from '@mickyballadelli/matrix'
 
 const view = Select({
   value: signal('design'),
@@ -128,7 +151,7 @@ const view = Select({
 Use `onRender` to customize the selected value and each option. It receives the normalized option and a context with `location` (`trigger` or `option`) and `selected`:
 
 ```jsx
-import { html } from 'matrix'
+import { html } from '@mickyballadelli/matrix'
 
 const renderMovie = option => html`<span class="movie-option">🎬 ${option.label}</span>`
 
@@ -143,7 +166,7 @@ Select also supports keyboard navigation: Arrow Up and Down move through options
 
 ```jsx
 import { Badge } from 'prism-ui'
-import { signal } from 'matrix'
+import { signal } from '@mickyballadelli/matrix'
 
 const unread = signal(12)
 
@@ -188,7 +211,7 @@ The exported `treeViewModels` map contains each model's display name and descrip
 
 ```jsx
 import { Popup } from 'prism-ui'
-import { signal } from 'matrix'
+import { signal } from '@mickyballadelli/matrix'
 
 const open = signal(false)
 
@@ -234,6 +257,6 @@ npm install
 npm run dev
 ```
 
-Vite watches the local Prism and Matrix source during development, so saved changes hot-reload without a manual build.
+Vite watches local Prism source during development and loads Matrix from `@mickyballadelli/matrix`. Update the Matrix dependency version when testing a new published alpha.
 
 Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Background`, `Label`, `Header`, `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, `CodeViewer`, `Popup`, and `Table`.

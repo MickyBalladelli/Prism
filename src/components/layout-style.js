@@ -1,4 +1,4 @@
-import { computed } from 'matrix'
+import { computed } from '@mickyballadelli/matrix'
 
 const reactiveKinds = new Set(['signal', 'computed'])
 

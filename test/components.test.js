@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { Background, Box, Button, Card, CheckBox, CodeViewer, Header, Label, TextField, TreeView } from '../src/index.js'
-import { signal } from 'matrix'
+import { signal } from '@mickyballadelli/matrix'
 
 test('components expose Matrix templates', () => {
   const background = Background({ children: 'Backdrop' })

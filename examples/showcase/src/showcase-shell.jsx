@@ -1,4 +1,4 @@
-import { html } from 'matrix'
+import { html } from '@mickyballadelli/matrix'
 import { FileIcon, FolderIcon, Header, MatrixIcon, PrismIcon, TreeView } from 'prism-ui'
 import { iconCategories, iconCount } from './icon-catalog.js'
 import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'

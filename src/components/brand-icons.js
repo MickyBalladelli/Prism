@@ -1,4 +1,4 @@
-import { html } from 'matrix'
+import { html } from '@mickyballadelli/matrix'
 
 function brandIconProps(props = {}, name) {
   const {

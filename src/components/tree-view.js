@@ -1,4 +1,4 @@
-import { component, computed, html } from 'matrix'
+import { component, computed, html } from '@mickyballadelli/matrix'
 import { Badge } from './badge.js'
 import { normalizeTreeViewModel } from '../theme.js'
 

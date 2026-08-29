@@ -595,6 +595,121 @@ h1 em {
   width: 100%;
 }
 
+.button-composer {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+  overflow: hidden;
+  padding: clamp(1.15rem, 3vw, 2rem);
+  border: 1px solid color-mix(in srgb, var(--prism-color-border) 72%, var(--prism-color-action));
+  border-radius: calc(var(--prism-radius-surface) + .35rem);
+  background:
+    radial-gradient(circle at 92% 4%, color-mix(in srgb, var(--prism-color-action) 18%, transparent), transparent 13rem),
+    linear-gradient(145deg, color-mix(in srgb, var(--prism-color-white) 96%, var(--prism-color-action)), var(--prism-color-white));
+  box-shadow: 0 1.25rem 3rem rgb(30 42 72 / 12%);
+}
+
+.button-composer::before {
+  position: absolute;
+  top: -4.5rem;
+  right: -3.5rem;
+  width: 10rem;
+  height: 10rem;
+  border: 1px solid color-mix(in srgb, var(--prism-color-action) 25%, transparent);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.button-composer-head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.button-composer-head h3 {
+  margin: .25rem 0 0;
+  color: var(--prism-color-ink);
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+  letter-spacing: -.035em;
+}
+
+.button-composer-head p:last-child {
+  max-width: 34rem;
+  margin: .4rem 0 0;
+  color: var(--prism-color-text-soft);
+  line-height: 1.55;
+}
+
+.button-click-count {
+  flex: 0 0 auto;
+  padding: .48rem .7rem;
+  border: 1px solid color-mix(in srgb, var(--prism-color-action) 22%, var(--prism-color-border));
+  border-radius: 999px;
+  color: var(--prism-color-text-soft);
+  background: color-mix(in srgb, var(--prism-color-white) 80%, transparent);
+  font-size: var(--prism-font-size-small);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 38%);
+}
+
+.button-click-count strong {
+  color: var(--prism-color-ink);
+}
+
+.button-demo-well {
+  position: relative;
+  display: flex;
+  min-height: 9rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--prism-color-border) 75%, transparent);
+  border-radius: var(--prism-radius-surface);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--prism-color-border) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--prism-color-border) 22%, transparent) 1px, transparent 1px),
+    color-mix(in srgb, var(--prism-color-surface-tint) 70%, transparent);
+  background-size: 1.25rem 1.25rem;
+  box-shadow: inset 0 .6rem 1.5rem rgb(31 43 71 / 5%);
+}
+
+.button-demo-well .button-live-example {
+  max-width: 100%;
+}
+
+.button-composer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.button-composer-meta span {
+  padding: .36rem .58rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: .48rem;
+  color: var(--prism-color-text-soft);
+  background: color-mix(in srgb, var(--prism-color-white) 75%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: var(--prism-font-size-micro);
+  text-transform: lowercase;
+}
+
+.button-recipe-shelf {
+  display: grid;
+  gap: .75rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--prism-color-border);
+}
+
+.button-recipe-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem;
+}
+
 .button-palette-label {
   margin-top: .15rem;
   margin-bottom: -.2rem;
@@ -2289,5 +2404,15 @@ input[type="text"]:required:invalid {
   .pulse-mode-examples,
   .pulse-status-strip {
     grid-template-columns: 1fr;
+  }
+
+  .button-composer-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .button-demo-well {
+    min-height: 7.5rem;
+    padding: 1rem;
   }
 }

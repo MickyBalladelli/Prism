@@ -1,4 +1,4 @@
-import { html } from 'matrix'
+import { html } from '@mickyballadelli/matrix'
 
 export { MatrixIcon, PrismIcon } from './brand-icons.js'
 

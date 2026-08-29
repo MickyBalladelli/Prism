@@ -10,7 +10,10 @@
     "test": "node --test"
   },
   "peerDependencies": {
-    "matrix": "file:../Matrix"
+    "@mickyballadelli/matrix": "^0.1.0-alpha.0"
+  },
+  "devDependencies": {
+    "@mickyballadelli/matrix": "0.1.0-alpha.0"
   },
   "exports": {
     ".": "./src/index.js",

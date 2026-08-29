@@ -1,4 +1,4 @@
-import type { ComponentResult, Signal, StyleDefinition } from 'matrix'
+import type { ComponentResult, Signal, StyleDefinition } from '@mickyballadelli/matrix'
 
 export interface BoxProps {
   children?: unknown
@@ -87,16 +87,31 @@ export interface PrismThemeValues {
 }
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'error' | 'warning' | 'information' | 'success'
+export type ButtonSize = 'small' | 'medium' | 'large'
+export type ButtonShape = 'rounded' | 'pill' | 'square'
+export type ButtonIconPosition = 'start' | 'end'
 
 export interface ButtonProps {
   children?: unknown
+  label?: unknown
+  showLabel?: boolean | Signal<boolean>
+  icon?: unknown
+  iconPosition?: ButtonIconPosition | Signal<ButtonIconPosition>
   class?: string
   id?: string
   type?: 'button' | 'submit' | 'reset'
   name?: string
   value?: string
   variant?: ButtonVariant | Signal<ButtonVariant>
-  disabled?: boolean
+  size?: ButtonSize | Signal<ButtonSize>
+  shape?: ButtonShape | Signal<ButtonShape>
+  fullWidth?: boolean | Signal<boolean>
+  loading?: boolean | Signal<boolean>
+  loadingLabel?: string | Signal<string>
+  pressed?: boolean | Signal<boolean>
+  disabled?: boolean | Signal<boolean>
+  ariaLabel?: string | Signal<string>
+  title?: string
   onClick?: (event: MouseEvent) => void
   onFocus?: (event: FocusEvent) => void
   onBlur?: (event: FocusEvent) => void

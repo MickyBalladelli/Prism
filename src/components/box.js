@@ -1,4 +1,4 @@
-import { component, html } from 'matrix'
+import { component, html } from '@mickyballadelli/matrix'
 import { createLayoutStyle } from './layout-style.js'
 
 export function Box(props = {}) {

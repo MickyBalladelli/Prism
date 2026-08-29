@@ -1,4 +1,4 @@
-import { component, computed, html, signal } from 'matrix'
+import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { CopyIcon } from './icons.js'
 
 const rootClassName = 'prism-code-viewer'

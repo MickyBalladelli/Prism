@@ -1,4 +1,4 @@
-import { component, html } from 'matrix'
+import { component, html } from '@mickyballadelli/matrix'
 
 export function CheckBox(props = {}) {
   const {

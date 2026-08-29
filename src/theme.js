@@ -1,4 +1,4 @@
-import { globalCss } from 'matrix'
+import { globalCss } from '@mickyballadelli/matrix'
 
 export const prismThemeValues = Object.freeze({
   colors: Object.freeze({
@@ -757,6 +757,106 @@ export const prismTheme = globalCss(`
     transition: background .18s ease, box-shadow .18s ease, transform .18s ease, opacity .18s ease, border-color .18s ease;
   }
 
+  .prism-button-small {
+    min-height: 2rem;
+    gap: .35rem;
+    padding: .42rem .62rem;
+    font-size: var(--prism-font-size-micro);
+  }
+
+  .prism-button-medium {
+    min-height: 2.4rem;
+  }
+
+  .prism-button-large {
+    min-height: 3rem;
+    gap: .58rem;
+    padding: .78rem 1.08rem;
+    font-size: var(--prism-font-size-body);
+  }
+
+  .prism-button-pill {
+    border-radius: 999px;
+  }
+
+  .prism-button-square {
+    border-radius: .48rem;
+  }
+
+  .prism-button-full-width {
+    width: 100%;
+  }
+
+  .prism-button-icon-only {
+    width: 2.4rem;
+    min-width: 2.4rem;
+    padding: 0;
+    aspect-ratio: 1;
+  }
+
+  .prism-button-small.prism-button-icon-only {
+    width: 2rem;
+    min-width: 2rem;
+  }
+
+  .prism-button-large.prism-button-icon-only {
+    width: 3rem;
+    min-width: 3rem;
+  }
+
+  .prism-button-full-width.prism-button-icon-only {
+    width: 100%;
+    aspect-ratio: auto;
+  }
+
+  .prism-button-icon {
+    display: inline-grid;
+    width: 1em;
+    height: 1em;
+    flex: 0 0 1em;
+    place-items: center;
+    font-size: 1.08em;
+  }
+
+  .prism-button-icon > svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .prism-button-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .prism-button-spinner {
+    width: .9em;
+    height: .9em;
+    border: 1.7px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: prism-button-spin .72s linear infinite;
+  }
+
+  .prism-button-pressed {
+    background: var(--prism-button-current-background-active);
+    box-shadow: var(--prism-button-current-shadow-active);
+    transform: translateY(1px);
+  }
+
+  @keyframes prism-button-spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prism-button-spinner {
+      animation-duration: 1.8s;
+    }
+  }
+
   .prism-button-primary {
     --prism-button-current-text: var(--prism-button-primary-text);
     --prism-button-current-border: var(--prism-button-primary-border);
@@ -838,6 +938,12 @@ export const prismTheme = globalCss(`
     background: var(--prism-button-current-background-hover);
     box-shadow: var(--prism-button-current-shadow-hover);
     transform: var(--prism-button-transform-hover);
+  }
+
+  .prism-button-pressed:hover:not(:disabled) {
+    background: var(--prism-button-current-background-active);
+    box-shadow: var(--prism-button-current-shadow-active);
+    transform: translateY(1px);
   }
 
   .prism-button:active:not(:disabled) {

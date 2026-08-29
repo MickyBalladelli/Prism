@@ -1,4 +1,4 @@
-import { computed, effect, signal } from 'matrix'
+import { computed, effect, signal } from '@mickyballadelli/matrix'
 import { Button, CheckBox, Popup, Select, SettingsIcon, treeViewModels } from 'prism-ui'
 
 const storageKey = 'prism-showcase-settings'

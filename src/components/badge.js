@@ -1,4 +1,4 @@
-import { component, computed, html } from 'matrix'
+import { component, computed, html } from '@mickyballadelli/matrix'
 
 const baseClassName = 'prism-badge'
 

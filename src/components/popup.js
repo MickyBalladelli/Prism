@@ -1,4 +1,4 @@
-import { component, computed, html, signal } from 'matrix'
+import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { CloseIcon } from './icons.js'
 
 const baseClassName = 'prism-popup'

@@ -1,4 +1,4 @@
-import { createRouter, mount, routerView } from 'matrix'
+import { createRouter, mount, routerView } from '@mickyballadelli/matrix'
 import { Background, prismTheme } from 'prism-ui'
 import { ComponentPage } from './pages/component-page.jsx'
 import { HomePage } from './pages/home-page.jsx'

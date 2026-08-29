@@ -1,4 +1,4 @@
-import { component, computed, html, onMount } from 'matrix'
+import { component, computed, html, onMount } from '@mickyballadelli/matrix'
 
 const baseClassName = 'prism-background'
 const reactiveKinds = new Set(['signal', 'computed'])
