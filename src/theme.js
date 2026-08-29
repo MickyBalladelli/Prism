@@ -414,12 +414,288 @@ const buttonPaletteRules = Object.entries(buttonPalettes)
   }`)
   .join('\n')
 
+const themeModelRules = `
+  .prism-theme-model-aurora {
+    --prism-color-page: #f3f6ff;
+    --prism-color-surface: #ffffff;
+    --prism-color-surface-glass: rgb(255 255 255 / 78%);
+    --prism-color-surface-card: rgb(255 255 255 / 86%);
+    --prism-color-surface-tint: #fbf8ff;
+    --prism-color-white: #ffffff;
+    --prism-color-white-strong: rgb(255 255 255 / 92%);
+    --prism-color-white-tint: rgb(255 255 255 / 30%);
+    --prism-color-ink: #272344;
+    --prism-color-text: #605a7b;
+    --prism-color-text-muted: #70688e;
+    --prism-color-text-soft: #817b9b;
+    --prism-color-text-subtle: #958fad;
+    --prism-color-placeholder: #b2abc5;
+    --prism-color-border: #e6e0f4;
+    --prism-color-border-strong: #d2c8ea;
+    --prism-color-border-input: #dcd4ef;
+    --prism-color-border-faint: #f0ecf7;
+    --prism-color-accent: #c15fce;
+    --prism-color-accent-bright: #df7be8;
+    --prism-color-accent-glow: rgb(223 123 232 / 15%);
+    --prism-color-accent-soft: #fff0fc;
+    --prism-color-action: #6958de;
+    --prism-color-action-end: #58bfc6;
+    --prism-color-action-hover: #5d4dcc;
+    --prism-color-action-hover-end: #43aeb5;
+    --prism-color-action-active: #4e3fb5;
+    --prism-color-action-active-end: #32969e;
+    --prism-color-focus: #7568ed;
+    --prism-color-focus-glow: rgb(117 104 237 / 18%);
+    --prism-color-focus-strong-glow: rgb(117 104 237 / 25%);
+    --prism-color-preview-glow: rgb(202 159 255 / 18%);
+    --prism-color-lavender-border: #d8caff;
+    --prism-color-lavender-surface: #f4efff;
+    --prism-color-mint-border: #c6e9e2;
+    --prism-color-mint-surface: #ecfbf6;
+    --prism-color-peach-border: #f3d4cf;
+    --prism-color-peach-surface: #fff3f0;
+    --prism-radius-control: .8rem;
+    --prism-radius-card: 1.45rem;
+    --prism-radius-preview: 1.15rem;
+    --prism-radius-surface: 1.15rem;
+    --prism-shadow-card: 0 .95rem 2.6rem rgb(109 94 247 / 10%);
+    --prism-shadow-action: 0 .45rem 1rem rgb(105 88 222 / 22%);
+    --prism-shadow-action-hover: 0 .6rem 1.25rem rgb(105 88 222 / 28%);
+    --prism-shadow-action-active: 0 .15rem .35rem rgb(105 88 222 / 18%);
+    --prism-button-primary-background: linear-gradient(135deg, #6958de, #58bfc6);
+    --prism-button-primary-background-hover: linear-gradient(135deg, #5d4dcc, #43aeb5);
+    --prism-button-primary-background-active: linear-gradient(135deg, #4e3fb5, #32969e);
+    --prism-button-primary-shadow: 0 .45rem 1rem rgb(105 88 222 / 22%);
+    --prism-button-primary-shadow-hover: 0 .6rem 1.25rem rgb(105 88 222 / 28%);
+    --prism-button-primary-shadow-active: 0 .15rem .35rem rgb(105 88 222 / 18%);
+    --prism-button-secondary-background: linear-gradient(135deg, #7d7a9e, #9691b5);
+    --prism-button-secondary-background-hover: linear-gradient(135deg, #6d6a8f, #8580a4);
+    --prism-button-secondary-background-active: linear-gradient(135deg, #5f5c7d, #74708f);
+    --prism-button-secondary-shadow: 0 .36rem .9rem rgb(125 122 158 / 20%);
+    --prism-button-secondary-shadow-hover: 0 .52rem 1.1rem rgb(125 122 158 / 26%);
+    --prism-button-secondary-shadow-active: 0 .12rem .32rem rgb(95 92 125 / 24%);
+    --prism-button-tertiary-background: linear-gradient(135deg, #c15fce, #ef91c7);
+    --prism-button-tertiary-background-hover: linear-gradient(135deg, #ae4dbd, #df7db6);
+    --prism-button-tertiary-background-active: linear-gradient(135deg, #963da5, #c865a0);
+    --prism-button-tertiary-shadow: 0 .42rem .96rem rgb(193 95 206 / 22%);
+    --prism-button-tertiary-shadow-hover: 0 .56rem 1.14rem rgb(193 95 206 / 28%);
+    --prism-button-tertiary-shadow-active: 0 .12rem .32rem rgb(150 61 165 / 24%);
+  }
+
+  .prism-theme-model-nocturne {
+    --prism-color-page: #080d1b;
+    --prism-color-surface: #10172d;
+    --prism-color-surface-glass: rgb(18 27 53 / 91%);
+    --prism-color-surface-card: rgb(17 26 53 / 94%);
+    --prism-color-surface-tint: #141f3d;
+    --prism-color-white: #172342;
+    --prism-color-white-strong: rgb(35 49 86 / 92%);
+    --prism-color-white-tint: rgb(126 154 226 / 16%);
+    --prism-color-ink: #eef4ff;
+    --prism-color-text: #b5c6e8;
+    --prism-color-text-muted: #9aadd4;
+    --prism-color-text-soft: #8fa5d0;
+    --prism-color-text-subtle: #768bb7;
+    --prism-color-placeholder: #6278a5;
+    --prism-color-border: #28375e;
+    --prism-color-border-strong: #3b5283;
+    --prism-color-border-input: #3a4e7d;
+    --prism-color-border-faint: #1d2a4a;
+    --prism-color-accent: #ff8da4;
+    --prism-color-accent-bright: #ff9f91;
+    --prism-color-accent-glow: rgb(255 141 164 / 16%);
+    --prism-color-accent-soft: #34233d;
+    --prism-color-action: #7b8dff;
+    --prism-color-action-end: #59c8ee;
+    --prism-color-action-hover: #91a1ff;
+    --prism-color-action-hover-end: #73d5f4;
+    --prism-color-action-active: #6275e7;
+    --prism-color-action-active-end: #43afd7;
+    --prism-color-focus: #a3caff;
+    --prism-color-focus-glow: rgb(126 217 255 / 22%);
+    --prism-color-focus-strong-glow: rgb(126 217 255 / 32%);
+    --prism-color-preview-glow: rgb(92 111 218 / 23%);
+    --prism-color-lavender-border: #5360a0;
+    --prism-color-lavender-surface: #202957;
+    --prism-color-mint-border: #3b7f79;
+    --prism-color-mint-surface: #173a3e;
+    --prism-color-peach-border: #895261;
+    --prism-color-peach-surface: #3a2539;
+    --prism-radius-control: .72rem;
+    --prism-radius-card: 1.35rem;
+    --prism-radius-preview: 1.1rem;
+    --prism-radius-surface: 1rem;
+    --prism-shadow-card: 0 .95rem 2.6rem rgb(0 0 0 / 28%);
+    --prism-shadow-action: 0 .45rem 1rem rgb(68 104 221 / 30%);
+    --prism-shadow-action-hover: 0 .6rem 1.25rem rgb(68 104 221 / 40%);
+    --prism-shadow-action-active: 0 .15rem .35rem rgb(0 0 0 / 30%);
+    --prism-button-primary-background: linear-gradient(135deg, #697cff, #4ab8df);
+    --prism-button-primary-background-hover: linear-gradient(135deg, #8292ff, #68c7e8);
+    --prism-button-primary-background-active: linear-gradient(135deg, #5669dc, #3aa3ca);
+    --prism-button-primary-shadow: 0 .45rem 1rem rgb(68 104 221 / 30%);
+    --prism-button-primary-shadow-hover: 0 .6rem 1.25rem rgb(68 104 221 / 40%);
+    --prism-button-primary-shadow-active: 0 .15rem .35rem rgb(0 0 0 / 30%);
+    --prism-button-secondary-background: linear-gradient(135deg, #465779, #6278a4);
+    --prism-button-secondary-background-hover: linear-gradient(135deg, #53678d, #7188b5);
+    --prism-button-secondary-background-active: linear-gradient(135deg, #394967, #52678f);
+    --prism-button-secondary-shadow: 0 .36rem .9rem rgb(0 0 0 / 24%);
+    --prism-button-secondary-shadow-hover: 0 .52rem 1.1rem rgb(0 0 0 / 32%);
+    --prism-button-secondary-shadow-active: 0 .12rem .32rem rgb(0 0 0 / 30%);
+    --prism-button-tertiary-background: linear-gradient(135deg, #e66f91, #f3a276);
+    --prism-button-tertiary-background-hover: linear-gradient(135deg, #f381a0, #ffb188);
+    --prism-button-tertiary-background-active: linear-gradient(135deg, #c95679, #d78361);
+    --prism-button-tertiary-shadow: 0 .42rem .96rem rgb(230 111 145 / 24%);
+    --prism-button-tertiary-shadow-hover: 0 .56rem 1.14rem rgb(230 111 145 / 34%);
+    --prism-button-tertiary-shadow-active: 0 .12rem .32rem rgb(0 0 0 / 28%);
+    --prism-button-focus-outline: 3px solid rgb(126 217 255 / 70%);
+  }
+
+  .prism-theme-model-editorial {
+    font-family: Georgia, 'Times New Roman', serif;
+    --prism-color-page: #f7f3ed;
+    --prism-color-surface: #fffdf9;
+    --prism-color-surface-glass: rgb(255 253 249 / 88%);
+    --prism-color-surface-card: rgb(255 253 249 / 94%);
+    --prism-color-surface-tint: #f3eee7;
+    --prism-color-white: #fffdf9;
+    --prism-color-white-strong: rgb(255 253 249 / 94%);
+    --prism-color-white-tint: rgb(255 253 249 / 32%);
+    --prism-color-ink: #2e2926;
+    --prism-color-text: #615b56;
+    --prism-color-text-muted: #746c65;
+    --prism-color-text-soft: #817870;
+    --prism-color-text-subtle: #9b9188;
+    --prism-color-placeholder: #b6aaa0;
+    --prism-color-border: #e5ddd4;
+    --prism-color-border-strong: #d0c4b8;
+    --prism-color-border-input: #d9cec3;
+    --prism-color-border-faint: #eee8e1;
+    --prism-color-accent: #c75a3e;
+    --prism-color-accent-bright: #df7654;
+    --prism-color-accent-glow: rgb(199 90 62 / 15%);
+    --prism-color-accent-soft: #fff0e9;
+    --prism-color-action: #2e6878;
+    --prism-color-action-end: #4d8b8c;
+    --prism-color-action-hover: #245666;
+    --prism-color-action-hover-end: #3d797a;
+    --prism-color-action-active: #1c4654;
+    --prism-color-action-active-end: #306567;
+    --prism-color-focus: #3b7c89;
+    --prism-color-focus-glow: rgb(59 124 137 / 18%);
+    --prism-color-focus-strong-glow: rgb(59 124 137 / 25%);
+    --prism-color-preview-glow: rgb(229 151 119 / 17%);
+    --prism-color-lavender-border: #d5c9df;
+    --prism-color-lavender-surface: #f3edf7;
+    --prism-color-mint-border: #c7ddd5;
+    --prism-color-mint-surface: #edf7f2;
+    --prism-color-peach-border: #eac5b8;
+    --prism-color-peach-surface: #fff0e8;
+    --prism-radius-control: .35rem;
+    --prism-radius-card: .9rem;
+    --prism-radius-preview: .55rem;
+    --prism-radius-surface: .65rem;
+    --prism-shadow-card: 0 .8rem 2rem rgb(74 58 45 / 8%);
+    --prism-shadow-action: 0 .35rem .8rem rgb(46 104 120 / 20%);
+    --prism-shadow-action-hover: 0 .5rem 1rem rgb(46 104 120 / 26%);
+    --prism-shadow-action-active: 0 .1rem .25rem rgb(28 70 84 / 18%);
+    --prism-button-primary-background: linear-gradient(135deg, #2e6878, #4d8b8c);
+    --prism-button-primary-background-hover: linear-gradient(135deg, #245666, #3d797a);
+    --prism-button-primary-background-active: linear-gradient(135deg, #1c4654, #306567);
+    --prism-button-primary-shadow: 0 .35rem .8rem rgb(46 104 120 / 20%);
+    --prism-button-primary-shadow-hover: 0 .5rem 1rem rgb(46 104 120 / 26%);
+    --prism-button-primary-shadow-active: 0 .1rem .25rem rgb(28 70 84 / 18%);
+    --prism-button-secondary-background: linear-gradient(135deg, #817870, #9a8e84);
+    --prism-button-secondary-background-hover: linear-gradient(135deg, #71675f, #897c71);
+    --prism-button-secondary-background-active: linear-gradient(135deg, #625950, #786b60);
+    --prism-button-secondary-shadow: 0 .32rem .75rem rgb(97 91 86 / 16%);
+    --prism-button-secondary-shadow-hover: 0 .48rem .95rem rgb(97 91 86 / 22%);
+    --prism-button-secondary-shadow-active: 0 .1rem .25rem rgb(80 70 60 / 18%);
+    --prism-button-tertiary-background: linear-gradient(135deg, #c75a3e, #df7654);
+    --prism-button-tertiary-background-hover: linear-gradient(135deg, #b44a30, #d36445);
+    --prism-button-tertiary-background-active: linear-gradient(135deg, #983c28, #b95038);
+    --prism-button-tertiary-shadow: 0 .35rem .85rem rgb(199 90 62 / 20%);
+    --prism-button-tertiary-shadow-hover: 0 .5rem 1rem rgb(199 90 62 / 26%);
+    --prism-button-tertiary-shadow-active: 0 .1rem .25rem rgb(152 60 40 / 18%);
+  }
+
+  .prism-theme-model-terminal {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --prism-color-page: #07100e;
+    --prism-color-surface: #0d1815;
+    --prism-color-surface-glass: rgb(13 24 21 / 93%);
+    --prism-color-surface-card: rgb(13 24 21 / 96%);
+    --prism-color-surface-tint: #10221c;
+    --prism-color-white: #12251d;
+    --prism-color-white-strong: rgb(28 59 45 / 94%);
+    --prism-color-white-tint: rgb(91 224 148 / 15%);
+    --prism-color-ink: #d8ffe4;
+    --prism-color-text: #a7d8b6;
+    --prism-color-text-muted: #8fc29e;
+    --prism-color-text-soft: #7cae8c;
+    --prism-color-text-subtle: #638e72;
+    --prism-color-placeholder: #4d765d;
+    --prism-color-border: #234b38;
+    --prism-color-border-strong: #32674c;
+    --prism-color-border-input: #2c5c43;
+    --prism-color-border-faint: #173326;
+    --prism-color-accent: #ffbd72;
+    --prism-color-accent-bright: #ffd18e;
+    --prism-color-accent-glow: rgb(255 189 114 / 15%);
+    --prism-color-accent-soft: #34271b;
+    --prism-color-action: #45d483;
+    --prism-color-action-end: #92e66d;
+    --prism-color-action-hover: #66e39a;
+    --prism-color-action-hover-end: #aceb87;
+    --prism-color-action-active: #2dbd6e;
+    --prism-color-action-active-end: #75d253;
+    --prism-color-focus: #79eca4;
+    --prism-color-focus-glow: rgb(91 224 148 / 20%);
+    --prism-color-focus-strong-glow: rgb(91 224 148 / 30%);
+    --prism-color-preview-glow: rgb(62 190 116 / 17%);
+    --prism-color-lavender-border: #35664e;
+    --prism-color-lavender-surface: #163126;
+    --prism-color-mint-border: #387256;
+    --prism-color-mint-surface: #143326;
+    --prism-color-peach-border: #795636;
+    --prism-color-peach-surface: #30251a;
+    --prism-radius-control: .35rem;
+    --prism-radius-card: .75rem;
+    --prism-radius-preview: .55rem;
+    --prism-radius-surface: .6rem;
+    --prism-shadow-card: 0 .8rem 2rem rgb(0 0 0 / 28%);
+    --prism-shadow-action: 0 .35rem .8rem rgb(45 189 110 / 20%);
+    --prism-shadow-action-hover: 0 .5rem 1rem rgb(45 189 110 / 30%);
+    --prism-shadow-action-active: 0 .1rem .25rem rgb(0 0 0 / 30%);
+    --prism-button-primary-background: linear-gradient(135deg, #35c879, #8cdf68);
+    --prism-button-primary-background-hover: linear-gradient(135deg, #50dc8b, #a2eb82);
+    --prism-button-primary-background-active: linear-gradient(135deg, #26ad65, #70c94f);
+    --prism-button-primary-shadow: 0 .35rem .8rem rgb(45 189 110 / 20%);
+    --prism-button-primary-shadow-hover: 0 .5rem 1rem rgb(45 189 110 / 30%);
+    --prism-button-primary-shadow-active: 0 .1rem .25rem rgb(0 0 0 / 30%);
+    --prism-button-secondary-background: linear-gradient(135deg, #315a47, #47765a);
+    --prism-button-secondary-background-hover: linear-gradient(135deg, #3c6d53, #578866);
+    --prism-button-secondary-background-active: linear-gradient(135deg, #274a3a, #3c644d);
+    --prism-button-secondary-shadow: 0 .32rem .75rem rgb(0 0 0 / 24%);
+    --prism-button-secondary-shadow-hover: 0 .48rem .95rem rgb(0 0 0 / 32%);
+    --prism-button-secondary-shadow-active: 0 .1rem .25rem rgb(0 0 0 / 30%);
+    --prism-button-tertiary-background: linear-gradient(135deg, #c9794a, #e6a45d);
+    --prism-button-tertiary-background-hover: linear-gradient(135deg, #dc8956, #f0b36d);
+    --prism-button-tertiary-background-active: linear-gradient(135deg, #a96039, #c98949);
+    --prism-button-tertiary-shadow: 0 .35rem .85rem rgb(201 121 74 / 20%);
+    --prism-button-tertiary-shadow-hover: 0 .5rem 1rem rgb(201 121 74 / 28%);
+    --prism-button-tertiary-shadow-active: 0 .1rem .25rem rgb(0 0 0 / 28%);
+    --prism-button-focus-outline: 3px solid rgb(91 224 148 / 70%);
+  }
+`
+
 export const prismTheme = globalCss(`
   :root {
     ${rootVariableRules}
   }
 
   ${buttonPaletteRules}
+
+  ${themeModelRules}
 
   .prism-icon {
     display: block;

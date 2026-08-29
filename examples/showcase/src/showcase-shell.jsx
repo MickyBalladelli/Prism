@@ -1,5 +1,6 @@
 import { TreeView } from 'prism-ui'
 import { iconCategories, iconCount } from './icon-catalog.js'
+import { ThemePicker, showcaseThemeModel } from './theme-picker.jsx'
 
 function createSidebarItems(link, activeKey) {
   return [
@@ -127,6 +128,9 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
 
   return (
     <div class="showcase-frame">
+      <div class="showcase-topbar">
+        <ThemePicker />
+      </div>
       <aside class="showcase-sidebar">
         <div class="sidebar-brand">
           <div class="sidebar-brand-row">
@@ -135,7 +139,7 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
           </div>
           <p class="sidebar-brand-copy">Component explorer</p>
         </div>
-        <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} />
+        <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} />
       </aside>
       <div class="showcase-main">{children}</div>
     </div>

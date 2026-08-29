@@ -4,6 +4,7 @@ import { ComponentPage } from './pages/component-page.jsx'
 import { HomePage } from './pages/home-page.jsx'
 import { IconsPage } from './pages/icons-page.jsx'
 import { NotFoundPage } from './pages/not-found-page.jsx'
+import { showcaseThemeClass } from './theme-picker.jsx'
 import './style.css'
 
 let router
@@ -28,7 +29,7 @@ router.start()
 const appView = routerView(router)
 
 mount(() => (
-  <div use:style={prismTheme}>
+  <div class={showcaseThemeClass} use:style={prismTheme}>
     {appView}
   </div>
 ), document.querySelector('#app'))

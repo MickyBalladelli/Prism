@@ -602,7 +602,7 @@ function PulsePlayground() {
 function TreeViewPlayground() {
   const showMeta = signal(true)
   const expanded = signal(true)
-  const model = signal('prism')
+  const model = signal('nocturne')
   const modelName = computed(() => treeViewModels[model.value]?.label ?? treeViewModels.prism.label)
   const modelDescription = computed(() => treeViewModels[model.value]?.description ?? treeViewModels.prism.description)
   const modelOptions = Object.entries(treeViewModels).map(([value, definition]) => ({
