@@ -19,7 +19,7 @@ export function Pulse(props = {}) {
     ? size
     : size || 'medium'
 
-  return html`<span class="${baseClassName} ${baseClassName}-${statusValue} ${baseClassName}-${sizeValue} ${classValue}" role="${ariaLabel ? 'img' : undefined}" aria-label="${ariaLabel}"><span class="${baseClassName}-mark"><span class="${baseClassName}-core"></span></span>${children}</span>`
+  return html`<span class="${baseClassName} ${baseClassName}-${statusValue} ${baseClassName}-${sizeValue} ${classValue}" role="${ariaLabel ? 'img' : undefined}" aria-label="${ariaLabel}"><span class="${baseClassName}-mark"><span class="${baseClassName}-core"></span></span><span class="${baseClassName}-label">${children}</span></span>`
 }
 
 export const PulseComponent = props => component(Pulse, props)

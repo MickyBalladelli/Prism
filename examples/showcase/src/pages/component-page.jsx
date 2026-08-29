@@ -372,32 +372,22 @@ function ButtonPlayground() {
 }
 
 function PulsePlayground() {
-  const status = signal('success')
   const size = signal('large')
-  const exampleClass = nextStatus => computed(() => status.value === nextStatus ? 'pulse-example-active' : '')
 
   return {
     preview: (
       <div class="pulse-playground">
         <div class="pulse-status-strip" role="group" aria-label="Pulse status examples">
-          <Pulse status="success" size={size} class={exampleClass('success')}>Healthy</Pulse>
-          <Pulse status="info" size={size} class={exampleClass('info')}>Syncing</Pulse>
-          <Pulse status="warning" size={size} class={exampleClass('warning')}>Review</Pulse>
-          <Pulse status="error" size={size} class={exampleClass('error')}>Offline</Pulse>
-          <Pulse status="off" size={size} class={exampleClass('off')}>Off</Pulse>
+          <Pulse status="success" size={size}>Healthy</Pulse>
+          <Pulse status="info" size={size}>Syncing</Pulse>
+          <Pulse status="warning" size={size}>Review</Pulse>
+          <Pulse status="error" size={size}>Offline</Pulse>
+          <Pulse status="off" size={size}>Off</Pulse>
         </div>
       </div>
     ),
     controls: (
       <div class="settings-list">
-        <label class="setting-label" htmlFor="pulse-status">Status</label>
-        <select id="pulse-status" value={status} onChange={event => status.value = event.currentTarget.value}>
-          <option value="success">Success</option>
-          <option value="info">Info</option>
-          <option value="warning">Warning</option>
-          <option value="error">Error</option>
-          <option value="off">Off</option>
-        </select>
         <label class="setting-label" htmlFor="pulse-size">Size</label>
         <select id="pulse-size" value={size} onChange={event => size.value = event.currentTarget.value}>
           <option value="small">Small — dense UI</option>
