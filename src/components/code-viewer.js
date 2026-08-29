@@ -1,9 +1,24 @@
 import { component, computed, html, signal } from 'matrix'
 import { CopyIcon } from './icons.js'
 
-const baseClassName = 'prism-code-viewer'
+const rootClassName = 'prism-code-viewer'
+const baseClassName = 'prism-code'
 const reactiveKinds = new Set(['signal', 'computed'])
 const supportedLanguages = new Set(['javascript', 'jsx', 'typescript', 'tsx', 'json', 'css', 'html', 'xml', 'bash', 'text'])
+const languageAliases = new Map([
+  ['js', 'javascript'],
+  ['mjs', 'javascript'],
+  ['cjs', 'javascript'],
+  ['ts', 'typescript'],
+  ['mts', 'typescript'],
+  ['cts', 'typescript'],
+  ['sh', 'bash'],
+  ['shell', 'bash'],
+  ['zsh', 'bash'],
+  ['plaintext', 'text'],
+  ['plain', 'text'],
+  ['txt', 'text']
+])
 const javascriptKeywords = new Set([
   'as', 'async', 'await', 'break', 'case', 'catch', 'class', 'const', 'continue',
   'debugger', 'default', 'delete', 'do', 'else', 'export', 'extends', 'finally',
@@ -23,7 +38,8 @@ const readValue = (value, fallback) => isReactive(value)
 
 function normalizeLanguage(value) {
   const language = String(value ?? 'javascript').toLocaleLowerCase()
-  return supportedLanguages.has(language) ? language : 'text'
+  const normalizedLanguage = languageAliases.get(language) ?? language
+  return supportedLanguages.has(normalizedLanguage) ? normalizedLanguage : 'text'
 }
 
 function pushToken(tokens, type, value) {
@@ -323,7 +339,7 @@ export function CodeViewer(props = {}) {
   })
 
   return html`
-    <section class="${baseClassName} ${baseClassName}-language-${languageValue} ${classValue}" style="${styleValue}" aria-label="${ariaLabel}" data-copy-state="${copyState}">
+    <section class="${rootClassName} ${rootClassName}-language-${languageValue} ${classValue}" style="${styleValue}" aria-label="${ariaLabel}" data-copy-state="${copyState}">
       <header class="${baseClassName}-header">
         <div class="${baseClassName}-file">
           <span class="${baseClassName}-file-dot" aria-hidden="true"></span>
