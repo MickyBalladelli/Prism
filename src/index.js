@@ -9,6 +9,8 @@ export {
   CardComponent,
   CheckBox,
   CheckBoxComponent,
+  CodeViewer,
+  CodeViewerComponent,
   AlertIcon,
   ArrowDownIcon,
   ArrowLeftIcon,

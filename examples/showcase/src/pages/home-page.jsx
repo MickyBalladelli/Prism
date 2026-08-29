@@ -92,6 +92,16 @@ const components = [
     description: 'A polished navigation tree with nested branches, active items, and metadata chips.',
     highlights: ['Nested branches', 'Meta chips', 'Active states'],
     details: ['Expandable groups', 'Tree markers', 'Navigation structure']
+  },
+  {
+    key: 'code-viewer',
+    path: '/components/code-viewer',
+    eyebrow: 'Data & Code',
+    title: 'CodeViewer',
+    mark: '10',
+    description: 'An editable syntax-colored code surface with line numbers and one-click copying.',
+    highlights: ['Live editing', 'Syntax colors', 'Copy action'],
+    details: ['Line-number gutter', 'Custom token colors', 'Keyboard-friendly source']
   }
 ]
 

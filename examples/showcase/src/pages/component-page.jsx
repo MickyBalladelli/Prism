@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, FileIcon, FolderIcon, ImageIcon, Pulse, Select, SparkIcon, TextField, TreeView } from 'prism-ui'
+import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, ImageIcon, Pulse, Select, SparkIcon, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
@@ -48,12 +48,56 @@ const componentInfo = {
     eyebrow: 'Navigation',
     title: 'TreeView',
     description: 'Inspect nested navigation, active states, metadata chips, branch expansion, and custom item rendering.'
+  },
+  'code-viewer': {
+    eyebrow: 'Data & Code',
+    title: 'CodeViewer',
+    description: 'Edit source directly, inspect syntax colors, and copy polished code from a live editor.'
   }
 }
 
 const createDetails = (visible, message) => computed(() => visible.value
   ? html`<p class="playground-note">${message}</p>`
   : null)
+
+const codeLines = (...lines) => lines.join('\n')
+
+const playgroundRuntime = {
+  AlertIcon,
+  Badge,
+  Box,
+  Button,
+  Card,
+  CheckBox,
+  CodeViewer,
+  FileIcon,
+  FolderIcon,
+  ImageIcon,
+  Pulse,
+  Select,
+  SparkIcon,
+  TextField,
+  TreeView,
+  computed,
+  html,
+  signal
+}
+
+function createCodePreview(initialCode, scope = {}) {
+  const code = signal(initialCode)
+
+  const preview = computed(() => {
+    try {
+      const names = Object.keys(scope)
+      const values = Object.values(scope)
+      return Function(...names, `'use strict'; return (${code.value})`)(...values)
+    } catch (error) {
+      return html`<div class="playground-code-error"><strong>Preview paused</strong><span>${String(error?.message ?? error)}</span></div>`
+    }
+  })
+
+  return { code, preview }
+}
 
 function BoxPlayground() {
   const content = signal('Live Box content')
@@ -62,14 +106,20 @@ function BoxPlayground() {
   const showRole = signal(false)
   const boxClass = computed(() => `playground-box ${tone.value} ${density.value}`)
   const boxRole = computed(() => showRole.value ? 'region' : undefined)
+  const codePreview = createCodePreview(codeLines(
+    'Box({',
+    '  class: boxClass,',
+    '  role: boxRole,',
+    '  children: [',
+    '    html`<strong>${content}</strong>`,',
+    '    html`<span>Change the settings to reshape this Box.</span>`',
+    '  ]',
+    '})'
+  ), { ...playgroundRuntime, boxClass, boxRole, content })
 
   return {
-    preview: (
-      <Box class={boxClass} role={boxRole}>
-        <strong>{content}</strong>
-        <span>Change the settings to reshape this Box.</span>
-      </Box>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="box-content">Content</label>
@@ -106,20 +156,18 @@ function TextFieldPlayground() {
   const required = signal(false)
   const disabled = signal(false)
   const size = signal('medium')
+  const codePreview = createCodePreview(codeLines(
+    'html`',
+    '  <div class="field-playground">',
+    '    ${TextField({ value, placeholder, required, disabled, size })}',
+    '    <p class="playground-note">Current value: <strong>${value}</strong></p>',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, value, placeholder, required, disabled, size })
 
   return {
-    preview: (
-      <div class="field-playground">
-        <TextField
-          value={value}
-          placeholder={placeholder}
-          required={required}
-          disabled={disabled}
-          size={size}
-        />
-        <p class="playground-note">Current value: <strong>{value}</strong></p>
-      </div>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="field-placeholder">Placeholder</label>
@@ -184,18 +232,22 @@ function SelectPlayground() {
 
     return html`<span class="select-rendered-option">${Icon({ class: 'select-rendered-icon', size: '1em' })}<span>${option.label}</span></span>`
   }
+  const codePreview = createCodePreview(codeLines(
+    'html`',
+    '  <div class="select-playground">',
+    '    <div class="select-demo-card">',
+    '      <p class="select-demo-label">Movie night</p>',
+    '      ${Select({ value, options, size, placement, onRender: renderMovieOption })}',
+    '      <p class="playground-note">Selected movie: <strong>${selectedLabel}</strong></p>',
+    '      <p class="playground-note">Option rendering: <strong>${renderModeLabel}</strong></p>',
+    '    </div>',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, value, options, size, placement, renderMovieOption, selectedLabel, renderModeLabel })
 
   return {
-    preview: (
-      <div class="select-playground">
-        <div class="select-demo-card">
-          <p class="select-demo-label">Movie night</p>
-          <Select value={value} options={options} size={size} placement={placement} onRender={renderMovieOption} />
-          <p class="playground-note">Selected movie: <strong>{selectedLabel}</strong></p>
-          <p class="playground-note">Option rendering: <strong>{renderModeLabel}</strong></p>
-        </div>
-      </div>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="select-size">Size</label>
@@ -240,15 +292,17 @@ function CheckBoxPlayground() {
   const checked = signal(true)
   const disabled = signal(false)
   const label = signal('Send me design updates')
+  const codePreview = createCodePreview(codeLines(
+    'html`',
+    '  <div class="checkbox-playground">',
+    '    ${CheckBox({ checked, disabled, children: label })}',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, checked, disabled, label })
 
   return {
-    preview: (
-      <div class="checkbox-playground">
-        <CheckBox checked={checked} disabled={disabled}>
-          {label}
-        </CheckBox>
-      </div>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="checkbox-label">Label</label>
@@ -266,28 +320,23 @@ function CardPlayground() {
   const showRole = signal(false)
   const clickCount = signal(0)
   const cardRole = computed(() => showRole.value ? 'region' : undefined)
+  const codePreview = createCodePreview(codeLines(
+    'Card({',
+    '  class: "interactive-card",',
+    '  role: cardRole,',
+    '  actions: Button({',
+    '    class: "card-action",',
+    '    disabled: actionDisabled,',
+    '    onClick: () => clickCount.update(value => value + 1),',
+    '    children: actionLabel',
+    '  }),',
+    '  children: html`<p class="eyebrow">Interactive Card</p><h3>Card content</h3><p class="card-copy">This Card has a configurable action area.</p><p class="playground-note">Action clicks: <strong>${clickCount}</strong></p>`',
+    '})'
+  ), { ...playgroundRuntime, actionLabel, actionDisabled, clickCount, cardRole })
 
   return {
-    preview: (
-      <Card
-        class="interactive-card"
-        role={cardRole}
-        actions={
-          <Button
-            class="card-action"
-            disabled={actionDisabled}
-            onClick={() => clickCount.update(value => value + 1)}
-          >
-            {actionLabel}
-          </Button>
-        }
-      >
-        <p class="eyebrow">Interactive Card</p>
-        <h3>Card content</h3>
-        <p class="card-copy">This Card has a configurable action area.</p>
-        <p class="playground-note">Action clicks: <strong>{clickCount}</strong></p>
-      </Card>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="card-action-label">Action label</label>
@@ -349,94 +398,36 @@ function ButtonPlayground() {
     clickCount.update(value => value + 1)
   }
 
+  const codePreview = createCodePreview(codeLines(
+    'html`',
+    '  <div class="button-playground" data-prism-palette="${palette}">',
+    '    <div class="button-variant-group">',
+    '      <p class="button-group-label">Core roles</p>',
+    '      <div class="button-variant-preview" role="group" aria-label="Button variants in action">',
+    '        ${Button({ variant: "primary", disabled, onClick: () => handleVariantClick("primary"), children: label })}',
+    '        ${Button({ variant: "secondary", disabled, onClick: () => handleVariantClick("secondary"), children: label })}',
+    '        ${Button({ variant: "tertiary", disabled, onClick: () => handleVariantClick("tertiary"), children: label })}',
+    '      </div>',
+    '    </div>',
+    '    <div class="button-variant-group">',
+    '      <p class="button-group-label">Feedback states</p>',
+    '      <div class="button-status-preview" role="group" aria-label="Feedback button states">',
+    '        ${Button({ variant: "error", disabled, onClick: () => handleVariantClick("error"), children: label })}',
+    '        ${Button({ variant: "warning", disabled, onClick: () => handleVariantClick("warning"), children: label })}',
+    '        ${Button({ variant: "information", disabled, onClick: () => handleVariantClick("information"), children: label })}',
+    '        ${Button({ variant: "success", disabled, onClick: () => handleVariantClick("success"), children: label })}',
+    '      </div>',
+    '    </div>',
+    '    <p class="playground-note">Palette: <strong>${paletteName}</strong></p>',
+    '    <p class="playground-note">Last clicked: <strong>${variantName}</strong></p>',
+    '    <p class="playground-note">Clicks: <strong>${clickCount}</strong></p>',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, palette, label, disabled, handleVariantClick, paletteName, variantName, clickCount })
+
   return {
-    preview: (
-      <div class="button-playground" data-prism-palette={palette}>
-        <div class="button-variant-group">
-          <p class="button-group-label">Core roles</p>
-          <div class="button-variant-preview" role="group" aria-label="Button variants in action">
-            <div class="button-variant-card">
-              <p class="button-variant-label">Primary</p>
-              <Button
-                variant="primary"
-                disabled={disabled}
-                onClick={() => handleVariantClick('primary')}
-              >
-                {label}
-              </Button>
-            </div>
-            <div class="button-variant-card">
-              <p class="button-variant-label">Secondary</p>
-              <Button
-                variant="secondary"
-                disabled={disabled}
-                onClick={() => handleVariantClick('secondary')}
-              >
-                {label}
-              </Button>
-            </div>
-            <div class="button-variant-card">
-              <p class="button-variant-label">Tertiary</p>
-              <Button
-                variant="tertiary"
-                disabled={disabled}
-                onClick={() => handleVariantClick('tertiary')}
-              >
-                {label}
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div class="button-variant-group">
-          <p class="button-group-label">Feedback states</p>
-          <div class="button-status-preview" role="group" aria-label="Feedback button states">
-            <div class="button-variant-card">
-              <p class="button-variant-label">Error</p>
-              <Button
-                variant="error"
-                disabled={disabled}
-                onClick={() => handleVariantClick('error')}
-              >
-                {label}
-              </Button>
-            </div>
-            <div class="button-variant-card">
-              <p class="button-variant-label">Warning</p>
-              <Button
-                variant="warning"
-                disabled={disabled}
-                onClick={() => handleVariantClick('warning')}
-              >
-                {label}
-              </Button>
-            </div>
-            <div class="button-variant-card">
-              <p class="button-variant-label">Information</p>
-              <Button
-                variant="information"
-                disabled={disabled}
-                onClick={() => handleVariantClick('information')}
-              >
-                {label}
-              </Button>
-            </div>
-            <div class="button-variant-card">
-              <p class="button-variant-label">Success</p>
-              <Button
-                variant="success"
-                disabled={disabled}
-                onClick={() => handleVariantClick('success')}
-              >
-                {label}
-              </Button>
-            </div>
-          </div>
-        </div>
-        <p class="playground-note">Palette: <strong>{paletteName}</strong></p>
-        <p class="playground-note">Last clicked: <strong>{variantName}</strong></p>
-        <p class="playground-note">Clicks: <strong>{clickCount}</strong></p>
-      </div>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="button-label">Label</label>
@@ -493,32 +484,32 @@ function BadgePlayground() {
   const count = signal(12)
   const tone = signal('info')
   const size = signal('large')
+  const codePreview = createCodePreview(codeLines(
+    'html`',
+    '  <div class="badge-playground">',
+    '    <div class="badge-live-card">',
+    '      <div class="badge-live-copy">',
+    '        <p class="badge-mode-label">Reactive count</p>',
+    '        <p class="badge-live-title">Unread messages</p>',
+    '        <p class="badge-live-description">Change the number to see the badge respond.</p>',
+    '      </div>',
+    '      <span class="badge-value-slot">${Badge({ value: count, tone, size, pulseOnChange: true })}</span>',
+    '      ${Button({ variant: "secondary", onClick: () => count.update(value => value + 1), children: "Add message" })}',
+    '    </div>',
+    '    <div class="badge-variant-strip" role="group" aria-label="Badge tone examples">',
+    '      ${Badge({ tone: "neutral", children: "Neutral" })}',
+    '      ${Badge({ tone: "success", children: "Ready" })}',
+    '      ${Badge({ tone: "info", children: "Info" })}',
+    '      ${Badge({ tone: "warning", children: "Review" })}',
+    '      ${Badge({ tone: "error", children: "Alert" })}',
+    '    </div>',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, count, tone, size })
 
   return {
-    preview: (
-      <div class="badge-playground">
-        <div class="badge-live-card">
-          <div class="badge-live-copy">
-            <p class="badge-mode-label">Reactive count</p>
-            <p class="badge-live-title">Unread messages</p>
-            <p class="badge-live-description">Change the number to see the badge respond.</p>
-          </div>
-          <span class="badge-value-slot">
-            <Badge value={count} tone={tone} size={size} pulseOnChange />
-          </span>
-          <Button variant="secondary" onClick={() => count.update(value => value + 1)}>
-            Add message
-          </Button>
-        </div>
-        <div class="badge-variant-strip" role="group" aria-label="Badge tone examples">
-          <Badge tone="neutral">Neutral</Badge>
-          <Badge tone="success">Ready</Badge>
-          <Badge tone="info">Info</Badge>
-          <Badge tone="warning">Review</Badge>
-          <Badge tone="error">Alert</Badge>
-        </div>
-      </div>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="badge-tone">Tone</label>
@@ -555,34 +546,36 @@ function PulsePlayground() {
     oncePulseTrigger.value
     return <Pulse status="success" animation="once" size={size}>Connected</Pulse>
   })
+  const codePreview = createCodePreview(codeLines(
+    'html`',
+    '  <div class="pulse-playground">',
+    '    <div class="pulse-mode-examples" role="group" aria-label="Pulse animation examples">',
+    '      <div class="pulse-mode-card">',
+    '        <p class="pulse-mode-label">Once</p>',
+    '        <span class="pulse-example-slot">${oncePulse}</span>',
+    '        ${Button({ variant: "secondary", onClick: () => oncePulseTrigger.update(value => value + 1), children: "Pulse once" })}',
+    '        <p class="pulse-mode-description">One signal on mount or button press.</p>',
+    '      </div>',
+    '      <div class="pulse-mode-card">',
+    '        <p class="pulse-mode-label">Continuous</p>',
+    '        ${Pulse({ status: "info", animation: "continuous", size, children: "Syncing" })}',
+    '        <p class="pulse-mode-description">A repeating signal for live activity.</p>',
+    '      </div>',
+    '    </div>',
+    '    <div class="pulse-status-strip" role="group" aria-label="Pulse status examples">',
+    '      ${Pulse({ status: "success", size, children: "Healthy" })}',
+    '      ${Pulse({ status: "info", size, children: "Syncing" })}',
+    '      ${Pulse({ status: "warning", size, children: "Review" })}',
+    '      ${Pulse({ status: "error", size, children: "Offline" })}',
+    '      ${Pulse({ status: "off", size, children: "Off" })}',
+    '    </div>',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, size, oncePulse, oncePulseTrigger })
 
   return {
-    preview: (
-      <div class="pulse-playground">
-        <div class="pulse-mode-examples" role="group" aria-label="Pulse animation examples">
-          <div class="pulse-mode-card">
-            <p class="pulse-mode-label">Once</p>
-            <span class="pulse-example-slot">{oncePulse}</span>
-            <Button variant="secondary" onClick={() => oncePulseTrigger.update(value => value + 1)}>
-              Pulse once
-            </Button>
-            <p class="pulse-mode-description">One signal on mount or button press.</p>
-          </div>
-          <div class="pulse-mode-card">
-            <p class="pulse-mode-label">Continuous</p>
-            <Pulse status="info" animation="continuous" size={size}>Syncing</Pulse>
-            <p class="pulse-mode-description">A repeating signal for live activity.</p>
-          </div>
-        </div>
-        <div class="pulse-status-strip" role="group" aria-label="Pulse status examples">
-          <Pulse status="success" size={size}>Healthy</Pulse>
-          <Pulse status="info" size={size}>Syncing</Pulse>
-          <Pulse status="warning" size={size}>Review</Pulse>
-          <Pulse status="error" size={size}>Offline</Pulse>
-          <Pulse status="off" size={size}>Off</Pulse>
-        </div>
-      </div>
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="pulse-size">Size</label>
@@ -595,6 +588,57 @@ function PulsePlayground() {
             { value: 'large', label: 'Large — hero status' }
           ]}
         />
+      </div>
+    )
+  }
+}
+
+function CodeViewerPlayground() {
+  const language = signal('javascript')
+  const showLineNumbers = signal(true)
+  const sampleCode = signal(codeLines(
+    'const status = "ready"',
+    '',
+    'function announce(message) {',
+    '  return `${message} · ${status}`',
+    '}',
+    '',
+    'announce("Prism is live")'
+  ))
+  const codePreview = createCodePreview(codeLines(
+    'CodeViewer({',
+    '  code: sampleCode,',
+    '  language,',
+    '  filename: "status.js",',
+    '  lineNumbers: showLineNumbers,',
+    '  copyable: true,',
+    '  syntaxColors: {',
+    '    keyword: "#a8b5ff",',
+    '    string: "#9ee4bf",',
+    '    function: "#8bd9ff"',
+    '  }',
+    '})'
+  ), { ...playgroundRuntime, sampleCode, language, showLineNumbers })
+
+  return {
+    code: codePreview.code,
+    preview: codePreview.preview,
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="code-viewer-language">Language</label>
+        <Select
+          id="code-viewer-language"
+          value={language}
+          options={[
+            { value: 'javascript', label: 'JavaScript' },
+            { value: 'jsx', label: 'JSX' },
+            { value: 'css', label: 'CSS' },
+            { value: 'json', label: 'JSON' },
+            { value: 'bash', label: 'Bash' }
+          ]}
+        />
+        <CheckBox checked={showLineNumbers}>Show line numbers</CheckBox>
+        <p class="playground-note">Edit the nested editor to change its source. Use the outer editor below to change how CodeViewer is configured.</p>
       </div>
     )
   }
@@ -680,11 +724,19 @@ function TreeViewPlayground() {
 
     return html`<span class="tree-rendered-rich"><span class="tree-rendered-icon" aria-hidden="true">${icon}</span><span class="tree-rendered-rich-copy"><strong>${item.label}</strong><small>${detail}</small></span></span>`
   }
+  const codePreview = createCodePreview(codeLines(
+    'TreeView({',
+    '  class: "component-tree-preview",',
+    '  ariaLabel: "Tree view playground",',
+    '  items,',
+    '  model,',
+    '  onRender: renderTreeItem',
+    '})'
+  ), { ...playgroundRuntime, items, model: showcaseThemeModel, renderTreeItem })
 
   return {
-    preview: (
-      <TreeView class="component-tree-preview" ariaLabel="Tree view playground" items={items} model={showcaseThemeModel} onRender={renderTreeItem} />
-    ),
+    code: codePreview.code,
+    preview: codePreview.preview,
     controls: (
       <div class="settings-list">
         <label class="setting-label" htmlFor="tree-render-mode">Custom item rendering</label>
@@ -714,6 +766,7 @@ const playgrounds = {
   button: ButtonPlayground,
   badge: BadgePlayground,
   pulse: PulsePlayground,
+  'code-viewer': CodeViewerPlayground,
   'tree-view': TreeViewPlayground
 }
 
@@ -764,6 +817,24 @@ export function ComponentPage({ name, link }) {
             <h2>Play with it</h2>
             <p class="settings-copy">Change a setting. Preview updates instantly.</p>
             {playground.controls}
+          </Card>
+
+          <Card class="detail-code-card">
+            <div class="detail-code-heading">
+              <div>
+                <p class="eyebrow">Editable source</p>
+                <h2>Change the recipe</h2>
+              </div>
+              <span class="detail-code-hint">Preview follows</span>
+            </div>
+            <CodeViewer
+              class="detail-code-viewer"
+              code={playground.code}
+              language="javascript"
+              filename={`${info.title}.recipe.js`}
+              ariaLabel={`${info.title} editable source`}
+            />
+            <p class="playground-note">Edit the code above. A valid recipe renders in the live preview.</p>
           </Card>
         </section>
       </main>

@@ -13,7 +13,7 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '9',
+      meta: '10',
       expanded: true,
       children: [
         {
@@ -95,6 +95,19 @@ function createSidebarItems(link, activeKey) {
               href: '/components/pulse',
               onClick: link('/components/pulse'),
               active: activeKey === 'pulse'
+            }
+          ]
+        },
+        {
+          label: 'Data & Code',
+          meta: '1',
+          expanded: true,
+          children: [
+            {
+              label: 'CodeViewer',
+              href: '/components/code-viewer',
+              onClick: link('/components/code-viewer'),
+              active: activeKey === 'code-viewer'
             }
           ]
         }

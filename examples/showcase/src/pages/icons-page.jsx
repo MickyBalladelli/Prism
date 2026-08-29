@@ -1,4 +1,4 @@
-import { Button, Card, PlusIcon } from 'prism-ui'
+import { Button, Card, CodeViewer, PlusIcon } from 'prism-ui'
 import { iconCategories, iconCount } from '../icon-catalog.js'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
@@ -15,7 +15,14 @@ function IconCard({ icon, category }) {
       <p class="icon-description">{icon.description}</p>
       <div class="icon-code-block">
         <p class="code-label">Import + use</p>
-        <pre><code>{icon.example}</code></pre>
+        <CodeViewer
+          code={icon.example}
+          language="jsx"
+          filename={`${icon.name}.jsx`}
+          editable={false}
+          class="icon-code-viewer"
+          ariaLabel={`${icon.name} example code`}
+        />
       </div>
     </Card>
   )

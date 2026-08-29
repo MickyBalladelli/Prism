@@ -3,6 +3,7 @@ export { Badge, BadgeComponent } from './badge.js'
 export { Button, ButtonComponent } from './button.js'
 export { Card, CardComponent } from './card.js'
 export { CheckBox, CheckBoxComponent } from './check-box.js'
+export { CodeViewer, CodeViewerComponent } from './code-viewer.js'
 export { Pulse, PulseComponent } from './pulse.js'
 export { Select, SelectComponent } from './select.js'
 export {

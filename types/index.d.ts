@@ -57,6 +57,29 @@ export interface CheckBoxProps {
   disabled?: boolean
 }
 
+export type CodeLanguage = 'javascript' | 'jsx' | 'typescript' | 'tsx' | 'json' | 'css' | 'html' | 'xml' | 'bash' | 'text'
+
+export interface CodeViewerProps {
+  code?: string | Signal<string>
+  language?: CodeLanguage | Signal<CodeLanguage>
+  filename?: string | Signal<string>
+  lineNumbers?: boolean | Signal<boolean>
+  editable?: boolean | Signal<boolean>
+  copyable?: boolean | Signal<boolean>
+  syntaxColors?: Readonly<Record<string, string>> | Signal<Readonly<Record<string, string>>>
+  fontFamily?: string | Signal<string>
+  fontSize?: string | Signal<string>
+  lineHeight?: string | Signal<string>
+  tabSize?: number | Signal<number>
+  minHeight?: string | Signal<string>
+  maxHeight?: string | Signal<string>
+  style?: string | Record<string, string>
+  class?: string
+  ariaLabel?: string
+  onChange?: (event: Event) => void
+  onCopy?: (code: string, event: MouseEvent) => void
+}
+
 export interface SelectOption {
   value: string | number
   label?: string
@@ -165,6 +188,7 @@ export function Card(props?: CardProps): unknown
 export function Badge(props?: BadgeProps): unknown
 export function TextField(props?: TextFieldProps): unknown
 export function CheckBox(props?: CheckBoxProps): unknown
+export function CodeViewer(props?: CodeViewerProps): unknown
 export function Select(props?: SelectProps): unknown
 export function TreeView(props?: TreeViewProps): unknown
 export function PrismMarkIcon(props?: IconProps): unknown
@@ -224,6 +248,7 @@ export function CardComponent(props?: CardProps): ComponentResult
 export function BadgeComponent(props?: BadgeProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
+export function CodeViewerComponent(props?: CodeViewerProps): ComponentResult
 export function SelectComponent(props?: SelectProps): ComponentResult
 export function TreeViewComponent(props?: TreeViewProps): ComponentResult
 export function PulseComponent(props?: PulseProps): ComponentResult

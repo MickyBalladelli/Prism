@@ -1,6 +1,6 @@
 # Prism
 
-Small UI components for [Matrix](../Matrix).
+Small UI components for [Matrix]([../Matrix)](https://github.com/MickyBalladelli/Matrix).
 
 ```js
 import { Box, Button, Card, CheckBox, TextField } from 'prism-ui'
@@ -30,6 +30,19 @@ const button = Button({
 
 Components accept Matrix signals for `value` and `checked`, keeping controls synchronized in both directions. `TextField` supports `small`, `medium`, and `large` sizes.
 `Card` renders an `<article>`, accepts the same layout props as `Box`, and can render an `actions` footer.
+
+`CodeViewer` renders editable, syntax-colored code with optional line numbers and a copy button:
+
+```jsx
+import { CodeViewer } from 'prism-ui'
+import { signal } from 'matrix'
+
+const source = signal('const answer = 42')
+
+const view = <CodeViewer code={source} language="javascript" filename="answer.js" />
+```
+
+Customize the editor with `lineNumbers`, `editable`, `copyable`, `fontFamily`, `fontSize`, `lineHeight`, `tabSize`, `minHeight`, `maxHeight`, and `syntaxColors`. Syntax color keys include `keyword`, `string`, `number`, `comment`, `function`, `tag`, `attribute`, `property`, `boolean`, `operator`, and `punctuation`.
 
 Prism exposes its design tokens and Matrix theme:
 
@@ -150,4 +163,4 @@ npm run dev
 
 Vite watches the local Prism and Matrix source during development, so saved changes hot-reload without a manual build.
 
-Select `Show details` on any component card to open its playground page. Component pages expose live props and settings for `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, and `TreeView`.
+Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, and `CodeViewer`.
