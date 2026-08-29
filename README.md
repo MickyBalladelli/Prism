@@ -31,6 +31,22 @@ const button = Button({
 Components accept Matrix signals for `value` and `checked`, keeping controls synchronized in both directions. `TextField` supports `small`, `medium`, and `large` sizes.
 `Box` and `Card` support `sticky` and `stickyTop` for parent-bounded sticky layout, and `Card` can also render an `actions` footer.
 
+`Background` renders a reusable animated backdrop with an overlay content slot. Use `palette`, `animated`, `speed`, `intensity`, `grain`, `overlayOpacity`, `minHeight`, `height`, `padding`, and `radius` to tune the surface:
+
+```jsx
+import { html } from 'matrix'
+import { Background, Button } from 'prism-ui'
+
+const view = Background({
+  palette: 'midnight',
+  intensity: 1.15,
+  children: [
+    html`<h2>Deep focus</h2>`,
+    Button({ children: 'Open workspace' })
+  ]
+})
+```
+
 `CodeViewer` renders editable, syntax-colored code with optional line numbers and a copy button:
 
 ```jsx
@@ -207,4 +223,4 @@ npm run dev
 
 Vite watches the local Prism and Matrix source during development, so saved changes hot-reload without a manual build.
 
-Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, `CodeViewer`, `Popup`, and `Table`.
+Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Background`, `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, `CodeViewer`, `Popup`, and `Table`.

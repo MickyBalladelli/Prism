@@ -1,9 +1,14 @@
 import { computed, html, signal } from 'matrix'
-import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, ImageIcon, MoreHorizontalIcon, Popup, Pulse, Select, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
+import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, ImageIcon, MoreHorizontalIcon, Popup, Pulse, Select, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 const componentInfo = {
+  background: {
+    eyebrow: 'Layout',
+    title: 'Background',
+    description: 'Shape a reusable animated backdrop with dark palettes, layered glow, and an overlay content slot.'
+  },
   box: {
     eyebrow: 'Layout',
     title: 'Box',
@@ -74,6 +79,7 @@ const codeLines = (...lines) => lines.join('\n')
 
 const playgroundRuntime = {
   AlertIcon,
+  Background,
   Badge,
   Box,
   Button,
@@ -110,6 +116,92 @@ function createCodePreview(initialCode, scope = {}) {
   })
 
   return { code, preview }
+}
+
+function BackgroundPlayground() {
+  const headline = signal('Deep focus, soft glow')
+  const palette = signal('midnight')
+  const animated = signal(true)
+  const speed = signal(1)
+  const intensity = signal(1.15)
+  const overlayOpacity = signal(0.22)
+  const codePreview = createCodePreview(codeLines(
+    'Background({',
+    '  palette,',
+    '  animated,',
+    '  speed,',
+    '  intensity,',
+    '  overlayOpacity,',
+    '  minHeight: "20rem",',
+    '  children: html`<div class="background-demo-stage">',
+    '    <p class="eyebrow">Ambient layer</p>',
+    '    <h3>${headline}</h3>',
+    '    <p class="background-demo-copy">The animation stays behind the content, so the surface can hold real UI, copy, and actions.</p>',
+    '    <div class="background-demo-badges">',
+    '      <span>Palette: ${palette}</span>',
+    '      <span>${animated ? "Animated" : "Still frame"}</span>',
+    '      <span>Intensity × ${intensity}</span>',
+    '    </div>',
+    '    <div class="background-demo-actions">',
+    '      ${Button({ children: "Primary action" })}',
+    '      ${Button({ variant: "secondary", children: "Secondary" })}',
+    '    </div>',
+    '  </div>`',
+    '})'
+  ), { ...playgroundRuntime, headline, palette, animated, speed, intensity, overlayOpacity })
+
+  return {
+    code: codePreview.code,
+    preview: codePreview.preview,
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="background-headline">Headline</label>
+        <TextField id="background-headline" value={headline} placeholder="Headline" />
+        <label class="setting-label" htmlFor="background-palette">Palette</label>
+        <Select
+          id="background-palette"
+          value={palette}
+          options={[
+            { value: 'midnight', label: 'Midnight — Prism blue' },
+            { value: 'aurora', label: 'Aurora — violet glow' },
+            { value: 'tide', label: 'Tide — teal current' }
+          ]}
+        />
+        <CheckBox checked={animated}>Animate background</CheckBox>
+        <label class="setting-label" htmlFor="background-speed">Animation speed</label>
+        <Select
+          id="background-speed"
+          value={speed}
+          options={[
+            { value: '.6', label: '0.6× — slow drift' },
+            { value: '1', label: '1× — default' },
+            { value: '1.5', label: '1.5× — brighter motion' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="background-intensity">Glow intensity</label>
+        <Select
+          id="background-intensity"
+          value={intensity}
+          options={[
+            { value: '.85', label: '0.85× — restrained' },
+            { value: '1.15', label: '1.15× — default' },
+            { value: '1.55', label: '1.55× — vivid' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="background-overlay">Overlay veil</label>
+        <Select
+          id="background-overlay"
+          value={overlayOpacity}
+          options={[
+            { value: '.14', label: '0.14 — airy' },
+            { value: '.22', label: '0.22 — balanced' },
+            { value: '.34', label: '0.34 — denser contrast' }
+          ]}
+        />
+        <p class="playground-note">This preview runs the animated surface as a reusable component, with content layered above the effect.</p>
+      </div>
+    )
+  }
 }
 
 function BoxPlayground() {
@@ -1091,6 +1183,7 @@ function TreeViewPlayground() {
 }
 
 const playgrounds = {
+  background: BackgroundPlayground,
   box: BoxPlayground,
   'text-field': TextFieldPlayground,
   select: SelectPlayground,

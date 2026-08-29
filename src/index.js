@@ -1,4 +1,6 @@
 export {
+  Background,
+  BackgroundComponent,
   Badge,
   BadgeComponent,
   Box,

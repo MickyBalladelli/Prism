@@ -310,6 +310,16 @@ h1 em {
   width: min(100%, 30rem);
 }
 
+.detail-layout-background .preview-surface {
+  min-height: 28rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.detail-layout-background .preview-surface > * {
+  width: 100%;
+}
+
 .settings-copy {
   margin: .6rem 0 1.5rem;
   color: var(--prism-color-text-subtle);
@@ -799,6 +809,66 @@ h1 em {
 .pulse-status-strip .pulse-example-active {
   font-weight: 860;
   transform: translateY(-1px) scale(1.03);
+}
+
+.background-demo-stage {
+  display: grid;
+  align-content: end;
+  gap: .85rem;
+  min-height: 17rem;
+}
+
+.background-demo-stage h3,
+.background-demo-copy,
+.background-demo-badges {
+  margin: 0;
+}
+
+.background-demo-stage h3 {
+  color: var(--prism-color-white);
+  font-size: clamp(1.8rem, 4vw, 2.35rem);
+  letter-spacing: -.05em;
+  line-height: .96;
+}
+
+.background-demo-copy {
+  max-width: 26rem;
+  color: rgb(226 236 255 / 84%);
+  font-size: var(--prism-font-size-body);
+  line-height: 1.6;
+}
+
+.background-demo-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+}
+
+.background-demo-badges span {
+  display: inline-flex;
+  align-items: center;
+  padding: .32rem .55rem;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 999px;
+  color: rgb(230 238 255 / 88%);
+  background: rgb(255 255 255 / 8%);
+  font-size: var(--prism-font-size-micro);
+  font-weight: 780;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+.background-demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: .35rem;
+}
+
+.background-demo-actions .prism-button-secondary {
+  border-color: rgb(255 255 255 / 18%);
+  background: linear-gradient(135deg, rgb(78 96 146 / 78%), rgb(52 67 110 / 88%));
 }
 
 .playground-box-frame {

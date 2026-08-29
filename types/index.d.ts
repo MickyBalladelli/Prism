@@ -10,6 +10,32 @@ export interface BoxProps {
   stickyTop?: string | Signal<string>
 }
 
+export type BackgroundPalette = 'midnight' | 'aurora' | 'tide'
+
+export interface BackgroundProps {
+  children?: unknown
+  class?: string
+  contentClass?: string
+  id?: string
+  role?: string
+  style?: string | Record<string, string>
+  contentStyle?: string | Record<string, string>
+  palette?: BackgroundPalette | Signal<BackgroundPalette>
+  animated?: boolean | Signal<boolean>
+  speed?: number | Signal<number>
+  intensity?: number | Signal<number>
+  grain?: number | Signal<number>
+  overlayOpacity?: number | Signal<number>
+  minHeight?: string | Signal<string>
+  height?: string | Signal<string>
+  padding?: string | Signal<string>
+  radius?: string | Signal<string>
+  baseColor?: string | Signal<string>
+  accentColor?: string | Signal<string>
+  glowColor?: string | Signal<string>
+  ariaLabel?: string
+}
+
 export interface CardProps extends BoxProps {
   actions?: unknown
 }
@@ -312,6 +338,7 @@ export interface TreeViewProps {
   onRender?: (item: TreeViewItem, context: TreeViewRenderContext) => unknown
 }
 
+export function Background(props?: BackgroundProps): unknown
 export function Box(props?: BoxProps): unknown
 export function Button(props?: ButtonProps): unknown
 export function Card(props?: CardProps): unknown
@@ -376,6 +403,7 @@ export function CodeIcon(props?: IconProps): unknown
 export function TerminalIcon(props?: IconProps): unknown
 export function EyeOffIcon(props?: IconProps): unknown
 export function Pulse(props?: PulseProps): unknown
+export function BackgroundComponent(props?: BackgroundProps): ComponentResult
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function CardComponent(props?: CardProps): ComponentResult

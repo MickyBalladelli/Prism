@@ -1,9 +1,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Box, Button, Card, CheckBox, CodeViewer, TextField, TreeView } from '../src/index.js'
+import { Background, Box, Button, Card, CheckBox, CodeViewer, TextField, TreeView } from '../src/index.js'
 import { signal } from 'matrix'
 
 test('components expose Matrix templates', () => {
+  const background = Background({ children: 'Backdrop' })
   const text = TextField({ placeholder: 'Name' })
   const checkbox = CheckBox({ children: 'Ready' })
   const button = Button({ children: 'Press me' })
@@ -13,6 +14,7 @@ test('components expose Matrix templates', () => {
   const successButton = Button({ children: 'Saved', variant: 'success' })
   const treeView = TreeView({ items: [{ label: 'Overview' }, { label: 'Forms', children: [{ label: 'Button' }] }] })
 
+  assert.equal(typeof background, 'object')
   assert.equal(typeof text, 'object')
   assert.equal(typeof checkbox, 'object')
   assert.equal(typeof button, 'object')
@@ -69,4 +71,23 @@ test('Box and Card support sticky layout props', () => {
   assert.equal(cardStyle?.value.position, 'sticky')
   assert.equal(cardStyle?.value.top, '2rem')
   assert.equal(cardStyle?.value.alignSelf, 'start')
+})
+
+test('Background exposes a reusable animated surface', () => {
+  const background = Background({
+    palette: 'aurora',
+    animated: false,
+    intensity: 1.4,
+    children: 'Backdrop'
+  })
+
+  assert.equal(background.values.includes('prism-background'), true)
+
+  const styleValue = background.values.find(value => value?.kind === 'computed' && typeof value.value === 'object' && value.value['--prism-background-accent'])
+  assert.equal(styleValue?.value['--prism-background-accent'], '#6d5ef7')
+
+  const canvasLayer = background.values.find(value => value?.render && value?.props)
+  assert.equal(typeof canvasLayer?.render, 'function')
+  assert.equal(canvasLayer?.props.animated, false)
+  assert.equal(canvasLayer?.props.intensity, 1.4)
 })

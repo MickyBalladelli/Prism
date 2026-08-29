@@ -4,6 +4,16 @@ import { ShowDetailsButton } from '../show-details-button.jsx'
 
 const components = [
   {
+    key: 'background',
+    path: '/components/background',
+    eyebrow: 'Layout',
+    title: 'Background',
+    mark: '13',
+    description: 'A reusable animated backdrop with Prism-toned palettes and an overlay content slot.',
+    highlights: ['Layered motion', 'Theme-friendly palettes', 'Content stays readable'],
+    details: ['Animated or still', 'Adjustable intensity and veil', 'Works as a real layout surface']
+  },
+  {
     key: 'box',
     path: '/components/box',
     eyebrow: 'Layout',

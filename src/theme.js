@@ -1227,6 +1227,76 @@ export const prismTheme = globalCss(`
     color: var(--prism-code-punctuation);
   }
 
+  .prism-background {
+    --prism-background-base: #071427;
+    --prism-background-accent: #3657d6;
+    --prism-background-glow: #7ac7ff;
+    --prism-background-overlay-opacity: .22;
+    --prism-background-padding: 1.5rem;
+    --prism-background-radius: 1.4rem;
+    --prism-background-min-height: 18rem;
+    --prism-background-height: auto;
+    position: relative;
+    display: block;
+    min-height: var(--prism-background-min-height);
+    height: var(--prism-background-height);
+    overflow: hidden;
+    border: 1px solid rgb(122 199 255 / 16%);
+    border-radius: var(--prism-background-radius);
+    background:
+      radial-gradient(circle at 80% 12%, rgb(122 199 255 / 20%), transparent 12rem),
+      radial-gradient(circle at 12% 0%, rgb(54 87 214 / 22%), transparent 10rem),
+      linear-gradient(145deg, color-mix(in srgb, var(--prism-background-base) 88%, black), var(--prism-background-base) 72%);
+    box-shadow: 0 1.1rem 2.4rem rgb(5 11 29 / 24%);
+    isolation: isolate;
+  }
+
+  .prism-background-layer,
+  .prism-background-wash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .prism-background-layer {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    opacity: 1;
+  }
+
+  .prism-background-wash {
+    background:
+      linear-gradient(180deg, rgb(3 7 18 / 16%), rgb(3 7 18 / 42%)),
+      radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--prism-background-glow) 20%, transparent), transparent 38%),
+      radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--prism-background-accent) 18%, transparent), transparent 32%);
+    opacity: var(--prism-background-overlay-opacity);
+    mix-blend-mode: screen;
+  }
+
+  .prism-background-content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    align-content: start;
+    min-height: var(--prism-background-min-height);
+    padding: var(--prism-background-padding);
+    box-sizing: border-box;
+  }
+
+  .prism-background-midnight {
+    border-color: rgb(122 199 255 / 18%);
+  }
+
+  .prism-background-aurora {
+    border-color: rgb(109 94 247 / 20%);
+  }
+
+  .prism-background-tide {
+    border-color: rgb(91 224 148 / 18%);
+  }
+
   .prism-popup-layer {
     position: fixed;
     z-index: 200;
