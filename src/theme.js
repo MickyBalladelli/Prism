@@ -1098,9 +1098,14 @@ export const prismTheme = globalCss(`
   }
 
   .prism-code-gutter-lines {
-    display: block;
-    white-space: pre;
+    display: grid;
+    align-content: start;
     transform: translateY(0);
+  }
+
+  .prism-code-gutter-line {
+    display: block;
+    line-height: var(--prism-code-line-height);
   }
 
   .prism-code-scroll {
@@ -1145,19 +1150,25 @@ export const prismTheme = globalCss(`
   }
 
   .prism-code-input {
-    position: relative;
+    position: absolute;
     z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     display: block;
     width: 100%;
     height: 100%;
     min-height: 100%;
     overflow: auto;
-    border: 0;
+    border: 0 !important;
     outline: none;
     color: transparent;
-    background: transparent;
+    background: transparent !important;
     caret-color: var(--prism-code-foreground);
     resize: none;
+    appearance: none;
+    box-shadow: none !important;
     -webkit-text-fill-color: transparent;
   }
 

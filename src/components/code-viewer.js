@@ -248,7 +248,10 @@ export function CodeViewer(props = {}) {
     : signal(String(readValue(code, '')))
   const languageValue = computed(() => normalizeLanguage(readValue(language, 'javascript')))
   const highlightedCode = computed(() => highlightCode(codeValue.value, languageValue.value))
-  const lineNumberText = computed(() => Array.from({ length: String(codeValue.value ?? '').split('\n').length }, (_, index) => index + 1).join('\n'))
+  const lineNumberMarkup = computed(() => Array.from(
+    { length: String(codeValue.value ?? '').split('\n').length },
+    (_, index) => html`<span class="${baseClassName}-gutter-line">${index + 1}</span>`
+  ))
   const gutterClass = computed(() => readValue(lineNumbers, true)
     ? `${baseClassName}-gutter`
     : `${baseClassName}-gutter ${baseClassName}-gutter-hidden`)
@@ -330,7 +333,7 @@ export function CodeViewer(props = {}) {
         <button type="button" class="${baseClassName}-copy" aria-label="${copyLabel}" title="${copyLabel}" ?hidden=${computed(() => !readValue(copyable, true))} @click=${handleCopy}>${CopyIcon({ size: '1em' })}</button>
       </header>
       <div class="${baseClassName}-body">
-        <div class="${gutterClass}" aria-hidden="true"><span class="${baseClassName}-gutter-lines">${lineNumberText}</span></div>
+        <div class="${gutterClass}" aria-hidden="true"><span class="${baseClassName}-gutter-lines">${lineNumberMarkup}</span></div>
         <div class="${baseClassName}-scroll">
           <pre class="${baseClassName}-highlight" aria-hidden="true"><code>${highlightedCode}</code></pre>
           <textarea class="${baseClassName}-input" spellcheck="false" wrap="off" aria-label="${ariaLabel} source" .value=${codeValue} ?readonly=${computed(() => !readValue(editable, true))} @input=${handleInput} @scroll=${syncScroll}></textarea>
