@@ -12,7 +12,7 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '7',
+      meta: '8',
       expanded: true,
       children: [
         {

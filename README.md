@@ -66,6 +66,19 @@ import { TreeLeafIcon } from 'prism-ui/icons'
 const view = <TreeLeafIcon size="14" />
 ```
 
+## Badge
+
+`Badge` displays a compact count or state. Use a Matrix signal with `pulseOnChange` to briefly highlight a changing value:
+
+```jsx
+import { Badge } from 'prism-ui'
+import { signal } from 'matrix'
+
+const unread = signal(12)
+
+const view = <Badge value={unread} tone="info" pulseOnChange />
+```
+
 ## Pulse
 
 `Pulse` turns the TreeView branch mark into a living status signal. It supports `success`, `info`, `warning`, `error`, and `off` states, plus `small`, `medium`, and `large` sizes. Use `animation="once"` for one pulse or `animation="continuous"` for a repeating signal. Continuous animation is the default. The `off` state is muted and does not animate:

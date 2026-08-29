@@ -95,12 +95,12 @@ export interface TreeViewItem {
   onClick?: (event: MouseEvent) => void
   active?: boolean
   expanded?: boolean
-  meta?: string
+  meta?: string | number | Signal<string | number>
   children?: TreeViewItem[]
 }
 
 export interface TreeViewProps {
-  items?: TreeViewItem[]
+  items?: TreeViewItem[] | Signal<TreeViewItem[]>
   class?: string
   id?: string
   ariaLabel?: string
