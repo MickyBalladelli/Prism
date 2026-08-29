@@ -1,6 +1,6 @@
 import { component, computed, html } from 'matrix'
 import { Badge } from './badge.js'
-import { normalizeTreeViewModel } from './tree-view-models.js'
+import { normalizeTreeViewModel } from '../theme.js'
 
 function renderMeta(meta) {
   return meta === undefined || meta === null

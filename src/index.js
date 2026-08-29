@@ -62,11 +62,10 @@ export {
   TreeBranchIcon,
   TreeLeafIcon,
   TreeToggleIcon,
-  treeViewModels,
   TreeView,
   TreeViewComponent,
   UnlockIcon,
   UploadIcon,
   UserIcon
 } from './components/index.js'
-export { prismTheme, prismThemeValues } from './theme.js'
+export { prismTheme, prismThemeValues, treeViewModels } from './theme.js'

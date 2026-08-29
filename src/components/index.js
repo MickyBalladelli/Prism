@@ -59,4 +59,4 @@ export {
 } from './icons.js'
 export { TextField, TextFieldComponent } from './text-field.js'
 export { TreeView, TreeViewComponent } from './tree-view.js'
-export { treeViewModels } from './tree-view-models.js'
+export { treeViewModels } from '../theme.js'
