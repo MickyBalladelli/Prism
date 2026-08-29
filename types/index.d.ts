@@ -65,11 +65,18 @@ export interface SelectOption {
 
 export type SelectOptionInput = SelectOption | string | number
 export type SelectPlacement = 'bottom' | 'top' | 'left' | 'right'
+export type SelectRenderLocation = 'trigger' | 'option'
+
+export interface SelectRenderContext {
+  location: SelectRenderLocation
+  selected: boolean
+}
 
 export interface SelectProps {
   options?: SelectOptionInput[] | Signal<SelectOptionInput[]>
   value?: string | Signal<string>
   onChange?: (event: Event) => void
+  onRender?: (option: SelectOption, context: SelectRenderContext) => unknown
   id?: string
   name?: string
   placeholder?: string

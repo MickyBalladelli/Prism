@@ -83,6 +83,16 @@ const view = Select({
 })
 ```
 
+Use `onRender` to customize the selected value and each option. It receives the normalized option and a context with `location` (`trigger` or `option`) and `selected`:
+
+```jsx
+import { html } from 'matrix'
+
+const renderMovie = option => html`<span class="movie-option">🎬 ${option.label}</span>`
+
+const view = <Select options={movies} value={selectedMovie} onRender={renderMovie} />
+```
+
 ## Badge
 
 `Badge` displays a compact count or state. Use a Matrix signal with `pulseOnChange` to briefly highlight a changing value:

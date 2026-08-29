@@ -30,6 +30,7 @@ export function Select(props = {}) {
     options = [],
     value = '',
     onChange,
+    onRender,
     id,
     name,
     placeholder = 'Select an option',
@@ -52,9 +53,16 @@ export function Select(props = {}) {
     : (options ?? []).map(normalizeOption)
 
   const readOptions = () => isReactiveValue(optionList) ? optionList.value : optionList
-  const selectedLabel = computed(() => {
+  const renderOption = (option, context) => typeof onRender === 'function'
+    ? onRender(option, context)
+    : option.label
+  const selectedOption = computed(() => {
     const selected = String(selectedValue.value ?? '')
-    return readOptions().find(option => String(option.value) === selected)?.label ?? placeholder
+    return readOptions().find(option => String(option.value) === selected)
+  })
+  const selectedLabel = computed(() => {
+    const option = selectedOption.value
+    return option ? renderOption(option, { location: 'trigger', selected: true }) : placeholder
   })
 
   let activeTrigger
@@ -186,7 +194,7 @@ export function Select(props = {}) {
   const optionMarkup = computed(() => {
     const selected = String(selectedValue.value ?? '')
 
-    return readOptions().map(option => html`<button type="button" class="${baseClassName}-option" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" ?disabled=${option.disabled} .onclick=${event => selectOption(option, event)}>${option.label}</button>`)
+    return readOptions().map(option => html`<button type="button" class="${baseClassName}-option" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" ?disabled=${option.disabled} .onclick=${event => selectOption(option, event)}>${renderOption(option, { location: 'option', selected: String(option.value) === selected })}</button>`)
   })
 
   const listboxId = id === undefined ? undefined : `${id}-listbox`

@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { Badge, Box, Button, Card, CheckBox, Pulse, Select, TextField, TreeView } from 'prism-ui'
+import { AlertIcon, Badge, Box, Button, Card, CheckBox, ClockIcon, ImageIcon, Pulse, Select, SparkIcon, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const componentInfo = {
@@ -144,6 +144,7 @@ function SelectPlayground() {
   const value = signal('spirited-away')
   const size = signal('medium')
   const placement = signal('bottom')
+  const renderMode = signal('text')
   const options = [
     { value: 'spirited-away', label: 'Spirited Away' },
     { value: 'moonlight', label: 'Moonlight' },
@@ -151,15 +152,42 @@ function SelectPlayground() {
     { value: 'arrival', label: 'Arrival' },
     { value: 'grand-budapest-hotel', label: 'The Grand Budapest Hotel' }
   ]
+  const movieDetails = {
+    'spirited-away': { year: '2001', genre: 'Fantasy', rating: '8.6', icon: SparkIcon, poster: 'coral' },
+    moonlight: { year: '2016', genre: 'Drama', rating: '7.4', icon: ClockIcon, poster: 'violet' },
+    parasite: { year: '2019', genre: 'Thriller', rating: '8.5', icon: AlertIcon, poster: 'gold' },
+    arrival: { year: '2016', genre: 'Sci-Fi', rating: '7.9', icon: ImageIcon, poster: 'blue' },
+    'grand-budapest-hotel': { year: '2014', genre: 'Comedy', rating: '8.1', icon: SparkIcon, poster: 'peach' }
+  }
   const selectedLabel = computed(() => options.find(option => option.value === value.value)?.label ?? 'Nothing selected')
+  const renderModeLabel = computed(() => ({
+    text: 'Text',
+    'icon-text': 'Icon + Text',
+    'film-card': 'Film card'
+  }[renderMode.value] ?? 'Text'))
+  const renderMovieOption = option => {
+    if (renderMode.value === 'text') {
+      return option.label
+    }
+
+    const details = movieDetails[option.value] ?? movieDetails.arrival
+    const Icon = details.icon
+
+    if (renderMode.value === 'film-card') {
+      return html`<span class="select-film-option"><span class="select-film-poster select-film-poster-${details.poster}" aria-hidden="true">${Icon({ size: '1.05em' })}</span><span class="select-film-copy"><span class="select-film-title">${option.label}</span><span class="select-film-meta">${details.year} · ${details.genre}</span></span><span class="select-film-rating">★ ${details.rating}</span></span>`
+    }
+
+    return html`<span class="select-rendered-option">${Icon({ class: 'select-rendered-icon', size: '1em' })}<span>${option.label}</span></span>`
+  }
 
   return {
     preview: (
       <div class="select-playground">
         <div class="select-demo-card">
           <p class="select-demo-label">Movie night</p>
-          <Select value={value} options={options} size={size} placement={placement} />
+          <Select value={value} options={options} size={size} placement={placement} onRender={renderMovieOption} />
           <p class="playground-note">Selected movie: <strong>{selectedLabel}</strong></p>
+          <p class="playground-note">Option rendering: <strong>{renderModeLabel}</strong></p>
         </div>
       </div>
     ),
@@ -186,6 +214,17 @@ function SelectPlayground() {
             { value: 'left', label: 'Left' }
           ]}
         />
+        <label class="setting-label" htmlFor="select-render-mode">Custom option rendering</label>
+        <Select
+          id="select-render-mode"
+          value={renderMode}
+          options={[
+            { value: 'text', label: 'Text' },
+            { value: 'icon-text', label: 'Icon + Text' },
+            { value: 'film-card', label: 'Film card' }
+          ]}
+        />
+        <p class="playground-note">The live movie Select uses <code>onRender</code> to follow this choice.</p>
       </div>
     )
   }
