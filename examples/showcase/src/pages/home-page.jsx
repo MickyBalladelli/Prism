@@ -14,6 +14,16 @@ const components = [
     details: ['Veil and Sanctum recipes', 'Toggle the motion layer', 'Works as a real layout surface']
   },
   {
+    key: 'label',
+    path: '/components/label',
+    eyebrow: 'Layout',
+    title: 'Label',
+    mark: '14',
+    description: 'Typographic labels with size, typeface, and a contrast lock that stays readable over motion.',
+    highlights: ['Size and typeface', 'Always-visible lock', 'Works over animation'],
+    details: ['Four sizes', 'Sans, serif, and mono', 'Readable on Veil and Sanctum']
+  },
+  {
     key: 'box',
     path: '/components/box',
     eyebrow: 'Layout',

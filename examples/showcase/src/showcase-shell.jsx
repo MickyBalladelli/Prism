@@ -13,12 +13,12 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '13',
+      meta: '14',
       expanded: true,
       children: [
         {
           label: 'Layout',
-          meta: '3',
+          meta: '4',
           expanded: true,
           children: [
             {
@@ -26,6 +26,12 @@ function createSidebarItems(link, activeKey) {
               href: '/components/background',
               onClick: link('/components/background'),
               active: activeKey === 'background'
+            },
+            {
+              label: 'Label',
+              href: '/components/label',
+              onClick: link('/components/label'),
+              active: activeKey === 'label'
             },
             {
               label: 'Box',

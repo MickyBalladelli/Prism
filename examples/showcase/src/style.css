@@ -320,6 +320,16 @@ h1 em {
   width: 100%;
 }
 
+.detail-layout-label .preview-surface {
+  min-height: 28rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.detail-layout-label .preview-surface > * {
+  width: 100%;
+}
+
 .settings-copy {
   margin: .6rem 0 1.5rem;
   color: var(--prism-color-text-subtle);
@@ -869,6 +879,22 @@ h1 em {
 .background-demo-actions .prism-button-secondary {
   border-color: rgb(255 255 255 / 18%);
   background: linear-gradient(135deg, rgb(78 96 146 / 78%), rgb(52 67 110 / 88%));
+}
+
+.label-demo-stage {
+  display: grid;
+  align-content: end;
+  justify-items: start;
+  gap: 1rem;
+  min-height: 18rem;
+}
+
+.label-demo-copy {
+  max-width: 26rem;
+  margin: 0;
+  color: rgb(226 236 255 / 78%);
+  font-size: var(--prism-font-size-body);
+  line-height: 1.6;
 }
 
 .playground-box-frame {

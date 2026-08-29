@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Background, Box, Button, Card, CheckBox, CodeViewer, TextField, TreeView } from '../src/index.js'
+import { Background, Box, Button, Card, CheckBox, CodeViewer, Label, TextField, TreeView } from '../src/index.js'
 import { signal } from 'matrix'
 
 test('components expose Matrix templates', () => {
@@ -117,4 +117,25 @@ test('Background removes the motion layer when animation is off', () => {
   assert.equal(classNames?.value.includes('prism-background-aurora'), true)
 
   assert.equal(background.values.some(value => value?.kind === 'computed' && value.value?.render), false)
+})
+
+test('Label supports typography props and an always-visible lock', () => {
+  const label = Label({
+    children: 'Over the motion',
+    size: 'display',
+    font: 'serif',
+    weight: 'bold',
+    alwaysVisible: true
+  })
+
+  const classNames = label.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-label'))
+  assert.equal(classNames?.value.includes('prism-label-size-display'), true)
+  assert.equal(classNames?.value.includes('prism-label-font-serif'), true)
+  assert.equal(classNames?.value.includes('prism-label-weight-bold'), true)
+  assert.equal(classNames?.value.includes('prism-label-always-visible'), true)
+})
+
+test('Label can associate with a control', () => {
+  const label = Label({ htmlFor: 'name', children: 'Name' })
+  assert.equal(label.values.includes('name'), true)
 })

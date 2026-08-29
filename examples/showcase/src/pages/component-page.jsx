@@ -1,5 +1,5 @@
 import { computed, html, signal } from 'matrix'
-import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, ImageIcon, MoreHorizontalIcon, Popup, Pulse, Select, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
+import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, FileIcon, FolderIcon, ImageIcon, Label, MoreHorizontalIcon, Popup, Pulse, Select, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
@@ -8,6 +8,11 @@ const componentInfo = {
     eyebrow: 'Layout',
     title: 'Background',
     description: 'Shape a reusable animated backdrop with named motion recipes, dark palettes, and an overlay content slot.'
+  },
+  label: {
+    eyebrow: 'Layout',
+    title: 'Label',
+    description: 'Set size, typeface, and weight, then lock contrast so the words stay readable over any motion behind them.'
   },
   box: {
     eyebrow: 'Layout',
@@ -89,6 +94,7 @@ const playgroundRuntime = {
   FileIcon,
   FolderIcon,
   ImageIcon,
+  Label,
   MoreHorizontalIcon,
   Popup,
   Pulse,
@@ -137,7 +143,7 @@ function BackgroundPlayground() {
     '  minHeight: "20rem",',
     '  children: html`<div class="background-demo-stage">',
     '    <p class="eyebrow">Ambient layer</p>',
-    '    <h3>${headline}</h3>',
+    '    ${Label({ size: "display", font: "sans", weight: "semibold", alwaysVisible: true, children: headline })}',
     '    <p class="background-demo-copy">The animation stays behind the content, so the surface can hold real UI, copy, and actions.</p>',
     '    <div class="background-demo-badges">',
     '      <span>Palette: ${palette}</span>',
@@ -210,6 +216,91 @@ function BackgroundPlayground() {
           ]}
         />
         <p class="playground-note">This preview runs the animated surface as a reusable component, with content layered above the effect.</p>
+      </div>
+    )
+  }
+}
+
+function LabelPlayground() {
+  const copy = signal('Always in focus')
+  const size = signal('display')
+  const font = signal('sans')
+  const weight = signal('semibold')
+  const alwaysVisible = signal(true)
+  const animation = signal('sanctum')
+  const codePreview = createCodePreview(codeLines(
+    'Background({',
+    '  palette: "midnight",',
+    '  animation,',
+    '  minHeight: "22rem",',
+    '  children: html`<div class="label-demo-stage">',
+    '    ${Label({',
+    '      size: "small",',
+    '      alwaysVisible: true,',
+    '      children: "Over the motion"',
+    '    })}',
+    '    ${Label({',
+    '      size,',
+    '      font,',
+    '      weight,',
+    '      alwaysVisible,',
+    '      children: copy',
+    '    })}',
+    '    <p class="label-demo-copy">Switch Veil and Sanctum. The locked label keeps its contrast on both recipes.</p>',
+    '  </div>`',
+    '})'
+  ), { ...playgroundRuntime, copy, size, font, weight, alwaysVisible, animation })
+
+  return {
+    code: codePreview.code,
+    preview: codePreview.preview,
+    controls: (
+      <div class="settings-list">
+        <label class="setting-label" htmlFor="label-copy">Copy</label>
+        <TextField id="label-copy" value={copy} placeholder="Label copy" />
+        <label class="setting-label" htmlFor="label-size">Size</label>
+        <Select
+          id="label-size"
+          value={size}
+          options={[
+            { value: 'small', label: 'Small — caption' },
+            { value: 'medium', label: 'Medium — body title' },
+            { value: 'large', label: 'Large — section' },
+            { value: 'display', label: 'Display — hero' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="label-font">Font</label>
+        <Select
+          id="label-font"
+          value={font}
+          options={[
+            { value: 'sans', label: 'Sans — interface' },
+            { value: 'serif', label: 'Serif — editorial' },
+            { value: 'mono', label: 'Mono — technical' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="label-weight">Weight</label>
+        <Select
+          id="label-weight"
+          value={weight}
+          options={[
+            { value: 'regular', label: 'Regular' },
+            { value: 'medium', label: 'Medium' },
+            { value: 'semibold', label: 'Semibold' },
+            { value: 'bold', label: 'Bold' }
+          ]}
+        />
+        <label class="setting-label" htmlFor="label-animation">Backdrop recipe</label>
+        <Select
+          id="label-animation"
+          value={animation}
+          options={[
+            { value: 'veil', label: 'Veil — sine cloud drift' },
+            { value: 'sanctum', label: 'Sanctum — gilded hall' }
+          ]}
+        />
+        <CheckBox checked={alwaysVisible}>Always visible</CheckBox>
+        <p class="playground-note">Turn the lock off to see the same type drop into the animation. Turn it on to keep a readable plate on any recipe.</p>
       </div>
     )
   }
@@ -1195,6 +1286,7 @@ function TreeViewPlayground() {
 
 const playgrounds = {
   background: BackgroundPlayground,
+  label: LabelPlayground,
   box: BoxPlayground,
   'text-field': TextFieldPlayground,
   select: SelectPlayground,

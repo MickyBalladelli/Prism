@@ -13,6 +13,29 @@ export interface BoxProps {
 export type BackgroundPalette = 'midnight' | 'aurora' | 'tide'
 export type BackgroundAnimation = 'veil' | 'sanctum'
 
+export type LabelSize = 'small' | 'medium' | 'large' | 'display'
+export type LabelFont = 'sans' | 'serif' | 'mono'
+export type LabelWeight = 'regular' | 'medium' | 'semibold' | 'bold'
+export type LabelTone = 'ink' | 'muted' | 'accent' | 'inverse'
+
+export interface LabelProps {
+  children?: unknown
+  class?: string
+  id?: string
+  htmlFor?: string | Signal<string>
+  size?: LabelSize | Signal<LabelSize>
+  font?: LabelFont | Signal<LabelFont>
+  weight?: LabelWeight | Signal<LabelWeight>
+  tone?: LabelTone | Signal<LabelTone>
+  alwaysVisible?: boolean | Signal<boolean>
+  fontSize?: string | Signal<string>
+  fontFamily?: string | Signal<string>
+  fontWeight?: string | number | Signal<string | number>
+  letterSpacing?: string | Signal<string>
+  lineHeight?: string | Signal<string>
+  style?: string | Record<string, string>
+}
+
 export interface BackgroundProps {
   children?: unknown
   class?: string
@@ -340,6 +363,7 @@ export interface TreeViewProps {
   onRender?: (item: TreeViewItem, context: TreeViewRenderContext) => unknown
 }
 
+export function Label(props?: LabelProps): unknown
 export function Background(props?: BackgroundProps): unknown
 export function Box(props?: BoxProps): unknown
 export function Button(props?: ButtonProps): unknown
@@ -405,6 +429,7 @@ export function CodeIcon(props?: IconProps): unknown
 export function TerminalIcon(props?: IconProps): unknown
 export function EyeOffIcon(props?: IconProps): unknown
 export function Pulse(props?: PulseProps): unknown
+export function LabelComponent(props?: LabelProps): ComponentResult
 export function BackgroundComponent(props?: BackgroundProps): ComponentResult
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult

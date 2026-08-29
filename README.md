@@ -35,17 +35,20 @@ Components accept Matrix signals for `value` and `checked`, keeping controls syn
 
 ```jsx
 import { html } from 'matrix'
-import { Background, Button } from 'prism-ui'
+import { Background, Button, Label } from 'prism-ui'
 
 const view = Background({
   palette: 'midnight',
+  animation: 'veil',
   intensity: 1.15,
   children: [
-    html`<h2>Deep focus</h2>`,
+    Label({ children: 'Deep focus', size: 'display', alwaysVisible: true }),
     Button({ children: 'Open workspace' })
   ]
 })
 ```
+
+`Label` sets size, typeface, and weight. Set `alwaysVisible` when the copy sits on a moving background so contrast stays locked on Veil, Sanctum, or a solid surface.
 
 `CodeViewer` renders editable, syntax-colored code with optional line numbers and a copy button:
 
@@ -223,4 +226,4 @@ npm run dev
 
 Vite watches the local Prism and Matrix source during development, so saved changes hot-reload without a manual build.
 
-Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Background`, `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, `CodeViewer`, `Popup`, and `Table`.
+Select `Show details` on any component card to open its playground page. Component pages expose live props, settings, and an editable source recipe for `Background`, `Label`, `Box`, `TextField`, `Select`, `CheckBox`, `Card`, `Button`, `Badge`, `Pulse`, `TreeView`, `CodeViewer`, `Popup`, and `Table`.

@@ -1302,6 +1302,124 @@ export const prismTheme = globalCss(`
     display: none;
   }
 
+  .prism-label {
+    --prism-label-size: var(--prism-font-size-lead);
+    --prism-label-font: inherit;
+    --prism-label-weight: 650;
+    --prism-label-tracking: -.02em;
+    --prism-label-leading: 1.12;
+    --prism-label-color: var(--prism-color-ink);
+    display: inline-block;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: var(--prism-label-color);
+    font-family: var(--prism-label-font);
+    font-size: var(--prism-label-size);
+    font-weight: var(--prism-label-weight);
+    letter-spacing: var(--prism-label-tracking);
+    line-height: var(--prism-label-leading);
+    vertical-align: baseline;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .prism-label-size-small {
+    --prism-label-size: var(--prism-font-size-label);
+    --prism-label-tracking: .04em;
+    --prism-label-leading: 1.2;
+  }
+
+  .prism-label-size-medium {
+    --prism-label-size: var(--prism-font-size-lead);
+  }
+
+  .prism-label-size-large {
+    --prism-label-size: clamp(1.55rem, 3vw, 2.15rem);
+    --prism-label-tracking: -.04em;
+  }
+
+  .prism-label-size-display {
+    --prism-label-size: clamp(2.05rem, 5vw, 3.35rem);
+    --prism-label-tracking: -.055em;
+    --prism-label-leading: .98;
+  }
+
+  .prism-label-font-sans {
+    --prism-label-font: inherit;
+  }
+
+  .prism-label-font-serif {
+    --prism-label-font: Georgia, 'Times New Roman', serif;
+  }
+
+  .prism-label-font-mono {
+    --prism-label-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+    --prism-label-tracking: -.03em;
+  }
+
+  .prism-label-weight-regular {
+    --prism-label-weight: 500;
+  }
+
+  .prism-label-weight-medium {
+    --prism-label-weight: 620;
+  }
+
+  .prism-label-weight-semibold {
+    --prism-label-weight: 740;
+  }
+
+  .prism-label-weight-bold {
+    --prism-label-weight: 830;
+  }
+
+  .prism-label-tone-ink {
+    --prism-label-color: var(--prism-color-ink);
+  }
+
+  .prism-label-tone-muted {
+    --prism-label-color: var(--prism-color-text-muted);
+  }
+
+  .prism-label-tone-accent {
+    --prism-label-color: var(--prism-color-action);
+  }
+
+  .prism-label-tone-inverse {
+    --prism-label-color: #f6f3ec;
+  }
+
+  .prism-label-always-visible {
+    --prism-label-color: #f8f4ec;
+    position: relative;
+    z-index: 2;
+    padding: .28em .7em .34em;
+    border: 1px solid rgb(255 255 255 / 22%);
+    border-radius: .62em;
+    background:
+      linear-gradient(180deg, rgb(18 24 42 / 78%), rgb(7 11 24 / 90%));
+    box-shadow:
+      0 .55rem 1.6rem rgb(3 6 16 / 42%),
+      0 0 0 1px rgb(0 0 0 / 28%),
+      inset 0 1px 0 rgb(255 255 255 / 18%);
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+    text-shadow:
+      0 1px 1px rgb(0 0 0 / 78%),
+      0 0 16px rgb(0 0 0 / 38%);
+    -webkit-text-stroke: .35px rgb(6 10 22 / 55%);
+    paint-order: stroke fill;
+  }
+
+  .prism-label-always-visible.prism-label-size-small {
+    padding: .22em .55em .24em;
+    border-radius: 999px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
   .prism-popup-layer {
     position: fixed;
     z-index: 200;

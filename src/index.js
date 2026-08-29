@@ -13,6 +13,8 @@ export {
   CheckBoxComponent,
   CodeViewer,
   CodeViewerComponent,
+  Label,
+  LabelComponent,
   AlertIcon,
   ArrowDownIcon,
   ArrowLeftIcon,
