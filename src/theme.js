@@ -2523,12 +2523,24 @@ export const prismTheme = globalCss(`
     box-shadow: 0 0 0 .16rem rgb(78 115 234 / 12%);
   }
 
+  .prism-tree-summary-active,
+  .prism-tree-details[open] > .prism-tree-summary-active,
   .prism-tree-link-active {
     border-color: var(--prism-color-lavender-border);
     background: linear-gradient(180deg, var(--prism-color-white), var(--prism-color-lavender-surface));
     box-shadow: 0 .52rem 1rem rgb(89 88 181 / 11%);
   }
 
+  .prism-tree-summary-active:hover,
+  .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-link-active:hover {
+    border-color: var(--prism-color-focus);
+    background: linear-gradient(180deg, var(--prism-color-white), var(--prism-color-accent-soft));
+    box-shadow: 0 .72rem 1.35rem rgb(89 88 181 / 18%);
+    transform: translateY(-1px);
+  }
+
+  .prism-tree-summary-active .prism-tree-label,
   .prism-tree-link-active .prism-tree-label {
     color: var(--prism-color-ink);
   }
@@ -2577,10 +2589,20 @@ export const prismTheme = globalCss(`
     background: linear-gradient(135deg, #836ef5, #58c9c2);
   }
 
+  .prism-tree-model-aurora .prism-tree-summary-active,
+  .prism-tree-model-aurora .prism-tree-details[open] > .prism-tree-summary-active,
   .prism-tree-model-aurora .prism-tree-link-active {
     border-color: rgb(109 94 247 / 42%);
     background: linear-gradient(135deg, rgb(255 255 255 / 96%), rgb(232 228 255 / 96%));
     box-shadow: 0 .58rem 1.15rem rgb(109 94 247 / 16%);
+  }
+
+  .prism-tree-model-aurora .prism-tree-summary-active:hover,
+  .prism-tree-model-aurora .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-aurora .prism-tree-link-active:hover {
+    border-color: rgb(109 94 247 / 58%);
+    background: linear-gradient(135deg, rgb(255 255 255 / 99%), rgb(223 217 255 / 98%));
+    box-shadow: 0 .8rem 1.45rem rgb(109 94 247 / 24%);
   }
 
   .prism-tree-model-nocturne {
@@ -2654,10 +2676,20 @@ export const prismTheme = globalCss(`
     background: rgb(128 217 255 / 11%);
   }
 
+  .prism-tree-model-nocturne .prism-tree-summary-active,
+  .prism-tree-model-nocturne .prism-tree-details[open] > .prism-tree-summary-active,
   .prism-tree-model-nocturne .prism-tree-link-active {
     border-color: rgb(177 155 255 / 62%);
     background: linear-gradient(135deg, rgb(75 67 143 / 80%), rgb(40 63 107 / 92%));
     box-shadow: 0 .5rem 1.15rem rgb(93 78 203 / 25%);
+  }
+
+  .prism-tree-model-nocturne .prism-tree-summary-active:hover,
+  .prism-tree-model-nocturne .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-nocturne .prism-tree-link-active:hover {
+    border-color: rgb(193 228 255 / 72%);
+    background: linear-gradient(135deg, rgb(91 81 166 / 86%), rgb(47 76 126 / 96%));
+    box-shadow: 0 .72rem 1.4rem rgb(93 78 203 / 34%);
   }
 
   .prism-tree-model-editorial {
@@ -2723,10 +2755,21 @@ export const prismTheme = globalCss(`
     box-shadow: 0 0 0 .17rem var(--prism-color-accent-glow);
   }
 
+  .prism-tree-model-editorial .prism-tree-summary-active,
+  .prism-tree-model-editorial .prism-tree-details[open] > .prism-tree-summary-active,
   .prism-tree-model-editorial .prism-tree-link-active {
     border-bottom-color: var(--prism-color-accent);
     background: linear-gradient(90deg, rgb(255 240 234 / 85%), transparent);
     box-shadow: none;
+  }
+
+  .prism-tree-model-editorial .prism-tree-summary-active:hover,
+  .prism-tree-model-editorial .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-editorial .prism-tree-link-active:hover {
+    border-bottom-color: var(--prism-color-accent-hover);
+    background: linear-gradient(90deg, rgb(255 233 225 / 94%), transparent 86%);
+    box-shadow: inset 0 -1px 0 rgb(231 111 81 / 18%);
+    transform: none;
   }
 
   .prism-tree-model-terminal {
@@ -2814,10 +2857,21 @@ export const prismTheme = globalCss(`
     font-family: inherit;
   }
 
+  .prism-tree-model-terminal .prism-tree-summary-active,
+  .prism-tree-model-terminal .prism-tree-details[open] > .prism-tree-summary-active,
   .prism-tree-model-terminal .prism-tree-link-active {
     border-color: rgb(91 224 148 / 38%);
     background: rgb(91 224 148 / 14%);
     box-shadow: inset 3px 0 #5be094;
+  }
+
+  .prism-tree-model-terminal .prism-tree-summary-active:hover,
+  .prism-tree-model-terminal .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-terminal .prism-tree-link-active:hover {
+    border-color: rgb(120 239 172 / 54%);
+    background: rgb(91 224 148 / 18%);
+    box-shadow: inset 3px 0 #5be094, 0 .24rem .62rem rgb(4 14 13 / 22%);
+    transform: translateX(.12rem);
   }
 
   .prism-tree-view.prism-tree-items-minimal {
@@ -2865,9 +2919,19 @@ export const prismTheme = globalCss(`
     box-shadow: 0 .28rem .72rem rgb(89 88 181 / 9%);
   }
 
+  .prism-tree-items-minimal .prism-tree-summary-active:hover,
+  .prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-items-minimal .prism-tree-link-active:hover {
+    border-color: var(--prism-color-focus);
+    background: linear-gradient(180deg, rgb(255 255 255 / 96%), var(--prism-color-lavender-surface));
+    box-shadow: 0 .42rem .95rem rgb(89 88 181 / 15%);
+    transform: translateY(-1px);
+  }
+
   .prism-tree-items-minimal .prism-tree-summary:hover .prism-tree-label,
   .prism-tree-items-minimal .prism-tree-link:hover .prism-tree-label,
   .prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary .prism-tree-label,
+  .prism-tree-items-minimal .prism-tree-summary-active .prism-tree-label,
   .prism-tree-items-minimal .prism-tree-link-active .prism-tree-label {
     color: var(--prism-color-action);
   }
@@ -2875,6 +2939,7 @@ export const prismTheme = globalCss(`
   .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-summary:hover .prism-tree-label,
   .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-link:hover .prism-tree-label,
   .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary .prism-tree-label,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-summary-active .prism-tree-label,
   .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-link-active .prism-tree-label {
     color: #80d9ff;
   }
@@ -2887,12 +2952,28 @@ export const prismTheme = globalCss(`
     box-shadow: 0 .3rem .8rem rgb(3 8 25 / 24%);
   }
 
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-summary-active:hover,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-nocturne.prism-tree-items-minimal .prism-tree-link-active:hover {
+    border-color: rgb(165 231 255 / 64%);
+    background: rgb(52 74 126 / 86%);
+    box-shadow: 0 .42rem .98rem rgb(3 8 25 / 30%);
+  }
+
   .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-summary-active,
   .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active,
   .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-link-active {
     border-color: rgb(109 94 247 / 38%);
     background: rgb(237 233 255 / 88%);
     box-shadow: 0 .3rem .8rem rgb(109 94 247 / 10%);
+  }
+
+  .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-summary-active:hover,
+  .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-aurora.prism-tree-items-minimal .prism-tree-link-active:hover {
+    border-color: rgb(109 94 247 / 52%);
+    background: rgb(229 223 255 / 94%);
+    box-shadow: 0 .45rem 1rem rgb(109 94 247 / 16%);
   }
 
   .prism-tree-model-editorial.prism-tree-items-minimal .prism-tree-summary-active,
@@ -2903,9 +2984,19 @@ export const prismTheme = globalCss(`
     box-shadow: 0 .28rem .72rem rgb(180 91 62 / 8%);
   }
 
+  .prism-tree-model-editorial.prism-tree-items-minimal .prism-tree-summary-active:hover,
+  .prism-tree-model-editorial.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-editorial.prism-tree-items-minimal .prism-tree-link-active:hover {
+    border-color: var(--prism-color-accent);
+    background: rgb(255 234 226 / 86%);
+    box-shadow: 0 .34rem .82rem rgb(180 91 62 / 12%);
+    transform: none;
+  }
+
   .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-summary:hover .prism-tree-label,
   .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-link:hover .prism-tree-label,
   .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary .prism-tree-label,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-summary-active .prism-tree-label,
   .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-link-active .prism-tree-label {
     color: #5be094;
   }
@@ -2916,5 +3007,14 @@ export const prismTheme = globalCss(`
     border-color: rgb(91 224 148 / 38%);
     background: rgb(91 224 148 / 11%);
     box-shadow: 0 .28rem .72rem rgb(4 14 13 / 20%);
+  }
+
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-summary-active:hover,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-details[open] > .prism-tree-summary-active:hover,
+  .prism-tree-model-terminal.prism-tree-items-minimal .prism-tree-link-active:hover {
+    border-color: rgb(91 224 148 / 56%);
+    background: rgb(91 224 148 / 16%);
+    box-shadow: 0 .4rem .9rem rgb(4 14 13 / 24%);
+    transform: translateX(.12rem);
   }
 `)
