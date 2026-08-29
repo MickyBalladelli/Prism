@@ -531,20 +531,40 @@ export const prismTheme = globalCss(`
     color: var(--prism-color-success);
   }
 
+  .prism-pulse-success .prism-pulse-core {
+    box-shadow: 0 0 0 .25rem var(--prism-color-success-glow);
+  }
+
   .prism-pulse-info {
     color: var(--prism-color-information);
+  }
+
+  .prism-pulse-info .prism-pulse-core {
+    box-shadow: 0 0 0 .25rem rgb(14 165 233 / 16%);
   }
 
   .prism-pulse-warning {
     color: var(--prism-color-warning);
   }
 
+  .prism-pulse-warning .prism-pulse-core {
+    box-shadow: 0 0 0 .25rem rgb(245 158 11 / 17%);
+  }
+
   .prism-pulse-error {
     color: var(--prism-color-error);
   }
 
+  .prism-pulse-error .prism-pulse-core {
+    box-shadow: 0 0 0 .25rem rgb(239 68 68 / 16%);
+  }
+
   .prism-pulse-off {
     color: var(--prism-color-text-subtle);
+  }
+
+  .prism-pulse-off .prism-pulse-core {
+    box-shadow: 0 0 0 .25rem rgb(138 149 168 / 18%);
   }
 
   .prism-pulse-mark {
@@ -572,32 +592,30 @@ export const prismTheme = globalCss(`
     animation-delay: 1.3s;
   }
 
-  .prism-pulse-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+  .prism-pulse-core {
+    position: relative;
     z-index: 1;
-    width: 1.8rem;
-    height: 1.8rem;
-    color: currentColor;
-    transform: translate(-50%, -50%);
+    display: inline-grid;
+    width: .45rem;
+    height: .45rem;
+    place-items: center;
+    border-radius: 50%;
+    background: currentColor;
   }
 
-  .prism-pulse-small .prism-pulse-icon {
-    width: 1.55rem;
-    height: 1.55rem;
+  .prism-pulse-small .prism-pulse-core {
+    width: .38rem;
+    height: .38rem;
   }
 
-  .prism-pulse-large .prism-pulse-icon {
-    width: 2.15rem;
-    height: 2.15rem;
+  .prism-pulse-large .prism-pulse-core {
+    width: .58rem;
+    height: .58rem;
   }
 
   .prism-pulse-off .prism-pulse-mark::before,
   .prism-pulse-off .prism-pulse-mark::after {
-    opacity: .16;
-    transform: scale(1);
-    animation: none;
+    display: none;
   }
 
   @keyframes prism-pulse-ring {
