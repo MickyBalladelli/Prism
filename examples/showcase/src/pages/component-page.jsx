@@ -373,10 +373,30 @@ function ButtonPlayground() {
 
 function PulsePlayground() {
   const size = signal('large')
+  const oncePulseTrigger = signal(0)
+  const oncePulse = computed(() => {
+    oncePulseTrigger.value
+    return <Pulse status="success" animation="once" size={size}>Connected</Pulse>
+  })
 
   return {
     preview: (
       <div class="pulse-playground">
+        <div class="pulse-mode-examples" role="group" aria-label="Pulse animation examples">
+          <div class="pulse-mode-card">
+            <p class="pulse-mode-label">Once</p>
+            {oncePulse}
+            <Button variant="secondary" onClick={() => oncePulseTrigger.update(value => value + 1)}>
+              Pulse once
+            </Button>
+            <p class="pulse-mode-description">One signal on mount or button press.</p>
+          </div>
+          <div class="pulse-mode-card">
+            <p class="pulse-mode-label">Continuous</p>
+            <Pulse status="info" animation="continuous" size={size}>Syncing</Pulse>
+            <p class="pulse-mode-description">A repeating signal for live activity.</p>
+          </div>
+        </div>
         <div class="pulse-status-strip" role="group" aria-label="Pulse status examples">
           <Pulse status="success" size={size}>Healthy</Pulse>
           <Pulse status="info" size={size}>Syncing</Pulse>

@@ -65,10 +65,12 @@ export interface IconProps {
 
 export type PulseStatus = 'success' | 'info' | 'warning' | 'error' | 'off'
 export type PulseSize = 'small' | 'medium' | 'large'
+export type PulseAnimation = 'once' | 'continuous'
 
 export interface PulseProps {
   status?: PulseStatus | Signal<PulseStatus>
   size?: PulseSize | Signal<PulseSize>
+  animation?: PulseAnimation | Signal<PulseAnimation>
   class?: string
   ariaLabel?: string
   children?: unknown

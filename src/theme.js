@@ -592,6 +592,14 @@ export const prismTheme = globalCss(`
     animation-delay: 1.3s;
   }
 
+  .prism-pulse-once .prism-pulse-mark::before {
+    animation-iteration-count: 1;
+  }
+
+  .prism-pulse-once .prism-pulse-mark::after {
+    display: none;
+  }
+
   .prism-pulse-core {
     position: relative;
     z-index: 1;

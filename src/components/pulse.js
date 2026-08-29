@@ -6,6 +6,7 @@ export function Pulse(props = {}) {
   const {
     status = 'info',
     size = 'medium',
+    animation = 'continuous',
     class: classValue = '',
     ariaLabel,
     children = []
@@ -19,7 +20,11 @@ export function Pulse(props = {}) {
     ? size
     : size || 'medium'
 
-  return html`<span class="${baseClassName} ${baseClassName}-${statusValue} ${baseClassName}-${sizeValue} ${classValue}" role="${ariaLabel ? 'img' : undefined}" aria-label="${ariaLabel}"><span class="${baseClassName}-mark"><span class="${baseClassName}-core"></span></span><span class="${baseClassName}-label">${children}</span></span>`
+  const animationValue = animation?.kind === 'signal' || animation?.kind === 'computed'
+    ? animation
+    : animation || 'continuous'
+
+  return html`<span class="${baseClassName} ${baseClassName}-${statusValue} ${baseClassName}-${sizeValue} ${baseClassName}-${animationValue} ${classValue}" role="${ariaLabel ? 'img' : undefined}" aria-label="${ariaLabel}"><span class="${baseClassName}-mark"><span class="${baseClassName}-core"></span></span><span class="${baseClassName}-label">${children}</span></span>`
 }
 
 export const PulseComponent = props => component(Pulse, props)

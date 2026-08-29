@@ -68,7 +68,7 @@ const view = <TreeLeafIcon size="14" />
 
 ## Pulse
 
-`Pulse` turns the TreeView branch mark into a living status signal. It supports `success`, `info`, `warning`, `error`, and `off` states, plus `small`, `medium`, and `large` sizes. The `off` state is muted and does not animate:
+`Pulse` turns the TreeView branch mark into a living status signal. It supports `success`, `info`, `warning`, `error`, and `off` states, plus `small`, `medium`, and `large` sizes. Use `animation="once"` for one pulse or `animation="continuous"` for a repeating signal. Continuous animation is the default. The `off` state is muted and does not animate:
 
 ```jsx
 import { Pulse } from 'prism-ui'

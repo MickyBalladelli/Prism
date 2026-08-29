@@ -449,6 +449,45 @@ h1 em {
   gap: 1.1rem;
 }
 
+.pulse-mode-examples {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+}
+
+.pulse-mode-card {
+  display: grid;
+  gap: .7rem;
+  padding: 1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: var(--prism-color-white);
+  box-shadow: 0 .35rem .9rem rgb(37 49 78 / 5%);
+}
+
+.pulse-mode-label,
+.pulse-mode-description {
+  margin: 0;
+}
+
+.pulse-mode-label {
+  color: var(--prism-color-text-soft);
+  font-size: var(--prism-font-size-label);
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.pulse-mode-description {
+  color: var(--prism-color-text-subtle);
+  font-size: var(--prism-font-size-small);
+  line-height: 1.45;
+}
+
+.pulse-mode-card .prism-button {
+  justify-self: start;
+}
+
 .pulse-status-strip {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1265,6 +1304,7 @@ input[type="text"]:required:invalid {
   .button-variant-preview,
   .button-status-preview,
   .button-palette-selector,
+  .pulse-mode-examples,
   .pulse-status-strip {
     grid-template-columns: 1fr;
   }
