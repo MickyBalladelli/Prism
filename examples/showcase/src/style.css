@@ -1797,27 +1797,8 @@ h2 {
   transition: transform .2s, box-shadow .2s, background .2s;
 }
 
-.button-icon {
-  position: relative;
-  display: inline-block;
-  width: .9rem;
-  height: .6rem;
-  border: 1.5px solid var(--prism-color-white-strong);
-  border-radius: 50%;
-  background: var(--prism-color-white-tint);
-  color: var(--prism-color-white);
-}
-
-.button-icon::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: .24rem;
-  height: .24rem;
-  border-radius: 50%;
-  background: currentColor;
-  content: '';
-  transform: translate(-50%, -50%);
+.card-action .prism-button-icon {
+  font-size: 1em;
 }
 
 .card-action:hover {

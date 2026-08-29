@@ -60,6 +60,20 @@ test('CodeViewer uses themed class names and supports line number toggles', () =
   assert.equal(Boolean(highlightedTokens), true)
 })
 
+test('CodeViewer renders language tabs when both sources are provided', () => {
+  const viewer = CodeViewer({
+    defaultTab: 'jsx',
+    tabs: [
+      { id: 'jsx', label: 'JSX', language: 'jsx', filename: 'view.jsx', code: '<Button />' },
+      { id: 'javascript', label: 'JavaScript', language: 'javascript', filename: 'view.js', code: 'Button({})' }
+    ]
+  })
+
+  assert.equal(viewer.values.includes('prism-code-viewer-has-tabs'), true)
+  assert.equal(viewer.values.includes('JSX'), true)
+  assert.equal(viewer.values.includes('JavaScript'), true)
+})
+
 test('Box and Card support sticky layout props', () => {
   const box = Box({ children: 'Sticky box', sticky: true, stickyTop: '1.5rem' })
   const card = Card({ children: 'Sticky card', sticky: true, stickyTop: '2rem' })

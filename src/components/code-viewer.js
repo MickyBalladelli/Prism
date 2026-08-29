@@ -237,11 +237,50 @@ function createCodeStyle(props) {
   })
 }
 
+function toCodeSignal(value, fallback = '') {
+  return value?.kind === 'signal' ? value : signal(String(readValue(value, fallback)))
+}
+
+function tabLabel(tab) {
+  if (tab.label) {
+    return tab.label
+  }
+
+  const language = normalizeLanguage(tab.language)
+  if (language === 'javascript') {
+    return 'JavaScript'
+  }
+
+  if (language === 'jsx') {
+    return 'JSX'
+  }
+
+  return language
+}
+
+function createTabs(props) {
+  const tabs = readValue(props.tabs)
+  if (Array.isArray(tabs) && tabs.length > 0) {
+    return tabs.map((tab, index) => ({
+      id: String(tab.id ?? tab.language ?? index),
+      label: tabLabel(tab),
+      language: tab.language ?? 'javascript',
+      filename: tab.filename ?? props.filename ?? 'untitled.js',
+      code: toCodeSignal(tab.code, '')
+    }))
+  }
+
+  return [{
+    id: 'source',
+    label: tabLabel({ language: props.language }),
+    language: props.language ?? 'javascript',
+    filename: props.filename ?? 'untitled.js',
+    code: toCodeSignal(props.code, '')
+  }]
+}
+
 export function CodeViewer(props = {}) {
   const {
-    code = '',
-    language = 'javascript',
-    filename = 'untitled.js',
     lineNumbers = true,
     editable = true,
     copyable = true,
@@ -256,13 +295,22 @@ export function CodeViewer(props = {}) {
     class: classValue = '',
     ariaLabel = 'Code viewer',
     onChange,
-    onCopy
+    onCopy,
+    onTabChange
   } = props
 
-  const codeValue = code?.kind === 'signal'
-    ? code
-    : signal(String(readValue(code, '')))
-  const languageValue = computed(() => normalizeLanguage(readValue(language, 'javascript')))
+  const tabs = createTabs(props)
+  const showTabs = tabs.length > 1
+  const defaultTabId = tabs.some(tab => tab.id === 'jsx')
+    ? 'jsx'
+    : tabs[0].id
+  const activeTabId = props.activeTab?.kind === 'signal'
+    ? props.activeTab
+    : signal(String(readValue(props.activeTab, readValue(props.defaultTab, defaultTabId))))
+  const activeTab = computed(() => tabs.find(tab => tab.id === activeTabId.value) ?? tabs[0])
+  const codeValue = computed(() => activeTab.value.code.value)
+  const languageValue = computed(() => normalizeLanguage(readValue(activeTab.value.language, 'javascript')))
+  const filenameValue = computed(() => readValue(activeTab.value.filename, 'untitled.js'))
   const highlightedCode = computed(() => highlightCode(codeValue.value, languageValue.value))
   const lineNumberMarkup = computed(() => Array.from(
     { length: String(codeValue.value ?? '').split('\n').length },
@@ -274,8 +322,14 @@ export function CodeViewer(props = {}) {
   const styleValue = createCodeStyle({ syntaxColors, fontFamily, fontSize, lineHeight, tabSize, minHeight, maxHeight, style })
   const copyState = signal('ready')
 
+  const selectTab = id => {
+    activeTabId.value = id
+    onTabChange?.(id)
+  }
+
   const handleInput = event => {
-    codeValue.value = event.currentTarget.value
+    const tab = tabs.find(item => item.id === activeTabId.value) ?? tabs[0]
+    tab.code.value = event.currentTarget.value
     onChange?.(event)
   }
 
@@ -339,13 +393,26 @@ export function CodeViewer(props = {}) {
   })
 
   return html`
-    <section class="${rootClassName} ${rootClassName}-language-${languageValue} ${classValue}" style="${styleValue}" aria-label="${ariaLabel}" data-copy-state="${copyState}">
+    <section class="${rootClassName} ${rootClassName}-language-${languageValue} ${showTabs ? `${rootClassName}-has-tabs` : ''} ${classValue}" style="${styleValue}" aria-label="${ariaLabel}" data-copy-state="${copyState}">
       <header class="${baseClassName}-header">
         <div class="${baseClassName}-file">
           <span class="${baseClassName}-file-dot" aria-hidden="true"></span>
-          <span class="${baseClassName}-filename">${filename}</span>
-          <span class="${baseClassName}-language">${languageValue}</span>
+          <span class="${baseClassName}-filename">${filenameValue}</span>
+          ${showTabs ? null : html`<span class="${baseClassName}-language">${languageValue}</span>`}
         </div>
+        ${showTabs ? html`
+          <div class="${baseClassName}-tabs" role="tablist" aria-label="Source language">
+            ${tabs.map(tab => html`
+              <button
+                type="button"
+                role="tab"
+                class="${baseClassName}-tab"
+                aria-selected="${computed(() => activeTabId.value === tab.id ? 'true' : 'false')}"
+                @click=${() => selectTab(tab.id)}
+              >${tab.label}</button>
+            `)}
+          </div>
+        ` : null}
         <button type="button" class="${baseClassName}-copy" aria-label="${copyLabel}" title="${copyLabel}" ?hidden=${computed(() => !readValue(copyable, true))} @click=${handleCopy}>${CopyIcon({ size: '1em' })}</button>
       </header>
       <div class="${baseClassName}-body">

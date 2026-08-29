@@ -1,6 +1,7 @@
-import { computed, html, signal } from '@mickyballadelli/matrix'
+import { computed, html, jsx, Fragment, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, SettingsIcon, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
+import { compileJsx, jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 const componentInfo = {
@@ -119,19 +120,28 @@ const playgroundRuntime = {
 }
 
 function createCodePreview(initialCode, scope = {}) {
-  const code = signal(initialCode)
+  const javascript = signal(initialCode)
+  let jsxSource = initialCode
+  try {
+    jsxSource = jsRecipeToJsx(initialCode)
+  } catch {
+    jsxSource = initialCode
+  }
+  const jsxCode = signal(jsxSource)
+  const recipeLanguage = signal('jsx')
 
   const preview = computed(() => {
     try {
       const names = Object.keys(scope)
       const values = Object.values(scope)
-      return Function(...names, `'use strict'; return (${code.value})`)(...values)
+      const source = recipeLanguage.value === 'jsx' ? compileJsx(jsxCode.value) : javascript.value
+      return Function('jsx', 'Fragment', ...names, `'use strict'; return (${source})`)(jsx, Fragment, ...values)
     } catch (error) {
       return html`<div class="playground-code-error"><strong>Preview paused</strong><span>${String(error?.message ?? error)}</span></div>`
     }
   })
 
-  return { code, preview }
+  return { javascript, jsxCode, recipeLanguage, preview, code: javascript }
 }
 
 function BackgroundPlayground() {
@@ -166,7 +176,9 @@ function BackgroundPlayground() {
   ), { ...playgroundRuntime, headline, copy, palette, animation, animated, speed, intensity, overlayOpacity })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -278,7 +290,9 @@ function LabelPlayground() {
   ), { ...playgroundRuntime, copy, size, font, weight, alwaysVisible, animation, outlineColor, backgroundColor })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -396,7 +410,9 @@ function HeaderPlayground() {
   ), { ...playgroundRuntime, Header, title, eyebrow, sticky, stickyTop, trailing, trailingLabel })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -460,7 +476,9 @@ function BoxPlayground() {
   ), { ...playgroundRuntime, boxClass, boxRole, content, sticky, stickyTop, stickySections, stickyState })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -520,7 +538,9 @@ function TextFieldPlayground() {
   ), { ...playgroundRuntime, value, required, disabled, size })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -598,7 +618,9 @@ function SelectPlayground() {
   ), { ...playgroundRuntime, value, options, size, placement, renderMovieOption, selectedLabel, renderModeLabel })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -653,7 +675,9 @@ function CheckBoxPlayground() {
   ), { ...playgroundRuntime, checked, disabled, label })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -687,7 +711,9 @@ function CardPlayground() {
   ), { ...playgroundRuntime, actionLabel, actionDisabled, clickCount, cardRole })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -816,7 +842,9 @@ function ButtonPlayground() {
   })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -962,7 +990,9 @@ function BadgePlayground() {
   ), { ...playgroundRuntime, count, tone, size })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -1028,7 +1058,9 @@ function PulsePlayground() {
   ), { ...playgroundRuntime, size, oncePulse, oncePulseTrigger })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -1106,7 +1138,9 @@ function PopupPlayground() {
   })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -1307,7 +1341,9 @@ function TablePlayground() {
   })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -1371,7 +1407,9 @@ function CodeViewerPlayground() {
   ), { ...playgroundRuntime, sampleCode, language, showLineNumbers })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -1475,7 +1513,9 @@ function TreeViewPlayground() {
   ), { ...playgroundRuntime, items, model: showcaseThemeModel, itemVariant, renderTreeItem })
 
   return {
-    code: codePreview.code,
+    javascript: codePreview.javascript,
+    jsxCode: codePreview.jsxCode,
+    recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
       <div class="settings-list">
@@ -1586,9 +1626,11 @@ export function ComponentPage({ name, link }) {
             </div>
             <CodeViewer
               class="detail-code-viewer"
-              code={playground.code}
-              language="javascript"
-              filename={`${info.title}.recipe.js`}
+              activeTab={playground.recipeLanguage}
+              tabs={[
+                { id: 'jsx', label: 'JSX', language: 'jsx', filename: `${info.title}.recipe.jsx`, code: playground.jsxCode },
+                { id: 'javascript', label: 'JavaScript', language: 'javascript', filename: `${info.title}.recipe.js`, code: playground.javascript }
+              ]}
               ariaLabel={`${info.title} editable source`}
             />
             <p class="playground-note">Edit the code above. A valid recipe renders in the live preview.</p>

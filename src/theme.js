@@ -1140,6 +1140,8 @@ export const prismTheme = globalCss(`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .65rem;
     min-height: 2.65rem;
     padding: .5rem .65rem .5rem .85rem;
     border-bottom: 1px solid var(--prism-code-border);
@@ -1151,6 +1153,7 @@ export const prismTheme = globalCss(`
     align-items: center;
     gap: .48rem;
     min-width: 0;
+    flex: 1;
     color: var(--prism-code-foreground);
     font-family: var(--prism-code-font-family);
     font-size: .72rem;
@@ -1183,10 +1186,53 @@ export const prismTheme = globalCss(`
     text-transform: uppercase;
   }
 
+  .prism-code-tabs {
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: .12rem;
+    padding: .14rem;
+    border: 1px solid var(--prism-code-border);
+    border-radius: 999px;
+    background: rgb(3 8 25 / 28%);
+  }
+
+  .prism-code-tab {
+    appearance: none;
+    min-height: 1.55rem;
+    padding: .18rem .7rem;
+    border: 0;
+    border-radius: 999px;
+    color: var(--prism-code-gutter);
+    background: transparent;
+    font-family: inherit;
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .18s ease, background .18s ease, box-shadow .18s ease;
+  }
+
+  .prism-code-tab:hover {
+    color: var(--prism-code-foreground);
+  }
+
+  .prism-code-tab:focus-visible {
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: 2px;
+  }
+
+  .prism-code-tab[aria-selected="true"] {
+    color: var(--prism-code-foreground);
+    background: var(--prism-code-background);
+    box-shadow: 0 .2rem .6rem rgb(3 8 25 / 28%);
+  }
+
   .prism-code-copy {
     display: inline-grid;
     width: 1.85rem;
     height: 1.85rem;
+    margin-left: auto;
     place-items: center;
     padding: 0;
     border: 1px solid transparent;

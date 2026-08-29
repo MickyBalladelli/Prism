@@ -16,9 +16,10 @@ function IconCard({ icon, category }) {
       <div class="icon-code-block">
         <p class="code-label">Import + use</p>
         <CodeViewer
-          code={icon.example}
-          language="jsx"
-          filename={`${icon.name}.jsx`}
+          tabs={[
+            { id: 'jsx', label: 'JSX', language: 'jsx', filename: `${icon.name}.jsx`, code: icon.exampleJsx },
+            { id: 'javascript', label: 'JavaScript', language: 'javascript', filename: `${icon.name}.js`, code: icon.exampleJs }
+          ]}
           editable={false}
           class="icon-code-viewer"
           ariaLabel={`${icon.name} example code`}

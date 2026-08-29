@@ -52,9 +52,12 @@ function iconEntry(name, component, description) {
     name,
     component,
     description,
-    example: `import { ${name} } from 'prism-ui'
+    exampleJsx: `import { ${name} } from 'prism-ui'
 
-<${name} size="20" />`
+<${name} size="20" />`,
+    exampleJs: `import { ${name} } from 'prism-ui'
+
+${name}({ size: "20" })`
   }
 }
 

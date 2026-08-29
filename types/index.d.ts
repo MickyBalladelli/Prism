@@ -141,10 +141,21 @@ export interface CheckBoxProps {
 
 export type CodeLanguage = 'javascript' | 'jsx' | 'typescript' | 'tsx' | 'json' | 'css' | 'html' | 'xml' | 'bash' | 'text'
 
+export interface CodeViewerTab {
+  id?: string
+  label?: string
+  language?: CodeLanguage
+  filename?: string
+  code?: string | Signal<string>
+}
+
 export interface CodeViewerProps {
   code?: string | Signal<string>
   language?: CodeLanguage | Signal<CodeLanguage>
   filename?: string | Signal<string>
+  tabs?: ReadonlyArray<CodeViewerTab>
+  activeTab?: string | Signal<string>
+  defaultTab?: string
   lineNumbers?: boolean | Signal<boolean>
   editable?: boolean | Signal<boolean>
   copyable?: boolean | Signal<boolean>
@@ -160,6 +171,7 @@ export interface CodeViewerProps {
   ariaLabel?: string
   onChange?: (event: Event) => void
   onCopy?: (code: string, event: MouseEvent) => void
+  onTabChange?: (tabId: string) => void
 }
 
 export type PopupSize = 'small' | 'medium' | 'large' | 'full'
