@@ -111,7 +111,7 @@ export function Select(props = {}) {
   }
 
   const positionMenu = () => {
-    if (!activeTrigger) {
+    if (!activeTrigger || !open.value) {
       return
     }
 
@@ -121,8 +121,23 @@ export function Select(props = {}) {
       return
     }
 
+    menu.style.position = ''
+    menu.style.top = ''
+    menu.style.right = ''
+    menu.style.bottom = ''
+    menu.style.left = ''
+    menu.style.width = ''
+    menu.style.maxHeight = ''
+    menu.style.zIndex = ''
+    menu.style.visibility = ''
+
+    const previousHidden = menu.hidden
+    menu.hidden = false
+    const menuHeight = Math.max(menu.scrollHeight, menu.offsetHeight)
+    const menuWidth = Math.max(menu.scrollWidth, menu.offsetWidth)
+    menu.hidden = previousHidden
+
     const triggerRect = activeTrigger.getBoundingClientRect()
-    const menuRect = menu.getBoundingClientRect()
     const gutter = 8
     const available = {
       bottom: window.innerHeight - triggerRect.bottom - gutter,
@@ -131,10 +146,10 @@ export function Select(props = {}) {
       left: triggerRect.left - gutter
     }
     const fits = {
-      bottom: menuRect.height <= available.bottom,
-      top: menuRect.height <= available.top,
-      right: menuRect.width <= available.right,
-      left: menuRect.width <= available.left
+      bottom: menuHeight <= available.bottom,
+      top: menuHeight <= available.top,
+      right: menuWidth <= available.right,
+      left: menuWidth <= available.left
     }
     const preferred = normalizePlacement(isReactiveValue(placement) ? placement.value : placement)
     const opposite = {
@@ -170,6 +185,10 @@ export function Select(props = {}) {
   }
 
   const closeMenu = restoreFocus => {
+    const menu = activeTrigger?.parentElement?.querySelector(`.${baseClassName}-menu`)
+    if (menu) {
+      menu.style.maxHeight = ''
+    }
     open.value = false
     activeIndex.value = -1
     removeOpenListeners()
@@ -255,6 +274,8 @@ export function Select(props = {}) {
   }
 
   const handleKeyDown = event => {
+    activeTrigger = event.currentTarget
+
     if (event.key === 'Escape' && open.value) {
       event.preventDefault()
       closeMenu(true)

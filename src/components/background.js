@@ -23,7 +23,17 @@ const palettes = Object.freeze({
 const animations = Object.freeze({
   veil: 0,
   sanctum: 1,
-  mist: 2
+  mist: 2,
+  silk: 3,
+  halo: 4,
+  ember: 5,
+  orbit: 6,
+  gossamer: 7,
+  meridian: 8,
+  bloom: 9,
+  current: 10,
+  opal: 11,
+  zephyr: 12
 })
 
 const vertexSource = `
@@ -55,8 +65,13 @@ vec4 cubicTanh(vec4 x) {
   return (ePos - eNeg) / (ePos + eNeg);
 }
 
+float lumaPow(float x, float k) {
+  return pow(clamp(x, 0.0, 1.0), k);
+}
+
 void main() {
   vec2 frag = gl_FragCoord.xy;
+  vec2 uv = (frag * 2.0 - uResolution.xy) / max(uResolution.y, 1.0);
   vec3 ray = normalize(vec3(frag * 2.0, 0.0) - vec3(uResolution.xy, uResolution.y));
   vec4 color = vec4(0.0);
   float z = 0.0;
@@ -74,7 +89,6 @@ void main() {
     }
     color = cubicTanh(color / 400.0);
   } else if (uMode < 1.5) {
-    vec2 uv = (frag * 2.0 - uResolution.xy) / max(uResolution.y, 1.0);
     for (int i = 0; i < 10; i++) {
       float depth = float(i) * 0.3;
       vec3 p = vec3(uv * (1.12 + depth * 0.1), depth + uTime * 0.11);
@@ -87,8 +101,7 @@ void main() {
       color += vec4(9.0, 7.0, 4.0, 1.0) / dens * (0.085 - float(i) * 0.004);
     }
     color = cubicTanh(color / 11.0);
-  } else {
-    vec2 uv = (frag * 2.0 - uResolution.xy) / max(uResolution.y, 1.0);
+  } else if (uMode < 2.5) {
     for (int i = 0; i < 8; i++) {
       float depth = float(i) * 0.34;
       vec3 p = vec3(uv * (1.08 + depth * 0.16), depth + uTime * 0.12);
@@ -102,6 +115,99 @@ void main() {
       color += vec4(sheets, 0.0) / dens * (0.1 - float(i) * 0.007);
     }
     color = cubicTanh(color / 16.0);
+  } else if (uMode < 3.5) {
+    vec2 p = uv * vec2(1.18, 0.96);
+    float c = 0.0;
+    for (int i = 0; i < 6; i++) {
+      p = vec2(p.x + sin(p.y + uTime * 0.29 + float(i) * 0.4), p.y + cos(p.x - uTime * 0.24)) * 0.86 + p * 0.18;
+      c += 1.0 / (0.72 + abs(p.x * p.y));
+    }
+    float fold = lumaPow(c * 0.078, 1.65);
+    color = vec4(fold, lumaPow(c * 0.05, 2.35), 0.0, 1.0);
+  } else if (uMode < 4.5) {
+    vec3 p = vec3(uv * vec2(1.08, 0.92), uTime * 0.09);
+    float mist = 0.0;
+    float gleam = 0.0;
+    for (int i = 0; i < 6; i++) {
+      p = p.yzx + 0.22 * sin(p * (1.55 + float(i) * 0.28) + uTime * 0.31);
+      mist += 1.0 / (0.85 + abs(p.x) * 1.15 + abs(sin(p.y * 2.4 + p.z)));
+      gleam += exp(-abs(p.y + sin(p.x * 1.6) * 0.35) * 2.2);
+    }
+    color = vec4(lumaPow(mist * 0.11, 1.35), lumaPow(gleam * 0.18, 1.9), 0.0, 1.0);
+  } else if (uMode < 5.5) {
+    vec3 p = vec3(uv * 1.28, uTime * 0.18);
+    float ember = 0.0;
+    float ash = 0.0;
+    for (int i = 0; i < 7; i++) {
+      p += 0.19 * sin(p.zxy * (2.1 + float(i) * 0.35) + uTime * 0.4);
+      ember += exp(-abs(p.y) * 2.05) * (0.45 + 0.55 * sin(p.x * 2.8 + uTime));
+      ash += exp(-abs(p.x * 0.7 + p.z * 0.2) * 2.4) * 0.35;
+    }
+    color = vec4(lumaPow(ember * 0.22, 1.4), lumaPow(ash * 0.28, 1.8), 0.0, 1.0);
+  } else if (uMode < 6.5) {
+    vec2 a = uv * vec2(1.22, 0.88) + vec2(uTime * 0.06, 0.0);
+    vec2 b = uv * vec2(0.82, 1.28) - vec2(0.0, uTime * 0.05);
+    for (int i = 0; i < 5; i++) {
+      a = vec2(a.x + 0.2 * sin(a.y * 2.15 + uTime * 0.27), a.y + 0.16 * cos(a.x * 1.9));
+      b = vec2(b.x + 0.16 * cos(b.y * 1.85 - uTime * 0.22), b.y + 0.2 * sin(b.x * 2.05));
+    }
+    float weave = 1.0 / (0.55 + 4.2 * abs(a.x) * abs(b.y));
+    float ribbon = 1.0 / (0.7 + 3.4 * abs(a.y * b.x));
+    color = vec4(lumaPow(weave, 1.2), lumaPow(ribbon, 1.85), 0.0, 1.0);
+  } else if (uMode < 7.5) {
+    vec2 p = uv * 2.15;
+    vec2 q = uv * 2.05 + 0.35;
+    for (int i = 0; i < 4; i++) {
+      p.x += 0.14 * sin(p.y * 3.1 + uTime * 0.33);
+      q.y += 0.14 * cos(q.x * 2.8 - uTime * 0.29);
+    }
+    float film = abs(sin(p.x * 7.5) * sin(q.y * 6.8 + p.x * 0.4));
+    float veil = abs(sin((p.x + q.y) * 3.4 - uTime * 0.2));
+    color = vec4(lumaPow(film, 0.42) * 0.58, lumaPow(veil, 1.8) * 0.5, 0.0, 1.0);
+  } else if (uMode < 8.5) {
+    vec3 p = vec3(uv.x * 0.92, uv.y * 1.55, uTime * 0.11);
+    for (int i = 0; i < 5; i++) {
+      p.x += 0.24 * sin(p.y * 1.7 + uTime * 0.28);
+      p.z += 0.14 * cos(p.x * 1.3);
+    }
+    float curtain = exp(-abs(p.x) * 1.55);
+    float bands = 0.5 + 0.5 * sin(p.y * 4.4 + p.z * 2.1);
+    color = vec4(curtain * lumaPow(bands, 2.6), curtain * lumaPow(1.0 - bands, 3.4) * 0.72, 0.0, 1.0);
+  } else if (uMode < 9.5) {
+    float ang = atan(uv.y, uv.x);
+    float r = length(uv);
+    ang = mod(ang + 3.141593, 2.094395) - 1.047197;
+    vec2 p = vec2(cos(ang), sin(ang)) * r;
+    for (int i = 0; i < 5; i++) {
+      p += 0.16 * sin(p.yx * 3.05 + uTime * 0.23);
+    }
+    float blade = exp(-abs(p.x) * 2.7) * exp(-r * 0.72);
+    float glow = 0.16 * exp(-r * 0.48);
+    color = vec4(blade + glow, lumaPow(blade, 2.2) + glow * 0.6, 0.0, 1.0);
+  } else if (uMode < 10.5) {
+    vec2 p = uv * vec2(1.55, 1.12) + vec2(uTime * 0.07, 0.0);
+    for (int i = 0; i < 5; i++) {
+      p = 0.84 * vec2(sin(p.y + uTime * 0.31), cos(p.x - uTime * 0.26)) + p * 0.52;
+    }
+    float caustic = 1.0 / (1.0 + 7.5 * abs(p.x * p.y));
+    color = vec4(lumaPow(caustic, 1.15), lumaPow(caustic, 2.7), 0.0, 1.0) * 0.92;
+  } else if (uMode < 11.5) {
+    float s = sin(uTime * 0.07);
+    float c = cos(uTime * 0.07);
+    vec2 p = vec2(c * uv.x - s * uv.y, s * uv.x + c * uv.y) * 1.15;
+    float f1 = abs(sin(p.x * 3.15 + p.y * 0.35));
+    float f2 = abs(sin(p.y * 3.45 - p.x * 0.42));
+    float facet = lumaPow(f1 * f2, 0.48);
+    float edge = lumaPow(abs(sin((p.x + p.y) * 2.15)), 5.5);
+    color = vec4(facet * 0.62, edge * 0.7, 0.0, 1.0);
+  } else {
+    vec2 p = vec2(uv.x * 0.68 + uTime * 0.11, uv.y * 1.72);
+    for (int i = 0; i < 5; i++) {
+      p.x += 0.26 * sin(p.y * 1.55 + uTime * 0.2);
+    }
+    float streak = lumaPow(0.5 + 0.5 * sin(p.y * 5.8 + p.x * 1.1), 9.0);
+    float wash = 0.22 * exp(-abs(uv.y) * 0.85);
+    color = vec4(streak * 0.85 + wash, wash * 0.9 + streak * 0.25, 0.0, 1.0);
   }
 
   vec3 shade = max(color.rgb, 0.0) * uIntensity;

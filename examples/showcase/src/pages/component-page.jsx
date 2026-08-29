@@ -182,7 +182,17 @@ function BackgroundPlayground() {
           options={[
             { value: 'veil', label: 'Veil — sine cloud drift' },
             { value: 'mist', label: 'Mist — open veil, quiet core' },
-            { value: 'sanctum', label: 'Sanctum — gilded hall' }
+            { value: 'sanctum', label: 'Sanctum — gilded sheets' },
+            { value: 'silk', label: 'Silk — flowing ribbons' },
+            { value: 'halo', label: 'Halo — luminous fog sheets' },
+            { value: 'ember', label: 'Ember — breathing glow' },
+            { value: 'orbit', label: 'Orbit — woven dual currents' },
+            { value: 'gossamer', label: 'Gossamer — thin films' },
+            { value: 'meridian', label: 'Meridian — vertical dawn' },
+            { value: 'bloom', label: 'Bloom — slow radial blossom' },
+            { value: 'current', label: 'Current — horizontal drift' },
+            { value: 'opal', label: 'Opal — quiet two-tone shift' },
+            { value: 'zephyr', label: 'Zephyr — airy layered breeze' }
           ]}
         />
         <CheckBox checked={animated}>Animate background</CheckBox>
@@ -210,6 +220,7 @@ function BackgroundPlayground() {
         <Select
           id="background-overlay"
           value={overlayOpacity}
+          placement="top"
           options={[
             { value: '.14', label: '0.14 — airy' },
             { value: '.22', label: '0.22 — balanced' },
@@ -330,7 +341,17 @@ function LabelPlayground() {
           options={[
             { value: 'veil', label: 'Veil — sine cloud drift' },
             { value: 'mist', label: 'Mist — open veil, quiet core' },
-            { value: 'sanctum', label: 'Sanctum — gilded hall' }
+            { value: 'sanctum', label: 'Sanctum — gilded sheets' },
+            { value: 'silk', label: 'Silk — flowing ribbons' },
+            { value: 'halo', label: 'Halo — luminous fog sheets' },
+            { value: 'ember', label: 'Ember — breathing glow' },
+            { value: 'orbit', label: 'Orbit — woven dual currents' },
+            { value: 'gossamer', label: 'Gossamer — thin films' },
+            { value: 'meridian', label: 'Meridian — vertical dawn' },
+            { value: 'bloom', label: 'Bloom — slow radial blossom' },
+            { value: 'current', label: 'Current — horizontal drift' },
+            { value: 'opal', label: 'Opal — quiet two-tone shift' },
+            { value: 'zephyr', label: 'Zephyr — airy layered breeze' }
           ]}
         />
         <CheckBox checked={alwaysVisible}>Always visible</CheckBox>

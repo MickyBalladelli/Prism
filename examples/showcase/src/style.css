@@ -259,7 +259,13 @@ h1 em {
   position: sticky;
   top: 1.5rem;
   max-height: min(calc(100svh - 3rem), 100%);
+  overflow: visible;
+}
+
+.detail-settings-rail .settings-list {
+  max-height: calc(min(calc(100svh - 3rem), 100%) - 4.5rem);
   overflow: auto;
+  padding-bottom: 0.25rem;
 }
 
 .stage-heading {
@@ -2071,6 +2077,11 @@ input[type="text"]:required:invalid {
 
   .detail-settings-rail > .settings-card {
     position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .detail-settings-rail .settings-list {
     max-height: none;
     overflow: visible;
   }

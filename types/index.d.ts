@@ -11,7 +11,7 @@ export interface BoxProps {
 }
 
 export type BackgroundPalette = 'midnight' | 'aurora' | 'tide'
-export type BackgroundAnimation = 'veil' | 'mist' | 'sanctum'
+export type BackgroundAnimation = 'veil' | 'mist' | 'sanctum' | 'silk' | 'halo' | 'ember' | 'orbit' | 'gossamer' | 'meridian' | 'bloom' | 'current' | 'opal' | 'zephyr'
 
 export type LabelSize = 'small' | 'medium' | 'large' | 'display'
 export type LabelFont = 'sans' | 'serif' | 'mono'

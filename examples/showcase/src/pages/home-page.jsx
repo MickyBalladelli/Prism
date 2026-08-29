@@ -11,7 +11,7 @@ const components = [
     mark: '13',
     description: 'A reusable animated backdrop with named motion recipes, Prism-toned palettes, and an overlay content slot.',
     highlights: ['Named animations', 'Theme-friendly palettes', 'Content stays readable'],
-    details: ['Veil, Mist, and Sanctum recipes', 'Toggle the motion layer', 'Works as a real layout surface']
+    details: ['Thirteen motion recipes', 'Toggle the motion layer', 'Works as a real layout surface']
   },
   {
     key: 'label',
