@@ -148,6 +148,8 @@ function SelectPlayground() {
   const options = [
     { value: 'spirited-away', label: 'Spirited Away' },
     { value: 'moonlight', label: 'Moonlight' },
+    { value: 'midsommar', label: 'Midsommar' },
+    { value: 'mulholland-drive', label: 'Mulholland Drive' },
     { value: 'parasite', label: 'Parasite' },
     { value: 'arrival', label: 'Arrival' },
     { value: 'grand-budapest-hotel', label: 'The Grand Budapest Hotel' }
@@ -155,6 +157,8 @@ function SelectPlayground() {
   const movieDetails = {
     'spirited-away': { year: '2001', genre: 'Fantasy', rating: '8.6', icon: SparkIcon, poster: 'coral' },
     moonlight: { year: '2016', genre: 'Drama', rating: '7.4', icon: ClockIcon, poster: 'violet' },
+    midsommar: { year: '2019', genre: 'Folk horror', rating: '7.1', icon: SparkIcon, poster: 'gold' },
+    'mulholland-drive': { year: '2001', genre: 'Mystery', rating: '7.9', icon: ImageIcon, poster: 'blue' },
     parasite: { year: '2019', genre: 'Thriller', rating: '8.5', icon: AlertIcon, poster: 'gold' },
     arrival: { year: '2016', genre: 'Sci-Fi', rating: '7.9', icon: ImageIcon, poster: 'blue' },
     'grand-budapest-hotel': { year: '2014', genre: 'Comedy', rating: '8.1', icon: SparkIcon, poster: 'peach' }
@@ -225,6 +229,7 @@ function SelectPlayground() {
           ]}
         />
         <p class="playground-note">The live movie Select uses <code>onRender</code> to follow this choice.</p>
+        <p class="playground-note">Keyboard: ↑↓ move, type a letter to cycle, Enter accepts.</p>
       </div>
     )
   }

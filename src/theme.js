@@ -630,7 +630,8 @@ export const prismTheme = globalCss(`
   }
 
   .prism-select-option:hover:not(:disabled),
-  .prism-select-option[aria-selected="true"] {
+  .prism-select-option[aria-selected="true"],
+  .prism-select-option[data-active="true"] {
     color: var(--prism-color-ink);
     background: var(--prism-color-lavender-surface);
   }

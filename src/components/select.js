@@ -47,6 +47,7 @@ export function Select(props = {}) {
     ? value
     : signal(isReactiveValue(value) ? value.value : value)
   const currentPlacement = signal('bottom')
+  const activeIndex = signal(-1)
   const sizeValue = isReactiveValue(size) ? size : size || 'medium'
   const optionList = isReactiveValue(options)
     ? computed(() => (options.value ?? []).map(normalizeOption))
@@ -67,6 +68,47 @@ export function Select(props = {}) {
 
   let activeTrigger
   let removeOpenListeners = () => {}
+
+  const listboxId = id === undefined ? undefined : `${id}-listbox`
+  const optionId = index => id === undefined ? undefined : `${id}-option-${index}`
+
+  const getSelectedIndex = () => {
+    const selected = String(selectedValue.value ?? '')
+    return readOptions().findIndex(option => String(option.value) === selected)
+  }
+
+  const getEnabledIndex = (start, direction) => {
+    const optionList = readOptions()
+    if (optionList.length === 0) {
+      return -1
+    }
+
+    for (let offset = 1; offset <= optionList.length; offset += 1) {
+      const index = (start + direction * offset + optionList.length * 2) % optionList.length
+      if (!optionList[index].disabled) {
+        return index
+      }
+    }
+
+    return -1
+  }
+
+  const getInitialActiveIndex = () => {
+    const selectedIndex = getSelectedIndex()
+    if (selectedIndex >= 0 && !readOptions()[selectedIndex].disabled) {
+      return selectedIndex
+    }
+
+    return getEnabledIndex(-1, 1)
+  }
+
+  const openMenu = index => {
+    currentPlacement.value = normalizePlacement(isReactiveValue(placement) ? placement.value : placement)
+    activeIndex.value = index >= 0 ? index : getInitialActiveIndex()
+    open.value = true
+    addOpenListeners()
+    schedulePosition()
+  }
 
   const positionMenu = () => {
     if (!activeTrigger) {
@@ -129,6 +171,7 @@ export function Select(props = {}) {
 
   const closeMenu = restoreFocus => {
     open.value = false
+    activeIndex.value = -1
     removeOpenListeners()
     if (restoreFocus) {
       activeTrigger?.focus()
@@ -161,21 +204,54 @@ export function Select(props = {}) {
       return
     }
 
-    currentPlacement.value = normalizePlacement(isReactiveValue(placement) ? placement.value : placement)
-    open.value = true
-    addOpenListeners()
-    schedulePosition()
+    openMenu(getSelectedIndex())
   }
 
-  const selectOption = (option, event) => {
+  const selectOption = (option, event, index = readOptions().indexOf(option)) => {
     if (option.disabled) {
       return
     }
 
     event.preventDefault()
+    activeIndex.value = index
     selectedValue.value = String(option.value)
     onChange?.(event)
     closeMenu(true)
+  }
+
+  const moveActive = direction => {
+    const current = activeIndex.value >= 0 ? activeIndex.value : getSelectedIndex()
+    const next = getEnabledIndex(current, direction)
+    if (next >= 0) {
+      activeIndex.value = next
+    }
+  }
+
+  const moveToBoundary = direction => {
+    const optionList = readOptions()
+    const start = direction > 0 ? -1 : optionList.length
+    const next = getEnabledIndex(start, direction)
+    if (next >= 0) {
+      activeIndex.value = next
+    }
+  }
+
+  const moveToMatchingOption = key => {
+    const optionList = readOptions()
+    if (optionList.length === 0) {
+      return
+    }
+
+    const current = activeIndex.value >= 0 ? activeIndex.value : getSelectedIndex()
+
+    for (let offset = 1; offset <= optionList.length; offset += 1) {
+      const index = (current + offset + optionList.length * 2) % optionList.length
+      const option = optionList[index]
+      if (!option.disabled && String(option.label).toLocaleLowerCase().startsWith(key)) {
+        activeIndex.value = index
+        return
+      }
+    }
   }
 
   const handleKeyDown = event => {
@@ -185,22 +261,63 @@ export function Select(props = {}) {
       return
     }
 
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Enter' || event.key === ' ') {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      if (!open.value) {
+        openMenu(getSelectedIndex())
+      }
+      moveActive(event.key === 'ArrowDown' ? 1 : -1)
+      return
+    }
+
+    if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault()
+      if (!open.value) {
+        openMenu(getSelectedIndex())
+      }
+      moveToBoundary(event.key === 'Home' ? 1 : -1)
+      return
+    }
+
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      if (!open.value) {
+        openMenu(getSelectedIndex())
+        return
+      }
+
+      const option = readOptions()[activeIndex.value]
+      if (option) {
+        selectOption(option, event, activeIndex.value)
+      }
+      return
+    }
+
+    if (event.key === ' ') {
       event.preventDefault()
       toggleMenu(event)
+      return
+    }
+
+    if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault()
+      if (!open.value) {
+        openMenu(getSelectedIndex())
+      }
+      moveToMatchingOption(event.key.toLocaleLowerCase())
     }
   }
 
   const optionMarkup = computed(() => {
     const selected = String(selectedValue.value ?? '')
 
-    return readOptions().map(option => html`<button type="button" class="${baseClassName}-option" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" ?disabled=${option.disabled} .onclick=${event => selectOption(option, event)}>${renderOption(option, { location: 'option', selected: String(option.value) === selected })}</button>`)
+    return readOptions().map((option, index) => html`<button type="button" class="${baseClassName}-option" id="${optionId(index)}" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" data-active="${index === activeIndex.value}" ?disabled=${option.disabled} .onclick=${event => selectOption(option, event, index)}>${renderOption(option, { location: 'option', selected: String(option.value) === selected })}</button>`)
   })
 
-  const listboxId = id === undefined ? undefined : `${id}-listbox`
+  const activeOptionId = computed(() => optionId(activeIndex.value))
   const menu = html`<div class="${baseClassName}-menu ${baseClassName}-menu-${currentPlacement}" id="${listboxId}" role="listbox" aria-label="${ariaLabel ?? 'Options'}" ?hidden=${computed(() => !open.value)}>${optionMarkup}</div>`
 
-  return html`<div class="${baseClassName} ${baseClassName}-${sizeValue} ${classValue}"><button type="button" class="${baseClassName}-trigger" id="${id}" name="${name}" aria-haspopup="listbox" aria-expanded="${open}" aria-label="${ariaLabel}" aria-required="${required}" ?disabled=${disabled} @click=${toggleMenu} @keydown=${handleKeyDown}><span class="${baseClassName}-value">${selectedLabel}</span><span class="${baseClassName}-chevron" aria-hidden="true"></span></button>${menu}</div>`
+  return html`<div class="${baseClassName} ${baseClassName}-${sizeValue} ${classValue}"><button type="button" class="${baseClassName}-trigger" id="${id}" name="${name}" role="combobox" aria-haspopup="listbox" aria-expanded="${open}" aria-controls="${listboxId}" aria-activedescendant="${activeOptionId}" aria-label="${ariaLabel}" aria-required="${required}" ?disabled=${disabled} @click=${toggleMenu} @keydown=${handleKeyDown}><span class="${baseClassName}-value">${selectedLabel}</span><span class="${baseClassName}-chevron" aria-hidden="true"></span></button>${menu}</div>`
 }
 
 export const SelectComponent = props => component(Select, props)

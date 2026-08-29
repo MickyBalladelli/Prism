@@ -93,6 +93,8 @@ const renderMovie = option => html`<span class="movie-option">🎬 ${option.labe
 const view = <Select options={movies} value={selectedMovie} onRender={renderMovie} />
 ```
 
+Select also supports keyboard navigation: Arrow Up and Down move through options, letters cycle matching labels with wraparound, Enter accepts the active option, and Escape closes the menu.
+
 ## Badge
 
 `Badge` displays a compact count or state. Use a Matrix signal with `pulseOnChange` to briefly highlight a changing value:
