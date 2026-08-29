@@ -51,7 +51,10 @@ function renderBranch(item = {}) {
       <details class="prism-tree-details" ?open=${expanded}>
         <summary class="prism-tree-summary">
           <span class="prism-tree-entry-copy">
-            <span class="prism-tree-chevron" aria-hidden="true"></span>
+            <span class="prism-tree-toggle" aria-hidden="true">
+              <span class="prism-tree-toggle-bar prism-tree-toggle-bar-horizontal"></span>
+              <span class="prism-tree-toggle-bar prism-tree-toggle-bar-vertical"></span>
+            </span>
             <span class="prism-tree-marker" aria-hidden="true"></span>
             <span class="prism-tree-label">${label}</span>
           </span>

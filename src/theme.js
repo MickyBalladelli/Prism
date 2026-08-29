@@ -603,22 +603,55 @@ export const prismTheme = globalCss(`
     letter-spacing: -.01em;
   }
 
-  .prism-tree-chevron {
-    width: .52rem;
-    height: .52rem;
-    margin-top: -.08rem;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    color: var(--prism-color-text-subtle);
-    transform: rotate(-45deg);
-    transition: transform .18s ease, color .18s ease, opacity .18s ease;
-    opacity: .72;
+  .prism-tree-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: .92rem;
+    height: .92rem;
+    flex: 0 0 .92rem;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: .32rem;
+    background: linear-gradient(180deg, var(--prism-color-white), var(--prism-color-surface-tint));
+    box-shadow: 0 .12rem .28rem rgb(37 49 78 / 7%);
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
   }
 
-  .prism-tree-details[open] .prism-tree-chevron {
-    color: var(--prism-color-action);
-    transform: rotate(45deg) translateY(-1px);
-    opacity: 1;
+  .prism-tree-toggle-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 999px;
+    background: var(--prism-color-text-subtle);
+    transform: translate(-50%, -50%);
+    transition: background-color .18s ease, opacity .18s ease, transform .18s ease;
+  }
+
+  .prism-tree-toggle-bar-horizontal {
+    width: .46rem;
+    height: 1.5px;
+  }
+
+  .prism-tree-toggle-bar-vertical {
+    width: 1.5px;
+    height: .46rem;
+  }
+
+  .prism-tree-details[open] > .prism-tree-summary .prism-tree-toggle {
+    border-color: var(--prism-color-lavender-border);
+    background: linear-gradient(180deg, var(--prism-color-white), var(--prism-color-lavender-surface));
+    box-shadow: 0 .18rem .4rem rgb(89 88 181 / 11%);
+    transform: translateY(-1px);
+  }
+
+  .prism-tree-details[open] > .prism-tree-summary .prism-tree-toggle-bar {
+    background: var(--prism-color-action);
+  }
+
+  .prism-tree-details[open] > .prism-tree-summary .prism-tree-toggle-bar-vertical {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleY(.45);
   }
 
   .prism-tree-marker,
