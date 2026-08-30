@@ -1,5 +1,5 @@
 import { computed, effect, signal } from '@mickyballadelli/matrix'
-import { Button, CheckBox, Popup, Select, SettingsIcon, readStorageValue, treeViewModels, writeStorageValue } from 'prism-ui'
+import { Button, CheckBox, Popup, Select, SettingsIcon, readStorageValue, treeViewModels, writeStorageValue } from '@mickyballadelli/prism'
 
 const storageKey = 'prism-showcase-settings'
 const animationIds = new Set([

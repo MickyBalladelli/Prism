@@ -1,5 +1,5 @@
 import { component, html } from '@mickyballadelli/matrix'
-import { ArrowRightIcon, Footer } from 'prism-ui'
+import { ArrowRightIcon, Footer } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
 
 export function FooterPlayground() {

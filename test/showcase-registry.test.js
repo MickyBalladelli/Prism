@@ -28,7 +28,7 @@ test('each application registry entry has a Prism page source', () => {
   for (const example of exampleRegistry) {
     const fileName = `${example.key}-page.jsx`
     const source = readFileSync(resolve(examplePagesDirectory, fileName), 'utf8')
-    assert.match(source, /from ['"]prism-ui['"]$/m)
+    assert.match(source, /from ['"]@mickyballadelli/prism['"]$/m)
     assert.match(source, /ExamplePageShell/)
   }
 })

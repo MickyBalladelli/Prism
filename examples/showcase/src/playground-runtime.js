@@ -1,6 +1,6 @@
 import { computed, Fragment, html, jsx, signal } from '@mickyballadelli/matrix'
 import { compileJsx, jsRecipeToJsx } from './recipe-syntax.js'
-import { Alert, AlertIcon, Avatar, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, createToastController, DownloadIcon, DropdownMenu, EmptyState, FileIcon, FolderIcon, Footer, FormField, Grid, Header, IconButton, ImageIcon, Label, Layout, Menu, MoreHorizontalIcon, Navigator, Pagination, PlusIcon, Popover, Popup, Progress, Pulse, Select, SendIcon, Separator, serializeTableSettings, SettingsIcon, Skeleton, Spinner, SparkIcon, Stack, Table, Tabs, Tag, TextField, ToastRegion, Tooltip, TreeView } from 'prism-ui'
+import { Alert, AlertIcon, Avatar, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, createToastController, DownloadIcon, DropdownMenu, EmptyState, FileIcon, FolderIcon, Footer, FormField, Grid, Header, IconButton, ImageIcon, Label, Layout, Menu, MoreHorizontalIcon, Navigator, Pagination, PlusIcon, Popover, Popup, Progress, Pulse, Select, SendIcon, Separator, serializeTableSettings, SettingsIcon, Skeleton, Spinner, SparkIcon, Stack, Table, Tabs, Tag, TextField, ToastRegion, Tooltip, TreeView } from '@mickyballadelli/prism'
 
 export const codeLines = (...lines) => lines.join('\n')
 

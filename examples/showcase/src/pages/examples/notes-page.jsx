@@ -1,5 +1,5 @@
 import { component, computed, html, keyed, signal } from '@mickyballadelli/matrix'
-import { Alert, Avatar, Button, Card, EmptyState, PlusIcon, SearchIcon, Tag, TextField, readStorageValue, writeStorageValue } from 'prism-ui'
+import { Alert, Avatar, Button, Card, EmptyState, PlusIcon, SearchIcon, Tag, TextField, readStorageValue, writeStorageValue } from '@mickyballadelli/prism'
 import { ExampleMetric, ExamplePageShell } from '../example-page-shell.jsx'
 
 const storageKey = 'prism-showcase-notes'

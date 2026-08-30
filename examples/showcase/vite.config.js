@@ -12,7 +12,7 @@ export default defineConfig({
     jsx: matrixJsx
   },
   optimizeDeps: {
-    exclude: ['prism-ui'],
+    exclude: ['@mickyballadelli/prism'],
     rolldownOptions: {
       transform: {
         jsx: matrixJsx
@@ -23,7 +23,7 @@ export default defineConfig({
     dedupe: ['@mickyballadelli/matrix'],
     alias: [
       {
-        find: 'prism-ui',
+        find: '@mickyballadelli/prism',
         replacement: fileURLToPath(new URL('../../src/index.js', import.meta.url))
       },
     ]

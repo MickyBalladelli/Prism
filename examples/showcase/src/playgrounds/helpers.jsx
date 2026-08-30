@@ -1,4 +1,4 @@
-import { Select } from 'prism-ui'
+import { Select } from '@mickyballadelli/prism'
 
 export const selectOptions = values => values.map(value => ({ value, label: value[0].toUpperCase() + value.slice(1) }))
 

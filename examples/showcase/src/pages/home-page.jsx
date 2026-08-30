@@ -1,4 +1,4 @@
-import { Card } from 'prism-ui'
+import { Card } from '@mickyballadelli/prism'
 import { componentRegistry } from '../component-registry.js'
 import { exampleRegistry } from '../example-registry.js'
 import { ShowcaseShell } from '../showcase-shell.jsx'

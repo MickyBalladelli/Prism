@@ -1,4 +1,4 @@
-const prism = await import('prism-ui')
+const prism = await import('@mickyballadelli/prism')
 const requiredExports = ['Button', 'Card', 'Table', 'CodeViewer', 'prismTheme', 'serializeTableSettings']
 
 for (const name of requiredExports) {

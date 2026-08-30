@@ -45,17 +45,17 @@ import {
   UnlockIcon,
   UploadIcon,
   UserIcon
-} from 'prism-ui'
+} from '@mickyballadelli/prism'
 
 function iconEntry(name, component, description) {
   return {
     name,
     component,
     description,
-    exampleJsx: `import { ${name} } from 'prism-ui'
+    exampleJsx: `import { ${name} } from '@mickyballadelli/prism'
 
 <${name} size="20" />`,
-    exampleJs: `import { ${name} } from 'prism-ui'
+    exampleJs: `import { ${name} } from '@mickyballadelli/prism'
 
 ${name}({ size: "20" })`
   }

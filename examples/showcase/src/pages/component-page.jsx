@@ -1,5 +1,5 @@
 import { html } from '@mickyballadelli/matrix'
-import { Box, Card, CodeViewer } from 'prism-ui'
+import { Box, Card, CodeViewer } from '@mickyballadelli/prism'
 import { componentRegistryByKey } from '../component-registry.js'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { playgrounds } from '../playgrounds/index.jsx'

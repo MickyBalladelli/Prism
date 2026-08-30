@@ -7,7 +7,7 @@ Prism owns component structure, state, semantics, and the visual tokens used by 
 Apply `prismTheme` to the app root or another ancestor. This installs token variables, focus-visible treatment, reduced-motion rules, native control colors, forced-colors mappings, and the component styles:
 
 ```jsx
-import { prismTheme } from 'prism-ui'
+import { prismTheme } from '@mickyballadelli/prism'
 
 const view = <main use:style={prismTheme}>{children}</main>
 ```

@@ -11,7 +11,7 @@ for (const field of requiredFields) {
   }
 }
 
-if (packageJson.name !== 'prism-ui') {
+if (packageJson.name !== '@mickyballadelli/prism') {
   throw new Error(`Unexpected package name: ${packageJson.name}`)
 }
 

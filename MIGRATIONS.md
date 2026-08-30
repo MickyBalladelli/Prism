@@ -2,7 +2,7 @@
 
 ## From the pre-P2 alpha surface
 
-- Install `@mickyballadelli/matrix` alongside `prism-ui`; Matrix is a peer dependency.
+- Install `@mickyballadelli/matrix` alongside `@mickyballadelli/prism`; Matrix is a peer dependency.
 - Apply `prismTheme` to an app root so component tokens, focus styles, and reduced-motion rules are active.
 - `CodeViewer` previews in the showcase are read-only. Applications can still opt into `editable` and bind `code` to a writable Matrix signal.
 - Table settings helpers are now safe to use with persisted values: pass untrusted strings through `parseTableSettings` before applying them.

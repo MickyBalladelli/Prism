@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, Tag } from 'prism-ui'
+import { ArrowLeftIcon, Tag } from '@mickyballadelli/prism'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 export function ExamplePageShell({ example, link, navigateTo, children }) {

@@ -1,5 +1,5 @@
 import { component, createRouter, effect, html, mount, onMount } from '@mickyballadelli/matrix'
-import { Background, prismTheme } from 'prism-ui'
+import { Background, prismTheme } from '@mickyballadelli/prism'
 import { ComponentPage } from './pages/component-page.jsx'
 import { ExamplePage } from './pages/example-page.jsx'
 import { HomePage } from './pages/home-page.jsx'

@@ -1,5 +1,5 @@
 import { component, computed, keyed, onMount, signal } from '@mickyballadelli/matrix'
-import { Alert, Avatar, Button, Card, ChatIcon, Pulse, SendIcon, Tag, TextField } from 'prism-ui'
+import { Alert, Avatar, Button, Card, ChatIcon, Pulse, SendIcon, Tag, TextField } from '@mickyballadelli/prism'
 import { ExampleMetric, ExamplePageShell } from '../example-page-shell.jsx'
 
 const initialMessages = [

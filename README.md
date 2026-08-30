@@ -1,8 +1,8 @@
 # Prism UI
 
-[![npm version](https://img.shields.io/npm/v/prism-ui?logo=npm&logoColor=white)](https://www.npmjs.com/package/prism-ui)
-[![npm downloads](https://img.shields.io/npm/dm/prism-ui?logo=npm&logoColor=white)](https://www.npmjs.com/package/prism-ui)
-[![License](https://img.shields.io/npm/l/prism-ui)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/@mickyballadelli%2Fprism?logo=npm&logoColor=white)](https://www.npmjs.com/package/@mickyballadelli/prism)
+[![npm downloads](https://img.shields.io/npm/dm/@mickyballadelli%2Fprism?logo=npm&logoColor=white)](https://www.npmjs.com/package/@mickyballadelli/prism)
+[![License](https://img.shields.io/npm/l/@mickyballadelli%2Fprism)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Built for Matrix](https://img.shields.io/badge/built%20for-Matrix-6958de)](https://github.com/MickyBalladelli/Matrix)
 
@@ -13,7 +13,7 @@ Prism is alpha software. The API is small and useful today, but can change befor
 ## Install
 
 ```bash
-npm install prism-ui @mickyballadelli/matrix
+npm install @mickyballadelli/prism @mickyballadelli/matrix
 ```
 
 Prism uses Matrix as a peer dependency. Use a Matrix version that satisfies Prism's peer range.
@@ -25,7 +25,7 @@ Prism uses Matrix as a peer dependency. Use a Matrix version that satisfies Pris
 Matrix components are functions. Pass a props object and compose the returned templates:
 
 ```js
-import { Button, Card, CheckBox, TextField } from 'prism-ui'
+import { Button, Card, CheckBox, TextField } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const name = signal('Ada')
@@ -56,7 +56,7 @@ const view = Card({
 The showcase uses Matrix's JSX runtime. Configure your bundler for `@mickyballadelli/matrix` and use Prism components directly:
 
 ```jsx
-import { Button, Card, CheckBox, TextField } from 'prism-ui'
+import { Button, Card, CheckBox, TextField } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const name = signal('Ada')
@@ -76,7 +76,7 @@ const view = (
 Prism components use the exported Matrix style definition. Apply it to an app root or another ancestor:
 
 ```jsx
-import { Button, prismTheme } from 'prism-ui'
+import { Button, prismTheme } from '@mickyballadelli/prism'
 
 const view = (
   <main use:style={prismTheme}>
@@ -111,7 +111,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 Pass writable Matrix signals to controls when state must stay in sync. `TextField` writes to a `value` signal and `CheckBox` writes to a `checked` signal. `Select`, `Popup`, `Table`, and most visual props also accept reactive values.
 
 ```js
-import { CheckBox, Select, TextField } from 'prism-ui'
+import { CheckBox, Select, TextField } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const query = signal('')
@@ -146,7 +146,7 @@ Event handlers use Matrix's normal DOM event shape. Button handlers receive a mo
 `Background` is a themed surface with optional animated WebGL motion and a 2D fallback. It keeps its children above the effect.
 
 ```jsx
-import { Background, Button, Label } from 'prism-ui'
+import { Background, Button, Label } from '@mickyballadelli/prism'
 
 const view = (
   <Background
@@ -181,7 +181,7 @@ The component respects live `prefers-reduced-motion` changes. It uses a 2D fallb
 `Box` is a plain `div` wrapper. `Card` is an `article` wrapper and can render an action footer:
 
 ```js
-import { Button, Card } from 'prism-ui'
+import { Button, Card } from '@mickyballadelli/prism'
 
 const view = Card({
   children: 'A standalone piece of content',
@@ -196,7 +196,7 @@ Both support `children`, `class`, `id`, `role`, `style`, `sticky`, and `stickyTo
 `Header` renders an app bar. Put brand or navigation in `children`, and tools in `trailing`. It is sticky to the top by default.
 
 ```js
-import { Header, SettingsIcon } from 'prism-ui'
+import { Header, SettingsIcon } from '@mickyballadelli/prism'
 
 const view = Header({
   children: 'Prism',
@@ -211,7 +211,7 @@ const view = Header({
 Use `Layout` when a page has named header, navigation, content, and footer regions. `Navigator` renders the navigation landmark, while `Footer` closes the frame with either one content slot or balanced `leading` and `trailing` slots.
 
 ```js
-import { Card, Footer, Layout, Navigator, TreeView } from 'prism-ui'
+import { Card, Footer, Layout, Navigator, TreeView } from '@mickyballadelli/prism'
 
 const view = Layout({
   navigator: Navigator({
@@ -243,7 +243,7 @@ Set `backgroundColor` and `outlineColor` to customize the character fill and str
 ### TextField
 
 ```js
-import { TextField } from 'prism-ui'
+import { TextField } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const email = signal('')
@@ -263,7 +263,7 @@ Supported sizes are `small`, `medium`, and `large`. Use `onInput` or `onChange` 
 ### CheckBox
 
 ```js
-import { CheckBox } from 'prism-ui'
+import { CheckBox } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const accepted = signal(false)
@@ -283,7 +283,7 @@ The label wraps the input, so visible children provide the accessible name. `cla
 `Select` is a custom listbox with keyboard support. Arrow keys move, Home and End jump, letter keys cycle, Enter selects, and Escape closes.
 
 ```js
-import { Select } from 'prism-ui'
+import { Select } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const selected = signal('design')
@@ -307,7 +307,7 @@ Pass `name` when the selected value must submit with a form. Select mirrors its 
 ### Button
 
 ```jsx
-import { Button, SendIcon, SettingsIcon } from 'prism-ui'
+import { Button, SendIcon, SettingsIcon } from '@mickyballadelli/prism'
 
 const send = (
   <Button
@@ -348,7 +348,7 @@ Set `palette` to `cobalt`, `iris`, or `teal` for a first-class palette recipe. T
 `Badge` displays a count or state. Tones are `neutral`, `success`, `info`, `warning`, and `error`. Use `pulseOnChange` with a signal to animate value changes.
 
 ```js
-import { Badge } from 'prism-ui'
+import { Badge } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const unread = signal(12)
@@ -360,7 +360,7 @@ const view = Badge({ value: unread, tone: 'info', pulseOnChange: true })
 `Pulse` shows a living state with `success`, `info`, `warning`, `error`, or `off` status. Sizes are `small`, `medium`, and `large`. Animation is `continuous` by default; use `once` for a single pulse.
 
 ```jsx
-import { Pulse } from 'prism-ui'
+import { Pulse } from '@mickyballadelli/prism'
 
 const view = <Pulse status="success">Service healthy</Pulse>
 ```
@@ -372,7 +372,7 @@ const view = <Pulse status="success">Service healthy</Pulse>
 `TreeView` renders nested branches and leaves with tree roles, stable item IDs, roving focus, and keyboard navigation. Leaves can use `href` or `onClick`. Branches use `children` and can start open with `expanded`.
 
 ```js
-import { TreeView } from 'prism-ui'
+import { TreeView } from '@mickyballadelli/prism'
 
 const view = TreeView({
   ariaLabel: 'Workspace navigation',
@@ -405,7 +405,7 @@ Use `onRender(item, context)` to render richer labels. The context includes `typ
 `FormField` keeps a label, hint, error, and control wiring together. Its `control` callback receives the generated `id`, `ariaDescribedBy`, `ariaInvalid`, and `required` values:
 
 ```js
-import { FormField, TextField } from 'prism-ui'
+import { FormField, TextField } from '@mickyballadelli/prism'
 
 const view = FormField({
   label: 'Project name',
@@ -419,7 +419,7 @@ const view = FormField({
 `Alert` and `Notice` provide inline feedback. Use `ToastRegion` with `createToastController()` for transient messages; its timers pause while a toast is hovered or focused.
 
 ```js
-import { Alert, ToastRegion, createToastController } from 'prism-ui'
+import { Alert, ToastRegion, createToastController } from '@mickyballadelli/prism'
 
 const notices = createToastController()
 notices.push({ tone: 'success', title: 'Saved', children: 'Project is up to date.' })
@@ -441,7 +441,7 @@ For compact composition, use `IconButton` with `ariaLabel`, then combine `Avatar
 `Popup` is a modal dialog with a backdrop, Escape dismissal, focus trapping, and focus restoration.
 
 ```js
-import { Button, Popup } from 'prism-ui'
+import { Button, Popup } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const open = signal(false)
@@ -470,7 +470,7 @@ Use `size` (`small`, `medium`, `large`, `full`) and `placement` (`center`, `top`
 `Table` is a data surface with filtering, sorting, pagination, selection, sticky headers, pinned columns, drag ordering, keyboard resizing, density modes, custom cells, settings persistence, loading and error states, virtualization, and CSV export.
 
 ```js
-import { Table } from 'prism-ui'
+import { Table } from '@mickyballadelli/prism'
 
 const rows = [
   { id: 'p-1', name: 'Prism', status: 'Live', owner: 'Micky' },
@@ -518,7 +518,7 @@ Global filtering waits 180ms by default; change it with `filterDebounce` or set 
 `CodeViewer` renders a lightweight syntax-colored editor with optional line numbers, accessible tabs, copying, and Matrix signal binding:
 
 ```js
-import { CodeViewer } from 'prism-ui'
+import { CodeViewer } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const source = signal('const answer = 42')
@@ -542,7 +542,7 @@ Use `tabs` for multiple sources. `activeTab` can be a signal or computed value, 
 Prism exports 46 original SVG components in seven groups: Actions, Navigation, Communication, Status, Files, Workspace, and Data & Code.
 
 ```jsx
-import { Button, EyeIcon, SettingsIcon } from 'prism-ui'
+import { Button, EyeIcon, SettingsIcon } from '@mickyballadelli/prism'
 
 const view = (
   <div>
@@ -559,7 +559,7 @@ Use `PrismIcon` for Prism identity and `MatrixIcon` when crediting the runtime. 
 Import only the icon entry point when useful:
 
 ```js
-import { TreeLeafIcon } from 'prism-ui/icons'
+import { TreeLeafIcon } from '@mickyballadelli/prism/icons'
 
 const view = TreeLeafIcon({ size: '14' })
 ```
@@ -589,10 +589,10 @@ Create a production build with `npm run build`. The showcase loads local Prism s
 ## Package exports
 
 ```text
-prism-ui             Components, icons, theme, and settings helpers
-prism-ui/components  Component entry point
-prism-ui/icons       Icon entry point
-prism-ui/theme       Theme values and theme models
+@mickyballadelli/prism             Components, icons, theme, and settings helpers
+@mickyballadelli/prism/components  Component entry point
+@mickyballadelli/prism/icons       Icon entry point
+@mickyballadelli/prism/theme       Theme values and theme models
 ```
 
 Main exports include the `*Component` wrappers for Matrix component composition, all visual components, all icons, `prismTheme`, `prismThemeValues`, `treeViewModels`, `serializeTableSettings`, and `parseTableSettings`.

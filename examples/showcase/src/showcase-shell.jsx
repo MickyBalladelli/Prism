@@ -1,7 +1,7 @@
 import { computed, html, onMount, signal } from '@mickyballadelli/matrix'
 import { componentGroups, componentRegistry, componentRegistryByGroup } from './component-registry.js'
 import { exampleRegistry } from './example-registry.js'
-import { FileIcon, FolderIcon, Footer, Header, Layout, MatrixIcon, Navigator, PrismIcon, TreeView } from 'prism-ui'
+import { FileIcon, FolderIcon, Footer, Header, Layout, MatrixIcon, Navigator, PrismIcon, TreeView } from '@mickyballadelli/prism'
 import { iconCategories, iconCount } from './icon-catalog.js'
 import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'
 

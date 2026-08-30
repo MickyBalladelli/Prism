@@ -1,5 +1,5 @@
 import { component, computed, createForm, html, keyed, signal } from '@mickyballadelli/matrix'
-import { Alert, Avatar, Badge, Button, Card, EmptyState, FormField, PlusIcon, Stack, Tag, TextField, ToastRegion, createToastController } from 'prism-ui'
+import { Alert, Avatar, Badge, Button, Card, EmptyState, FormField, PlusIcon, Stack, Tag, TextField, ToastRegion, createToastController } from '@mickyballadelli/prism'
 import { ExampleMetric, ExamplePageShell } from '../example-page-shell.jsx'
 
 const products = [

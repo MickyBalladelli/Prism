@@ -1,4 +1,4 @@
-import { Card, CodeViewer } from 'prism-ui'
+import { Card, CodeViewer } from '@mickyballadelli/prism'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
 const apiGroups = [
@@ -68,7 +68,7 @@ const apiGroups = [
 
 const apiGroupId = group => `api-group-${group.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 
-const controlledExample = `import { Button, Card, FormField, TextField } from 'prism-ui'
+const controlledExample = `import { Button, Card, FormField, TextField } from '@mickyballadelli/prism'
 import { signal } from '@mickyballadelli/matrix'
 
 const name = signal('Ada')

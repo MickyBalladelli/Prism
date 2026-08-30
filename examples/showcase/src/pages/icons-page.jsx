@@ -1,4 +1,4 @@
-import { Button, Card, CodeViewer, PlusIcon } from 'prism-ui'
+import { Button, Card, CodeViewer, PlusIcon } from '@mickyballadelli/prism'
 import { iconCategories, iconCount } from '../icon-catalog.js'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
@@ -51,7 +51,7 @@ function IconScaleDemo() {
           Large action
         </Button>
       </div>
-      <pre class="icon-scale-code"><code>{`import { Button, PlusIcon } from 'prism-ui'
+      <pre class="icon-scale-code"><code>{`import { Button, PlusIcon } from '@mickyballadelli/prism'
 
 <Button class="compact-action">
   <PlusIcon size="14" />

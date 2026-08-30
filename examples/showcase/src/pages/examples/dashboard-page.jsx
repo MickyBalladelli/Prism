@@ -1,5 +1,5 @@
 import { component, computed, keyed, onMount, resource, signal } from '@mickyballadelli/matrix'
-import { Alert, Badge, Button, Card, Progress, Select, Table, Tag } from 'prism-ui'
+import { Alert, Badge, Button, Card, Progress, Select, Table, Tag } from '@mickyballadelli/prism'
 import { ExamplePageShell } from '../example-page-shell.jsx'
 
 const defaultDashboard = {

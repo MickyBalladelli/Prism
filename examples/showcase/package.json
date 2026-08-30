@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@mickyballadelli/matrix": "^1.0.1",
-    "prism-ui": "file:../.."
+    "@mickyballadelli/prism": "file:../.."
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",

@@ -1,5 +1,5 @@
 import { component, html } from '@mickyballadelli/matrix'
-import { Card, Footer, Layout, Navigator, TreeView } from 'prism-ui'
+import { Card, Footer, Layout, Navigator, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
 
 const navigationItems = [

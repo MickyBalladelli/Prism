@@ -1,4 +1,4 @@
-import { ArrowRightIcon, Button } from 'prism-ui'
+import { ArrowRightIcon, Button } from '@mickyballadelli/prism'
 
 export function ShowDetailsButton({ onClick }) {
   return (
