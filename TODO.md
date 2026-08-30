@@ -75,8 +75,8 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 - [x] **Add visual regression coverage.** Added a Playwright matrix for every route, five themes, three responsive projects, reduced motion, and snapshot seed/update guidance in `examples/showcase/visual/README.md`.
 
 ## Example applications from Matrix, enhance them using Prism.
-- [ ] Create "Shopping Cart" example (routing, forms, API calls, state)
-- [ ] Create "Notes App" example (complex forms, search, local storage)
-- [ ] Create "Dashboard" example (many components, performance considerations)
-- [ ] Create "Real-time Chat" example (WebSocket, message handling)
-- [ ] Each example should include tests and performance notes
+- [x] Create "Shopping Cart" example (routing, forms, API calls, state) — Added `/examples/shopping-cart` with cart state, checkout validation, async demo handoff, and Prism feedback surfaces.
+- [x] Create "Notes App" example (complex forms, search, local storage) — Added `/examples/notes` with reactive search, validated editing, keyed rows, and safe local persistence.
+- [x] Create "Dashboard" example (many components, performance considerations) — Added `/examples/dashboard` with async metrics, filters, Prism Table, trend view, and a local timeline recorder.
+- [x] Create "Real-time Chat" example (WebSocket, message handling) — Added `/examples/chat` with connection states, keyed messages, and a replaceable local echo socket.
+- [x] Each example should include tests and performance notes — Added registry/page coverage in `test/showcase-registry.test.js` and implementation notes in `examples/showcase/examples/README.md`.

@@ -1,5 +1,6 @@
 import { computed, html, onMount, signal } from '@mickyballadelli/matrix'
 import { componentGroups, componentRegistry, componentRegistryByGroup } from './component-registry.js'
+import { exampleRegistry } from './example-registry.js'
 import { FileIcon, FolderIcon, Header, MatrixIcon, PrismIcon, TreeView } from 'prism-ui'
 import { iconCategories, iconCount } from './icon-catalog.js'
 import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'
@@ -67,6 +68,20 @@ function createSidebarItems(link, activeKey) {
       active: activeKey === 'api',
       meta: 'Docs',
       detail: 'Props and contracts'
+    },
+    {
+      id: 'examples',
+      label: 'Applications',
+      meta: String(exampleRegistry.length),
+      expanded: true,
+      children: exampleRegistry.map(example => ({
+        id: `example-${example.key}`,
+        label: example.title,
+        href: example.path,
+        onClick: link(example.path),
+        active: activeKey === `example-${example.key}`,
+        detail: example.description
+      }))
     },
     {
       id: 'components',

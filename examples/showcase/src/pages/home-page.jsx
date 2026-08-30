@@ -1,5 +1,6 @@
 import { Card } from 'prism-ui'
 import { componentRegistry } from '../component-registry.js'
+import { exampleRegistry } from '../example-registry.js'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { ShowDetailsButton } from '../show-details-button.jsx'
 
@@ -42,6 +43,37 @@ export function HomePage({ link }) {
               </div>
             </Card>
           ))}
+        </section>
+
+        <section class="example-gallery" aria-labelledby="example-gallery-title">
+          <div class="example-gallery-heading">
+            <div>
+              <p class="eyebrow">Application studies</p>
+              <h2 id="example-gallery-title">Prism in the wild.</h2>
+            </div>
+            <p>Four small products adapted from Matrix examples. Each one shows how Prism components behave inside a real interaction loop.</p>
+          </div>
+          <div class="example-gallery-grid">
+            {exampleRegistry.map(example => (
+              <Card
+                key={example.key}
+                class="example-gallery-card"
+                actions={<ShowDetailsButton onClick={link(example.path)} />}
+              >
+                <div class="card-heading">
+                  <div>
+                    <p class="eyebrow">{example.eyebrow}</p>
+                    <h3>{example.title}</h3>
+                  </div>
+                  <span class="component-mark">{example.mark}</span>
+                </div>
+                <p class="card-copy">{example.description}</p>
+                <div class="component-badges" aria-label={`${example.title} highlights`}>
+                  {example.highlights.map(highlight => <span class="component-badge" key={`${example.key}-${highlight}`}>{highlight}</span>)}
+                </div>
+              </Card>
+            ))}
+          </div>
         </section>
 
         <footer class="footer">

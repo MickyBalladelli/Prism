@@ -1,12 +1,14 @@
 import { test, expect } from '@playwright/test'
 import { componentRegistry } from '../src/component-registry.js'
+import { exampleRegistry } from '../src/example-registry.js'
 
 const themes = ['prism', 'aurora', 'nocturne', 'editorial', 'terminal']
 const routes = [
   { key: 'overview', path: '/' },
   { key: 'api', path: '/api' },
   { key: 'icons', path: '/icons' },
-  ...componentRegistry.map(component => ({ key: component.key, path: component.path }))
+  ...componentRegistry.map(component => ({ key: component.key, path: component.path })),
+  ...exampleRegistry.map(example => ({ key: `example-${example.key}`, path: example.path }))
 ]
 
 test.describe('showcase visual matrix', () => {

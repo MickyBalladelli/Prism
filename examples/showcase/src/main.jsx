@@ -1,12 +1,14 @@
 import { createRouter, mount, routerView } from '@mickyballadelli/matrix'
 import { Background, prismTheme } from 'prism-ui'
 import { ComponentPage } from './pages/component-page.jsx'
+import { ExamplePage } from './pages/example-page.jsx'
 import { HomePage } from './pages/home-page.jsx'
 import { IconsPage } from './pages/icons-page.jsx'
 import { NotFoundPage } from './pages/not-found-page.jsx'
 import { ApiPage } from './pages/api-page.jsx'
 import { showcaseBackgroundAccentColor, showcaseBackgroundAnimated, showcaseBackgroundBaseColor, showcaseBackgroundGlowColor, showcaseBackgroundPalette, showcaseBackgroundRecipe, showcaseThemeClass } from './theme-picker.jsx'
 import './style.css'
+import './examples-style.css'
 
 let router
 
@@ -23,6 +25,7 @@ router = createRouter([
   { path: '/icons', view: withNavigation(IconsPage) },
   { path: '/icons/:category', view: withNavigation(IconsPage) },
   { path: '/components/:name', view: withNavigation(ComponentPage) },
+  { path: '/examples/:name', view: withNavigation(ExamplePage) },
   { path: '*path', view: withNavigation(NotFoundPage) }
 ])
 

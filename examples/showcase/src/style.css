@@ -1378,6 +1378,20 @@ h1 em {
   width: 100%;
 }
 
+/* Keep animated showcase backgrounds behind readable table surfaces. */
+.showcase-main .prism-table,
+.showcase-main .api-props-table-wrap {
+  position: relative;
+  z-index: 1;
+  background: var(--prism-color-surface);
+  box-shadow: 0 .65rem 1.6rem rgb(20 29 61 / 10%);
+  isolation: isolate;
+}
+
+.showcase-main .api-props-table {
+  background: var(--prism-color-surface);
+}
+
 .popup-playground {
   display: grid;
   justify-items: center;
