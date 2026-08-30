@@ -37,22 +37,37 @@ export function Tooltip(props = {}) {
   }
 
   onMount(root => {
-    if (typeof document === 'undefined') return
+    if (typeof document === 'undefined' || !root?.addEventListener) return
     const updatePosition = () => {
       const tooltip = root.querySelector('.prism-tooltip')
       positionFloatingElement(root, tooltip, normalizePlacement(readReactiveValue(placement, 'top'), 'top'))
     }
+    const handleKeydown = event => {
+      if (event.key === 'Escape') hide()
+    }
+    root.addEventListener('mouseenter', show)
+    root.addEventListener('mouseleave', hide)
+    root.addEventListener('pointerdown', toggleTouch)
+    root.addEventListener('focusin', show)
+    root.addEventListener('focusout', hide)
+    root.addEventListener('keydown', handleKeydown)
     const dispose = effect(() => {
       if (open.value) requestAnimationFrame(updatePosition)
     })
     return () => {
       clearTimeout(timer)
+      root.removeEventListener('mouseenter', show)
+      root.removeEventListener('mouseleave', hide)
+      root.removeEventListener('pointerdown', toggleTouch)
+      root.removeEventListener('focusin', show)
+      root.removeEventListener('focusout', hide)
+      root.removeEventListener('keydown', handleKeydown)
       dispose?.()
     }
   })
 
   return html`
-    <span class="prism-tooltip-anchor ${classValue}" aria-describedby="${open.value ? tooltipDomId : ''}" @pointerenter=${show} @pointerleave=${hide} @pointerdown=${toggleTouch} @focusin=${show} @focusout=${hide} @keydown=${event => { if (event.key === 'Escape') hide() }}>
+    <span class="prism-tooltip-anchor ${classValue}" aria-describedby="${open.value ? tooltipDomId : ''}">
       ${children}
       ${open.value && !readReactiveValue(disabled, false) ? html`<span id="${tooltipDomId}" class="prism-tooltip prism-tooltip-${normalizePlacement(readReactiveValue(placement, 'top'), 'top')}" role="tooltip">${typeof content === 'function' ? content() : content}</span>` : ''}
     </span>
