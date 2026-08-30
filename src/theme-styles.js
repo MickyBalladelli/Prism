@@ -1993,6 +1993,13 @@ export const prismTheme = globalCss(`
     border-bottom: 0;
   }
 
+  .prism-table-virtual-spacer td {
+    height: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
   .prism-table-striped .prism-table-body tr:nth-child(even) td {
     --prism-table-row-background: color-mix(in srgb, var(--prism-color-surface-tint) 38%, var(--prism-color-surface));
   }
@@ -2098,6 +2105,28 @@ export const prismTheme = globalCss(`
 
   .prism-table-empty span:last-child {
     color: var(--prism-color-text-subtle);
+  }
+
+  .prism-table-error {
+    gap: .45rem;
+  }
+
+  .prism-table-retry {
+    margin-top: .3rem;
+    padding: .45rem .7rem;
+    border: 1px solid var(--prism-color-border-strong);
+    border-radius: var(--prism-radius-control);
+    color: var(--prism-color-ink);
+    background: var(--prism-color-surface);
+    font: inherit;
+    font-size: var(--prism-font-size-small);
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .prism-table-retry:hover {
+    border-color: var(--prism-color-focus);
+    color: var(--prism-color-focus);
   }
 
   .prism-table-skeleton {
@@ -3189,4 +3218,3 @@ export const prismTheme = globalCss(`
     }
   }
 `)
-

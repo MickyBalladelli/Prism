@@ -1,4 +1,4 @@
-import { component, computed, html, keyed, signal } from '@mickyballadelli/matrix'
+import { component, computed, html, keyed, onMount, signal } from '@mickyballadelli/matrix'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -148,6 +148,16 @@ function valueToSearchText(value) {
   return String(value)
 }
 
+function normalizeRowCount(value, fallback) {
+  const count = Number(value)
+  return Number.isFinite(count) && count >= 0 ? Math.floor(count) : fallback
+}
+
+function normalizeNonNegativeNumber(value, fallback, maximum = Number.POSITIVE_INFINITY) {
+  const number = Number(value)
+  return Number.isFinite(number) ? clamp(number, 0, maximum) : fallback
+}
+
 function compareValues(left, right) {
   if (left === right) {
     return 0
@@ -168,8 +178,10 @@ function compareValues(left, right) {
   return String(left).localeCompare(String(right), undefined, { numeric: true, sensitivity: 'base' })
 }
 
-function escapeCsv(value) {
-  const text = valueToSearchText(value).replaceAll('"', '""')
+function escapeCsv(value, protectFormula = true) {
+  const rawText = valueToSearchText(value)
+  const formulaSafeText = protectFormula && /^[=+\-@]/.test(rawText) ? `'${rawText}` : rawText
+  const text = formulaSafeText.replaceAll('"', '""')
   return /[",\n]/.test(text) ? `"${text}"` : text
 }
 
@@ -216,6 +228,15 @@ export function Table(props = {}) {
     striped = false,
     hoverable = true,
     loading = false,
+    error,
+    serverSide = false,
+    query,
+    totalRows,
+    filterDebounce = 180,
+    virtualized = true,
+    virtualizationThreshold = 100,
+    virtualRowHeight = 48,
+    virtualOverscan = 5,
     density = 'comfortable',
     emptyMessage = 'No rows found',
     class: classValue = '',
@@ -223,9 +244,13 @@ export function Table(props = {}) {
     ariaLabel = 'Data table',
     onRowClick,
     onSelectionChange,
+    onFilterChange,
     onSortChange,
     onPageChange,
     onPageSizeChange,
+    onQueryChange,
+    onError,
+    onRetry,
     onColumnOrderChange,
     onColumnResize,
     onSettingsChange
@@ -243,13 +268,23 @@ export function Table(props = {}) {
     .filter(column => column.pinned === 'left' || column.pinned === 'right')
     .map(column => [column.key, column.pinned]))
   const defaultDensity = densities.has(readValue(density)) ? readValue(density) : 'comfortable'
-  const queryValue = createWritable(filter, '')
-  const pageValue = createWritable(page, 1)
-  const pageSizeValue = isWritableSignal(pageSize)
+  const queryIsControlled = query !== undefined
+  const initialQuery = readValue(query)
+  const initialQueryObject = initialQuery && typeof initialQuery === 'object' ? initialQuery : {}
+  const initialFilter = initialQueryObject.filter ?? readValue(filter, '')
+  const initialPage = initialQueryObject.page ?? readValue(page, 1)
+  const initialPageSize = initialQueryObject.pageSize ?? initialSettings.pageSize ?? normalizePageSize(readValue(pageSize), 10)
+  const initialSort = Object.prototype.hasOwnProperty.call(initialQueryObject, 'sort')
+    ? initialQueryObject.sort
+    : initialSettings.sort ?? readValue(sort)
+  const queryValue = queryIsControlled ? signal(String(initialFilter ?? '')) : createWritable(filter, '')
+  const appliedFilterValue = signal(String(initialFilter ?? ''))
+  const pageValue = queryIsControlled ? signal(initialPage) : createWritable(page, 1)
+  const pageSizeValue = isWritableSignal(pageSize) && !queryIsControlled
     ? pageSize
-    : signal(initialSettings.pageSize ?? normalizePageSize(readValue(pageSize), 10))
+    : signal(initialPageSize)
   const selectedValue = createWritable(selectedKeys, [])
-  const sortValue = signal(initialSettings.sort ?? normalizeSort(readValue(sort)))
+  const sortValue = signal(normalizeSort(initialSort))
   const orderValue = signal(initialSettings.columnOrder ?? defaultOrder)
   const widthsValue = signal({ ...defaultWidths, ...(initialSettings.columnWidths ?? {}) })
   const hiddenValue = signal(initialSettings.hiddenColumns ?? defaultHidden)
@@ -294,51 +329,90 @@ export function Table(props = {}) {
     sourceIndex,
     key: getRowKey(row, sourceIndex)
   })))
+  const activeQuery = computed(() => {
+    const source = readValue(query)
+    return queryIsControlled && source && typeof source === 'object' ? source : {}
+  })
+  const activeFilterValue = computed(() => queryIsControlled
+    ? String(activeQuery.value.filter ?? queryValue.value ?? '')
+    : String(appliedFilterValue.value ?? ''))
+  const activeColumnFilters = computed(() => queryIsControlled
+    ? readValue(activeQuery.value.columnFilters, {}) ?? {}
+    : readValue(columnFilters, {}) ?? {})
+  const activeSortValue = computed(() => queryIsControlled
+    ? normalizeSort(activeQuery.value.sort ?? null)
+    : normalizeSort(sortValue.value))
+  const activePageValue = computed(() => queryIsControlled
+    ? Number(activeQuery.value.page ?? pageValue.value) || 1
+    : Number(pageValue.value) || 1)
+  const activePageSizeValue = computed(() => queryIsControlled
+    ? normalizePageSize(activeQuery.value.pageSize ?? pageSizeValue.value, 10)
+    : normalizePageSize(pageSizeValue.value, 10))
+  const serverSideValue = computed(() => readValue(serverSide, false))
   const filteredRows = computed(() => {
-    const query = String(queryValue.value ?? '').trim().toLocaleLowerCase()
-    const filters = readValue(columnFilters, {}) ?? {}
+    if (serverSideValue.value) {
+      return sourceRecords.value
+    }
+
+    const queryText = activeFilterValue.value.trim().toLocaleLowerCase()
+    const filters = activeColumnFilters.value
     const availableColumns = normalizedColumns.value
+    const columnsByKey = new Map(availableColumns.map(column => [column.key, column]))
+    const searchableColumns = availableColumns.filter(column => column.searchable)
+    const activeFilters = Object.entries(filters)
+      .filter(([, expected]) => expected !== '' && expected !== undefined && expected !== null)
+      .map(([key, expected]) => ({
+        column: columnsByKey.get(key),
+        expected,
+        expectedText: String(expected).toLocaleLowerCase()
+      }))
+      .filter(({ column }) => column)
 
     return sourceRecords.value.filter(record => {
       const { row, sourceIndex } = record
-      const matchesQuery = !query || availableColumns.some(column => {
-        if (!column.searchable) {
-          return false
+      const values = new Map()
+      const searchTexts = new Map()
+      const readColumn = column => {
+        if (!values.has(column.key)) {
+          values.set(column.key, getCellValue(row, column, sourceIndex))
         }
-
-        const value = getCellValue(row, column, sourceIndex)
-        const text = typeof column.searchText === 'function'
-          ? column.searchText(value, row)
-          : valueToSearchText(value)
-        return String(text).toLocaleLowerCase().includes(query)
+        return values.get(column.key)
+      }
+      const readSearchText = column => {
+        if (!searchTexts.has(column.key)) {
+          const value = readColumn(column)
+          const text = typeof column.searchText === 'function'
+            ? column.searchText(value, row)
+            : valueToSearchText(value)
+          searchTexts.set(column.key, String(text).toLocaleLowerCase())
+        }
+        return searchTexts.get(column.key)
+      }
+      const matchesQuery = !queryText || searchableColumns.some(column => {
+        return readSearchText(column).includes(queryText)
       })
 
       if (!matchesQuery) {
         return false
       }
 
-      return Object.entries(filters).every(([key, expected]) => {
-        if (expected === '' || expected === undefined || expected === null) {
-          return true
-        }
-
-        const column = availableColumns.find(candidate => candidate.key === key)
-        if (!column) {
-          return true
-        }
-
-        const value = getCellValue(row, column, sourceIndex)
+      return activeFilters.every(({ column, expected, expectedText }) => {
+        const value = readColumn(column)
         if (typeof column.filter === 'function') {
           return column.filter(value, expected, row)
         }
 
-        return valueToSearchText(value).toLocaleLowerCase().includes(String(expected).toLocaleLowerCase())
+        return readSearchText(column).includes(expectedText)
       })
     })
   })
 
   const sortedRows = computed(() => {
-    const activeSort = sortValue.value
+    if (serverSideValue.value) {
+      return filteredRows.value
+    }
+
+    const activeSort = activeSortValue.value
     if (!activeSort) {
       return filteredRows.value
     }
@@ -349,10 +423,19 @@ export function Table(props = {}) {
     }
 
     const multiplier = activeSort.direction === 'desc' ? -1 : 1
-    return [...filteredRows.value]
+    const sortableRows = filteredRows.value
+    const values = new Map()
+    const readSortValue = record => {
+      if (!values.has(record.key)) {
+        values.set(record.key, getCellValue(record.row, column, record.sourceIndex))
+      }
+      return values.get(record.key)
+    }
+
+    return [...sortableRows]
       .sort((left, right) => {
-        const leftValue = getCellValue(left.row, column, left.sourceIndex)
-        const rightValue = getCellValue(right.row, column, right.sourceIndex)
+        const leftValue = readSortValue(left)
+        const rightValue = readSortValue(right)
         const result = typeof column.compare === 'function'
           ? column.compare(leftValue, rightValue, left.row, right.row)
           : compareValues(leftValue, rightValue)
@@ -360,40 +443,138 @@ export function Table(props = {}) {
       })
   })
 
-  const rowsPerPage = computed(() => normalizePageSize(pageSizeValue.value, 10))
+  const rowsPerPage = activePageSizeValue
+  const resultRowCount = computed(() => serverSideValue.value
+    ? normalizeRowCount(readValue(totalRows), sortedRows.value.length)
+    : sortedRows.value.length)
   const totalPages = computed(() => {
     if (!readValue(paginated, true) || rowsPerPage.value === 'all') {
       return 1
     }
 
-    return Math.max(1, Math.ceil(sortedRows.value.length / rowsPerPage.value))
+    return Math.max(1, Math.ceil(resultRowCount.value / rowsPerPage.value))
   })
-  const activePage = computed(() => clamp(Number(pageValue.value) || 1, 1, totalPages.value))
+  const activePage = computed(() => clamp(activePageValue.value, 1, totalPages.value))
   const pageRows = computed(() => {
-    if (!readValue(paginated, true) || rowsPerPage.value === 'all') {
+    if (serverSideValue.value || !readValue(paginated, true) || rowsPerPage.value === 'all') {
       return sortedRows.value
     }
 
     const start = (activePage.value - 1) * rowsPerPage.value
     return sortedRows.value.slice(start, start + rowsPerPage.value)
   })
-  const rangeStart = computed(() => sortedRows.value.length === 0
+  const scrollTop = signal(0)
+  const viewportHeight = signal(480)
+  const virtualRows = computed(() => {
+    const source = pageRows.value
+    const rowHeight = normalizeNonNegativeNumber(readValue(virtualRowHeight), 48, 1000) || 48
+    const overscan = Math.floor(normalizeNonNegativeNumber(readValue(virtualOverscan), 5, 100))
+    const threshold = normalizeNonNegativeNumber(readValue(virtualizationThreshold), 100, 100000)
+    const enabled = Boolean(readValue(virtualized, true)) && source.length > threshold
+    const pageOffset = readValue(paginated, true) && rowsPerPage.value !== 'all'
+      ? (activePage.value - 1) * rowsPerPage.value
+      : 0
+
+    if (!enabled) {
+      return {
+        enabled: false,
+        rowHeight,
+        top: 0,
+        bottom: 0,
+        rows: source.map((record, index) => ({ record, rowIndex: pageOffset + index + 2 }))
+      }
+    }
+
+    const visibleCount = Math.max(1, Math.ceil(viewportHeight.value / rowHeight))
+    const firstVisible = Math.floor(scrollTop.value / rowHeight)
+    const start = clamp(firstVisible - overscan, 0, Math.max(0, source.length - 1))
+    const end = Math.min(source.length, start + visibleCount + overscan * 2)
+
+    return {
+      enabled: true,
+      rowHeight,
+      top: start * rowHeight,
+      bottom: Math.max(0, (source.length - end) * rowHeight),
+      rows: source.slice(start, end).map((record, index) => ({
+        record,
+        rowIndex: pageOffset + start + index + 2
+      }))
+    }
+  })
+  const rangeStart = computed(() => resultRowCount.value === 0 || pageRows.value.length === 0
     ? 0
     : rowsPerPage.value === 'all' ? 1 : (activePage.value - 1) * rowsPerPage.value + 1)
-  const rangeEnd = computed(() => rowsPerPage.value === 'all'
-    ? sortedRows.value.length
-    : Math.min(sortedRows.value.length, activePage.value * rowsPerPage.value))
+  const rangeEnd = computed(() => {
+    if (resultRowCount.value === 0 || pageRows.value.length === 0) {
+      return 0
+    }
+    if (rowsPerPage.value === 'all') {
+      return serverSideValue.value ? Math.min(resultRowCount.value, pageRows.value.length) : sortedRows.value.length
+    }
+    return serverSideValue.value
+      ? Math.min(resultRowCount.value, rangeStart.value - 1 + pageRows.value.length)
+      : Math.min(sortedRows.value.length, activePage.value * rowsPerPage.value)
+  })
   const hasActiveFilters = computed(() => {
-    const query = String(queryValue.value ?? '').trim()
-    const filters = readValue(columnFilters, {}) ?? {}
-    return Boolean(query || Object.values(filters).some(value => value !== '' && value !== undefined && value !== null))
+    const queryText = activeFilterValue.value.trim()
+    const filters = activeColumnFilters.value
+    return Boolean(queryText || Object.values(filters).some(value => value !== '' && value !== undefined && value !== null))
   })
   const emptyMessageValue = computed(() => readValue(emptyMessage, 'No rows found'))
   const emptyDescription = computed(() => hasActiveFilters.value
     ? 'Try another search or clear your filters.'
     : 'There are no rows to show yet.')
-  const loadingStatus = computed(() => readValue(loading, false) ? 'Loading rows' : '')
+  const requestLoading = signal(false)
+  const requestError = signal(null)
+  const errorValue = computed(() => readValue(error) ?? requestError.value)
+  const loadingValue = computed(() => readValue(loading, false) || requestLoading.value)
+  const errorMessage = computed(() => {
+    const value = errorValue.value
+    if (!value) {
+      return ''
+    }
+    return typeof value === 'string' ? value : String(value.message ?? 'Unable to load rows')
+  })
+  const loadingStatus = computed(() => loadingValue.value
+    ? 'Loading rows'
+    : errorMessage.value ? `Error loading rows: ${errorMessage.value}` : '')
   const tableLabel = computed(() => String(readValue(ariaLabel, 'Data table') ?? '').trim() || 'Data table')
+  let filterTimer = null
+  let requestToken = 0
+  let lastQuery = null
+  let requestActive = true
+
+  onMount(node => {
+    const viewport = node?.querySelector(`.${baseClassName}-viewport`)
+    if (!viewport) {
+      return
+    }
+
+    const updateViewport = () => {
+      scrollTop.value = viewport.scrollTop
+      viewportHeight.value = Math.max(viewport.clientHeight, 1)
+    }
+    const resizeObserver = typeof ResizeObserver === 'function'
+      ? new ResizeObserver(updateViewport)
+      : null
+    const filterSubscription = !queryIsControlled && isReactive(filter) && typeof filter.subscribe === 'function'
+      ? filter.subscribe(value => scheduleFilter(String(value ?? '')))
+      : null
+
+    viewport.addEventListener('scroll', updateViewport, { passive: true })
+    resizeObserver?.observe(viewport)
+    updateViewport()
+
+    return () => {
+      requestActive = false
+      if (filterTimer !== null) {
+        clearTimeout(filterTimer)
+      }
+      viewport.removeEventListener('scroll', updateViewport)
+      resizeObserver?.disconnect()
+      filterSubscription?.()
+    }
+  })
 
   const selectedSet = () => new Set(Array.isArray(selectedValue.value)
     ? selectedValue.value.map(String)
@@ -405,7 +586,7 @@ export function Table(props = {}) {
     columnWidths: { ...widthsValue.value },
     hiddenColumns: [...hiddenValue.value],
     pinnedColumns: { ...pinnedValue.value },
-    sort: sortValue.value ? { ...sortValue.value } : null,
+    sort: activeSortValue.value ? { ...activeSortValue.value } : null,
     pageSize: rowsPerPage.value,
     density: densityValue.value
   })
@@ -420,22 +601,136 @@ export function Table(props = {}) {
     onSettingsChange?.(snapshot, serialized)
   }
 
-  const setPage = nextPage => {
+  const makeQuerySnapshot = changes => {
+    const nextSort = Object.prototype.hasOwnProperty.call(changes, 'sort')
+      ? changes.sort
+      : activeSortValue.value
+    return {
+      filter: String(changes.filter ?? activeFilterValue.value ?? ''),
+      columnFilters: { ...(changes.columnFilters ?? activeColumnFilters.value ?? {}) },
+      sort: nextSort ? { ...nextSort } : null,
+      page: Math.max(1, Number(changes.page ?? activePage.value) || 1),
+      pageSize: normalizePageSize(changes.pageSize ?? rowsPerPage.value, 10)
+    }
+  }
+
+  const notifyRequestError = (requestErrorValue, nextQuery) => {
+    requestError.value = requestErrorValue
+    try {
+      onError?.(requestErrorValue, nextQuery)
+    } catch {
+      // Error callbacks must not break the table's own error state.
+    }
+  }
+
+  const runQueryRequest = (requestHandler, nextQuery) => {
+    lastQuery = nextQuery
+    const token = ++requestToken
+    requestError.value = null
+    let result
+    try {
+      result = requestHandler?.(nextQuery)
+    } catch (requestErrorValue) {
+      if (token === requestToken && requestActive) {
+        requestLoading.value = false
+        notifyRequestError(requestErrorValue, nextQuery)
+      }
+      return
+    }
+
+    if (!result || typeof result.then !== 'function') {
+      requestLoading.value = false
+      return
+    }
+
+    requestLoading.value = true
+    Promise.resolve(result).then(
+      () => {
+        if (token === requestToken && requestActive) {
+          requestLoading.value = false
+        }
+      },
+      requestErrorValue => {
+        if (token === requestToken && requestActive) {
+          requestLoading.value = false
+          notifyRequestError(requestErrorValue, nextQuery)
+        }
+      }
+    )
+  }
+
+  const emitQueryChange = changes => {
+    const nextQuery = makeQuerySnapshot(changes)
+    if (typeof onQueryChange === 'function') {
+      runQueryRequest(onQueryChange, nextQuery)
+    } else {
+      lastQuery = nextQuery
+    }
+  }
+
+  const retryQuery = () => {
+    const nextQuery = lastQuery ?? makeQuerySnapshot({})
+    if (typeof onRetry === 'function') {
+      runQueryRequest(onRetry, nextQuery)
+      return
+    }
+    if (typeof onQueryChange === 'function') {
+      runQueryRequest(onQueryChange, nextQuery)
+    }
+  }
+
+  const applyFilter = value => {
+    appliedFilterValue.value = value
+    const nextQuery = makeQuerySnapshot({ filter: value, page: 1 })
+    onFilterChange?.(value, nextQuery)
+    if (serverSideValue.value) {
+      emitQueryChange({ filter: value, page: 1 })
+    }
+  }
+
+  const scheduleFilter = value => {
+    if (filterTimer !== null) {
+      clearTimeout(filterTimer)
+      filterTimer = null
+    }
+
+    const delay = normalizeNonNegativeNumber(readValue(filterDebounce, 180), 180, 2000)
+    if (delay === 0) {
+      applyFilter(value)
+      return
+    }
+
+    filterTimer = setTimeout(() => {
+      filterTimer = null
+      applyFilter(value)
+    }, delay)
+  }
+
+  const setPage = (nextPage, { notifyQuery = true } = {}) => {
     const next = clamp(Number(nextPage) || 1, 1, totalPages.value)
-    pageValue.value = next
+    if (!queryIsControlled) {
+      pageValue.value = next
+    }
     onPageChange?.(next)
+    if (notifyQuery) {
+      emitQueryChange({ page: next })
+    }
   }
 
   const handleSearch = event => {
     queryValue.value = event.currentTarget.value
-    setPage(1)
+    setPage(1, { notifyQuery: false })
+    scheduleFilter(String(event.currentTarget.value ?? ''))
   }
 
   const handlePageSize = event => {
     const next = normalizePageSize(event.currentTarget.value, 10)
-    pageSizeValue.value = next
-    setPage(1)
+    if (!queryIsControlled) {
+      pageSizeValue.value = next
+    }
+    setPage(1, { notifyQuery: false })
     onPageSizeChange?.(next)
+    emitQueryChange({ pageSize: next, page: 1 })
     emitSettings()
   }
 
@@ -444,15 +739,18 @@ export function Table(props = {}) {
       return
     }
 
-    const current = sortValue.value
+    const current = activeSortValue.value
     const next = current?.key !== column.key
       ? { key: column.key, direction: 'asc' }
       : current.direction === 'asc'
         ? { key: column.key, direction: 'desc' }
         : null
-    sortValue.value = next
-    setPage(1)
+    if (!queryIsControlled) {
+      sortValue.value = next
+    }
+    setPage(1, { notifyQuery: false })
     onSortChange?.(next)
+    emitQueryChange({ sort: next, page: 1 })
     emitSettings()
   }
 
@@ -648,18 +946,25 @@ export function Table(props = {}) {
   const exportCsv = () => {
     const exportColumns = visibleColumns.value.filter(column => column.exportable !== false)
     const lines = [
-      exportColumns.map(column => escapeCsv(column.header)).join(','),
+      exportColumns.map(column => escapeCsv(column.header, false)).join(','),
       ...sortedRows.value.map(record => exportColumns
         .map(column => escapeCsv(getCellValue(record.row, column, record.sourceIndex)))
         .join(','))
     ]
-    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' })
+    const blob = new Blob([`\uFEFF${lines.join('\n')}`], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = `${String(title ?? 'table').toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-')}.csv`
-    anchor.click()
-    URL.revokeObjectURL(url)
+    const filename = String(title ?? 'table').toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'table'
+    anchor.download = `${filename}.csv`
+    const parent = document.body ?? document.documentElement
+    parent?.append(anchor)
+    try {
+      anchor.click()
+    } finally {
+      anchor.remove()
+      setTimeout(() => URL.revokeObjectURL(url), 0)
+    }
   }
 
   const columnStyle = (column, columnsToRender) => {
@@ -693,7 +998,7 @@ export function Table(props = {}) {
     column.class ?? ''
   ].filter(Boolean).join(' ')
 
-  const renderTableRow = ({ record }) => {
+  const renderTableRow = ({ record, rowIndex }) => {
     const columnsToRender = visibleColumns.value
     const selected = selectedSet()
     const selectionEnabled = readValue(selectable, false)
@@ -715,7 +1020,7 @@ export function Table(props = {}) {
     }
 
     return html`
-      <tr class="${rowClass}" data-selected="${isSelected}" tabindex="${onRowClick ? 0 : undefined}" @click=${activateRow} @keydown=${activateRow}>
+      <tr class="${rowClass}" data-selected="${isSelected}" aria-rowindex="${rowIndex}" tabindex="${onRowClick ? 0 : undefined}" @click=${activateRow} @keydown=${activateRow}>
         ${selectionEnabled ? html`<td class="${baseClassName}-selection-cell"><input type="checkbox" aria-label="Select row ${sourceIndex + 1}" .checked=${isSelected} @click=${event => event.stopPropagation()} @keydown=${event => event.stopPropagation()} @change=${event => toggleRow(record, event)}></td>` : null}
         ${columnsToRender.map(column => {
           const value = getCellValue(row, column, sourceIndex)
@@ -744,7 +1049,7 @@ export function Table(props = {}) {
         <tr>
           ${readValue(selectable, false) ? html`<th class="${baseClassName}-selection-cell" scope="col"><input type="checkbox" aria-label="Select rows on this page" .checked=${allSelected} .indeterminate=${someSelected} @change=${togglePageRows}></th>` : null}
           ${columnsToRender.map(column => {
-            const activeSort = sortValue.value?.key === column.key ? sortValue.value.direction : 'none'
+            const activeSort = activeSortValue.value?.key === column.key ? activeSortValue.value.direction : 'none'
             const canSort = readValue(sortable, true) && column.sortable
             const canResize = readValue(resizable, true) && column.resizable
             const canReorder = readValue(reorderable, true) && column.reorderable
@@ -775,17 +1080,31 @@ export function Table(props = {}) {
     const selectionEnabled = readValue(selectable, false)
     const colspan = columnsToRender.length + (selectionEnabled ? 1 : 0)
 
-    if (readValue(loading, false)) {
+    if (loadingValue.value) {
       return html`<tbody class="${baseClassName}-body">${Array.from({ length: 5 }, (_, rowIndex) => html`<tr class="${baseClassName}-row ${baseClassName}-row-loading">${selectionEnabled ? html`<td class="${baseClassName}-selection-cell"><span class="${baseClassName}-skeleton ${baseClassName}-skeleton-check"></span></td>` : null}${columnsToRender.map((column, columnIndex) => html`<td class="${columnClass(column)}" style="${columnStyle(column, columnsToRender)}"><span class="${baseClassName}-skeleton" style="width: ${50 + (rowIndex + columnIndex) % 4 * 11}%"></span></td>`)}</tr>`)}</tbody>`
+    }
+
+    if (errorMessage.value) {
+      return html`<tbody class="${baseClassName}-body"><tr><td class="${baseClassName}-empty ${baseClassName}-error" colspan="${colspan}"><span class="${baseClassName}-empty-mark" aria-hidden="true">!</span><strong>${errorMessage}</strong>${typeof onRetry === 'function' || typeof onQueryChange === 'function' ? html`<button type="button" class="${baseClassName}-retry" @click=${retryQuery}>Try again</button>` : null}</td></tr></tbody>`
     }
 
     if (pageRows.value.length === 0) {
       return html`<tbody class="${baseClassName}-body"><tr><td class="${baseClassName}-empty" colspan="${colspan}"><span class="${baseClassName}-empty-mark" aria-hidden="true">✦</span><strong>${emptyMessageValue}</strong><span>${emptyDescription}</span></td></tr></tbody>`
     }
 
+    const virtual = virtualRows.value
+    const topSpacer = virtual.top > 0
+      ? html`<tr class="${baseClassName}-virtual-spacer" aria-hidden="true"><td colspan="${colspan}" style="height: ${virtual.top}px"></td></tr>`
+      : null
+    const bottomSpacer = virtual.bottom > 0
+      ? html`<tr class="${baseClassName}-virtual-spacer" aria-hidden="true"><td colspan="${colspan}" style="height: ${virtual.bottom}px"></td></tr>`
+      : null
+
     return html`
       <tbody class="${baseClassName}-body">
-        ${keyed(pageRows.value.map(record => component(renderTableRow, { record }, record.key)), result => result.key)}
+        ${topSpacer}
+        ${keyed(virtual.rows.map(({ record, rowIndex }) => component(renderTableRow, { record, rowIndex }, record.key)), result => result.key)}
+        ${bottomSpacer}
       </tbody>
     `
   })
@@ -874,17 +1193,17 @@ export function Table(props = {}) {
       </div>
 
       <div class="${baseClassName}-viewport">
-        <table aria-busy="${computed(() => readValue(loading, false) ? 'true' : undefined)}">
+        <table aria-busy="${computed(() => loadingValue.value ? 'true' : undefined)}" aria-rowcount="${computed(() => resultRowCount.value + 1)}">
           ${headerMarkup}
           ${bodyMarkup}
         </table>
       </div>
 
       <footer class="${baseClassName}-footer">
-        <div class="${baseClassName}-result-count"><strong>${rangeStart}–${rangeEnd}</strong><span>of ${computed(() => sortedRows.value.length)} rows</span>${computed(() => sourceRows.value.length !== sortedRows.value.length ? html`<span class="${baseClassName}-filtered-count">${sourceRows.value.length - sortedRows.value.length} filtered</span>` : null)}</div>
+        <div class="${baseClassName}-result-count"><strong>${rangeStart}–${rangeEnd}</strong><span>of ${computed(() => resultRowCount.value)} rows</span>${computed(() => !serverSideValue.value && sourceRows.value.length !== sortedRows.value.length ? html`<span class="${baseClassName}-filtered-count">${sourceRows.value.length - sortedRows.value.length} filtered</span>` : null)}</div>
         ${computed(() => readValue(paginated, true) ? html`
           <div class="${baseClassName}-pagination">
-            <label class="${baseClassName}-page-size"><span>Rows</span><select aria-label="Rows per page" .value=${pageSizeValue} @change=${handlePageSize}>${pageSizeOptions.map(option => html`<option value="${option}">${option === 'all' || option === 'max' ? 'Max' : option}</option>`)}</select></label>
+            <label class="${baseClassName}-page-size"><span>Rows</span><select aria-label="Rows per page" .value=${computed(() => rowsPerPage.value)} @change=${handlePageSize}>${pageSizeOptions.map(option => html`<option value="${option}">${option === 'all' || option === 'max' ? 'Max' : option}</option>`)}</select></label>
             <div class="${baseClassName}-pages" aria-label="Pagination">
               <button type="button" class="${baseClassName}-page-arrow" aria-label="Previous page" ?disabled=${computed(() => activePage.value <= 1)} @click=${() => setPage(activePage.value - 1)}>${ArrowLeftIcon({ size: '1em' })}</button>
               ${pageButtons}

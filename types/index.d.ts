@@ -278,6 +278,14 @@ export interface TableSort {
   direction: TableSortDirection
 }
 
+export interface TableQuery {
+  filter?: string
+  columnFilters?: Record<string, unknown>
+  sort?: TableSort | null
+  page?: number
+  pageSize?: TablePageSize
+}
+
 export interface TableRenderContext<Row = Record<string, unknown>> {
   rowIndex: number
   column: TableColumn<Row>
@@ -333,6 +341,15 @@ export interface TableProps<Row = Record<string, unknown>> {
   sort?: TableSort
   selectedKeys?: Array<string | number> | Signal<Array<string | number>>
   columnFilters?: Record<string, unknown> | Signal<Record<string, unknown>>
+  serverSide?: boolean | Signal<boolean>
+  query?: TableQuery | Reactive<TableQuery>
+  totalRows?: number | Reactive<number>
+  error?: unknown | Reactive<unknown>
+  filterDebounce?: number | Reactive<number>
+  virtualized?: boolean | Reactive<boolean>
+  virtualizationThreshold?: number | Reactive<number>
+  virtualRowHeight?: number | Reactive<number>
+  virtualOverscan?: number | Reactive<number>
   settings?: TableSettings | string
   storageKey?: string
   title?: unknown
@@ -357,9 +374,13 @@ export interface TableProps<Row = Record<string, unknown>> {
   ariaLabel?: string | Reactive<string>
   onRowClick?: (row: Row, context: { key: string, rowIndex: number, event: MouseEvent | KeyboardEvent }) => void
   onSelectionChange?: (keys: string[], rows: Row[]) => void
+  onFilterChange?: (filter: string, query: TableQuery) => void
   onSortChange?: (sort: TableSort | null) => void
   onPageChange?: (page: number) => void
   onPageSizeChange?: (pageSize: number | 'all') => void
+  onQueryChange?: (query: TableQuery) => void | PromiseLike<unknown>
+  onError?: (error: unknown, query: TableQuery) => void
+  onRetry?: (query: TableQuery) => void | PromiseLike<unknown>
   onColumnOrderChange?: (keys: string[]) => void
   onColumnResize?: (key: string, width: number) => void
   onSettingsChange?: (settings: TableSettings, serialized: string) => void

@@ -35,10 +35,10 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P1 — Data and performance
 
-- [ ] **Add a server-side Table mode.** Current filtering, sorting, and pagination all operate on the full client array (`src/components/table.js:286-360`). Add controlled query state, async loading/error hooks, total row count, and callbacks for remote filter/sort/page changes.
-- [ ] **Add virtualization for large tables.** `pageSize: 'all'` renders every row. Add windowed rows or document a hard size limit; do not call the current implementation “high-performance” for large data sets until this is solved (`README.md:231`).
-- [ ] **Harden CSV export.** Append a UTF-8 BOM when useful, append the anchor before clicking, clean up after the download, and protect against spreadsheet formula injection for values beginning with `=`, `+`, `-`, or `@` (`src/components/table.js:636-654`).
-- [ ] **Avoid repeated work in Table.** Filtering and sorting repeatedly resolve nested paths and stringify objects. Cache normalized accessors/search values per render, and debounce global filtering for large inputs.
+- [x] **Add a server-side Table mode.** `serverSide` now accepts controlled `query` state, current-page rows, `totalRows`, async `onQueryChange`, `error`, `onError`, and `onRetry`; remote filter, sort, page, and page-size changes share one query contract.
+- [x] **Add virtualization for large tables.** Large rendered pages, including `pageSize: 'all'`, now use windowed rows with spacer rows, stable `aria-rowindex` values, and configurable row height, threshold, and overscan.
+- [x] **Harden CSV export.** CSV now includes a UTF-8 BOM, protects formula-looking cell values, appends the download anchor before clicking, cleans it up, and revokes the object URL after the click.
+- [x] **Avoid repeated work in Table.** Filtering now caches each row’s accessed column values and column lookup map per pass, sorting caches sort values, and global filtering is debounced by default.
 
 ## P2 — New components worth adding
 

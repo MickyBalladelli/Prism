@@ -398,7 +398,7 @@ Use `size` (`small`, `medium`, `large`, `full`) and `placement` (`center`, `top`
 
 ### Table
 
-`Table` is a client-side data surface with filtering, sorting, pagination, selection, sticky headers, pinned columns, drag ordering, keyboard resizing, density modes, custom cells, settings persistence, loading states, and CSV export.
+`Table` is a data surface with filtering, sorting, pagination, selection, sticky headers, pinned columns, drag ordering, keyboard resizing, density modes, custom cells, settings persistence, loading and error states, virtualization, and CSV export.
 
 ```js
 import { Table } from 'prism-ui'
@@ -438,9 +438,11 @@ Column features include:
 - `sortable`, `searchable`, `resizable`, `reorderable`, `pinnable`, `hideable`, `exportable`
 - `pinned`: `left` or `right`
 
-Use `onSelectionChange`, `onSortChange`, `onPageChange`, `onPageSizeChange`, `onColumnOrderChange`, `onColumnResize`, and `onSettingsChange` to connect the table to app state. Resizer handles support Left and Right Arrow keys and expose their current width to assistive technology. `loading` announces progress and marks the table busy. `serializeTableSettings` and `parseTableSettings` are exported for URLs or user preferences.
+Use `onSelectionChange`, `onFilterChange`, `onSortChange`, `onPageChange`, `onPageSizeChange`, `onColumnOrderChange`, `onColumnResize`, and `onSettingsChange` to connect the table to app state. Resizer handles support Left and Right Arrow keys and expose their current width to assistive technology. `loading` announces progress and marks the table busy. `serializeTableSettings` and `parseTableSettings` are exported for URLs or user preferences.
 
-The current Table operates on client-side arrays. For very large or remote data sets, add server-side query handling around the table and keep page size bounded.
+For remote data, set `serverSide: true`. Pass the current page rows through `rows`, the full result count through `totalRows`, and a controlled `query` with `filter`, `columnFilters`, `sort`, `page`, and `pageSize`. The table then skips client filtering, sorting, and slicing. `onQueryChange` receives the next query and may return a Promise; its pending and rejected states drive the built-in loading and error UI. Use `error`, `onError`, and `onRetry` when the data layer owns those states.
+
+Global filtering waits 180ms by default; change it with `filterDebounce` or set it to `0` for immediate updates. Tables virtualize rendered pages over 100 rows by default. Set `virtualized: false` to opt out, or tune `virtualizationThreshold`, `virtualRowHeight`, and `virtualOverscan` when row content has a different height. CSV exports include a UTF-8 BOM and prefix spreadsheet formula-looking values with an apostrophe.
 
 ### CodeViewer
 
