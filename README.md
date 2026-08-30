@@ -96,7 +96,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 | Group | Components | Use them for |
 | --- | --- | --- |
 | Layout | `Background`, `Box`, `Card`, `Header`, `Layout`, `Navigator`, `Footer`, `Label` | Surfaces, app chrome, page structure, navigation panes, and readable type |
-| Forms | `TextField`, `Select`, `CheckBox`, `ColorPicker` | Basic input, choice, and color controls |
+| Forms | `TextField`, `Select`, `CheckBox`, `ColorPicker`, `DatePicker`, `DateTimePicker` | Basic input, choice, color, and scheduling controls |
 | Actions | `Button` | Primary, secondary, status, and icon actions |
 | Feedback | `Badge`, `Pulse`, `Alert`, `ToastRegion`, `Progress`, `Spinner`, `Skeleton`, `EmptyState` | Counts, state, health, async work, and empty results |
 | Navigation | `TreeView` | Nested product or workspace navigation |
@@ -300,6 +300,25 @@ const view = ColorPicker({
 ```
 
 Use `small`, `medium`, or `large` for the control size. `showValue`, `disabled`, `required`, `class`, and `style` are also supported. When no visible label is provided, set `ariaLabel`.
+
+### DatePicker and DateTimePicker
+
+Both controls use a theme-aware calendar popup and bind ISO-shaped values to Matrix signals. `DatePicker` uses `YYYY-MM-DD`; `DateTimePicker` uses local `YYYY-MM-DDTHH:mm` values without timezone conversion.
+
+```js
+import { DatePicker, DateTimePicker } from '@mickyballadelli/prism'
+import { signal } from '@mickyballadelli/matrix'
+
+const launchDate = signal('2026-09-15')
+const reviewStart = signal('2026-09-15T09:30')
+
+const view = [
+  DatePicker({ label: 'Launch date', value: launchDate }),
+  DateTimePicker({ label: 'Review starts', value: reviewStart })
+]
+```
+
+Use `min`, `max`, and `step` to constrain the picker. Both support `small`, `medium`, and `large` sizes, plus `disabled`, `required`, `class`, `style`, and focus/input/change callbacks.
 
 ### Select
 

@@ -100,6 +100,26 @@ export const componentRegistry = [
     details: ['Hex value display', 'Three sizes', 'Accessible labeling']
   },
   {
+    key: 'date-picker',
+    path: '/components/date-picker',
+    eyebrow: 'Forms',
+    title: 'DatePicker',
+    mark: '39',
+    description: 'A themed calendar control with a reactive ISO date value and familiar picker affordances.',
+    highlights: ['Native calendar', 'Reactive value', 'Form ready'],
+    details: ['ISO date values', 'Min and max bounds', 'Three sizes']
+  },
+  {
+    key: 'date-time-picker',
+    path: '/components/date-time-picker',
+    eyebrow: 'Forms',
+    title: 'DateTimePicker',
+    mark: '40',
+    description: 'A local date and time control for scheduling moments without hidden timezone conversion.',
+    highlights: ['Local date-time', 'Reactive value', 'Themed popup'],
+    details: ['Minute-level input', 'Min and max bounds', 'Three sizes']
+  },
+  {
     key: 'card',
     path: '/components/card',
     eyebrow: 'Layout',

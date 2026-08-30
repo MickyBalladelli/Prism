@@ -3287,6 +3287,8 @@ export const prismTheme = globalCss(`
   :where(
     .prism-form-field,
     .prism-color-picker,
+    .prism-date-picker,
+    .prism-date-time-picker,
     .prism-alert,
     .prism-toast-region,
     .prism-dropdown,
@@ -3407,6 +3409,365 @@ export const prismTheme = globalCss(`
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.78rem;
     letter-spacing: 0.03em;
+  }
+
+  .prism-date-picker,
+  .prism-date-time-picker {
+    position: relative;
+    display: grid;
+    gap: 0.45rem;
+    width: min(100%, 20rem);
+  }
+
+  .prism-date-input-label {
+    color: var(--prism-color-text-strong);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .prism-date-input-control-wrap {
+    position: relative;
+    min-width: 0;
+  }
+
+  .prism-date-input-control-row {
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
+  }
+
+  .prism-date-input-control {
+    box-sizing: border-box;
+    min-width: 0;
+    width: auto;
+    flex: 1;
+    min-height: 2.65rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--prism-color-border-strong);
+    border-radius: var(--prism-radius-medium) 0 0 var(--prism-radius-medium);
+    color: var(--prism-color-text-strong);
+    background: var(--prism-color-surface-raised);
+    font: inherit;
+    color-scheme: inherit;
+    accent-color: var(--prism-color-action);
+    appearance: none;
+  }
+
+  .prism-date-input-trigger {
+    display: inline-grid;
+    flex: 0 0 2.65rem;
+    place-items: center;
+    min-height: 2.65rem;
+    margin-left: -1px;
+    padding: 0;
+    border: 1px solid var(--prism-color-border-strong);
+    border-radius: 0 var(--prism-radius-medium) var(--prism-radius-medium) 0;
+    color: var(--prism-color-action);
+    background: var(--prism-color-surface-raised);
+    cursor: pointer;
+  }
+
+  .prism-date-input-trigger:hover,
+  .prism-date-input-trigger:focus-visible {
+    border-color: var(--prism-color-accent);
+    color: var(--prism-color-accent);
+    background: var(--prism-color-surface-hover);
+  }
+
+  .prism-date-input-trigger:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: 2px;
+  }
+
+  .prism-date-input-trigger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .prism-theme-model-prism .prism-date-input-control,
+  .prism-theme-model-aurora .prism-date-input-control,
+  .prism-theme-model-editorial .prism-date-input-control {
+    color-scheme: light;
+  }
+
+  .prism-theme-model-nocturne .prism-date-input-control,
+  .prism-theme-model-terminal .prism-date-input-control {
+    color-scheme: dark;
+  }
+
+  .prism-date-input-control:hover {
+    border-color: var(--prism-color-accent);
+  }
+
+  .prism-date-input-control:focus-visible {
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: 2px;
+  }
+
+  .prism-date-input-control:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .prism-date-picker-small .prism-date-input-control,
+  .prism-date-time-picker-small .prism-date-input-control {
+    min-height: 2.25rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .prism-date-picker-small .prism-date-input-trigger,
+  .prism-date-time-picker-small .prism-date-input-trigger {
+    flex-basis: 2.25rem;
+    min-height: 2.25rem;
+  }
+
+  .prism-date-picker-large .prism-date-input-control,
+  .prism-date-time-picker-large .prism-date-input-control {
+    min-height: 3rem;
+    padding: 0.7rem 0.8rem;
+  }
+
+  .prism-date-picker-large .prism-date-input-trigger,
+  .prism-date-time-picker-large .prism-date-input-trigger {
+    flex-basis: 3rem;
+    min-height: 3rem;
+  }
+
+  .prism-date-picker-popup-wrap {
+    position: static;
+  }
+
+  .prism-date-picker-popup {
+    position: absolute;
+    z-index: 100;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    width: min(22rem, calc(100vw - 2rem));
+    padding: 0.8rem;
+    overflow: hidden;
+    border: 1px solid var(--prism-color-border);
+    border-radius: var(--prism-radius-medium);
+    color: var(--prism-color-text-strong);
+    background: var(--prism-color-surface-raised);
+    box-shadow: var(--prism-shadow-floating);
+    color-scheme: inherit;
+  }
+
+  .prism-date-picker-popup[hidden] {
+    display: none;
+  }
+
+  .prism-date-picker-popup-header,
+  .prism-date-picker-popup-footer,
+  .prism-date-picker-popup-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .prism-date-picker-popup-header {
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .prism-date-picker-month {
+    min-width: 0;
+    color: var(--prism-color-text-strong);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .prism-date-picker-nav,
+  .prism-date-picker-today,
+  .prism-date-picker-close,
+  .prism-date-picker-confirm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    border: 1px solid transparent;
+    border-radius: var(--prism-radius-small);
+    color: var(--prism-color-action);
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .prism-date-picker-nav {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+  }
+
+  .prism-date-picker-nav:hover,
+  .prism-date-picker-nav:focus-visible,
+  .prism-date-picker-today:hover,
+  .prism-date-picker-today:focus-visible,
+  .prism-date-picker-close:hover,
+  .prism-date-picker-close:focus-visible {
+    border-color: var(--prism-color-border);
+    background: var(--prism-color-surface-hover);
+    outline: none;
+  }
+
+  .prism-date-picker-weekdays,
+  .prism-date-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.2rem;
+  }
+
+  .prism-date-picker-weekdays {
+    margin-bottom: 0.25rem;
+  }
+
+  .prism-date-picker-weekdays span {
+    color: var(--prism-color-text-muted);
+    font-size: 0.68rem;
+    font-weight: 750;
+    text-align: center;
+  }
+
+  .prism-date-picker-day {
+    display: grid;
+    min-width: 0;
+    min-height: 2rem;
+    place-items: center;
+    padding: 0.15rem;
+    border: 1px solid transparent;
+    border-radius: var(--prism-radius-small);
+    color: var(--prism-color-text-strong);
+    background: transparent;
+    font: inherit;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+
+  .prism-date-picker-day:hover,
+  .prism-date-picker-day:focus-visible {
+    border-color: var(--prism-color-accent);
+    background: var(--prism-color-surface-hover);
+    outline: none;
+  }
+
+  .prism-date-picker-day-outside {
+    color: var(--prism-color-text-subtle);
+  }
+
+  .prism-date-picker-day-today {
+    border-color: var(--prism-color-border-strong);
+  }
+
+  .prism-date-picker-day-selected {
+    border-color: var(--prism-color-action);
+    color: var(--prism-color-text-inverse);
+    background: var(--prism-color-action);
+  }
+
+  .prism-date-picker-day-selected:hover,
+  .prism-date-picker-day-selected:focus-visible {
+    border-color: var(--prism-color-action-hover);
+    color: var(--prism-color-text-inverse);
+    background: var(--prism-color-action-hover);
+  }
+
+  .prism-date-picker-day:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .prism-date-picker-time {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 0.45rem;
+    margin-top: 0.75rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--prism-color-border);
+  }
+
+  .prism-date-picker-time-heading {
+    grid-column: 1 / -1;
+    color: var(--prism-color-text-muted);
+    font-size: 0.72rem;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .prism-date-picker-time-field {
+    display: grid;
+    gap: 0.25rem;
+    color: var(--prism-color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 650;
+  }
+
+  .prism-date-picker-time-field select {
+    min-height: 2.1rem;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: var(--prism-radius-small);
+    color: var(--prism-color-text-strong);
+    background: var(--prism-color-surface);
+    font: inherit;
+    color-scheme: inherit;
+  }
+
+  .prism-date-picker-time-separator {
+    padding-bottom: 0.45rem;
+    color: var(--prism-color-text-muted);
+    font-weight: 800;
+  }
+
+  .prism-date-picker-popup-footer {
+    justify-content: space-between;
+    gap: 0.7rem;
+    margin-top: 0.75rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--prism-color-border);
+  }
+
+  .prism-date-picker-selected {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--prism-color-text-muted);
+    font-size: 0.72rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .prism-date-picker-popup-actions {
+    flex: 0 0 auto;
+    gap: 0.35rem;
+  }
+
+  .prism-date-picker-today,
+  .prism-date-picker-close,
+  .prism-date-picker-confirm {
+    min-height: 2rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .prism-date-picker-confirm {
+    color: var(--prism-color-text-inverse);
+    background: var(--prism-color-action);
+  }
+
+  .prism-date-picker-confirm:hover,
+  .prism-date-picker-confirm:focus-visible {
+    background: var(--prism-color-action-hover);
+    outline: none;
+  }
+
+  .prism-date-picker-confirm:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .prism-alert {

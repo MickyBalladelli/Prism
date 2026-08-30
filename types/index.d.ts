@@ -480,6 +480,28 @@ export interface ColorPickerProps {
   onBlur?: (event: FocusEvent) => void
 }
 
+export interface DatePickerProps {
+  value?: string | Reactive<string>
+  label?: unknown | Reactive<unknown>
+  ariaLabel?: string | Reactive<string>
+  min?: string | Reactive<string>
+  max?: string | Reactive<string>
+  step?: number | Reactive<number>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  disabled?: boolean | Reactive<boolean>
+  required?: boolean | Reactive<boolean>
+  id?: string
+  name?: string
+  class?: string
+  style?: StyleValue
+  onInput?: (event: InputEvent) => void
+  onChange?: (event: Event) => void
+  onFocus?: (event: FocusEvent) => void
+  onBlur?: (event: FocusEvent) => void
+}
+
+export interface DateTimePickerProps extends DatePickerProps {}
+
 export type CodeLanguage = 'javascript' | 'jsx' | 'typescript' | 'tsx' | 'json' | 'css' | 'html' | 'xml' | 'bash' | 'text'
 
 export interface CodeViewerTab {
@@ -829,6 +851,8 @@ export function TextField(props?: TextFieldProps): TemplateResult
 export function CheckBox(props?: CheckBoxProps): TemplateResult
 export function ColorPicker(props?: ColorPickerProps): TemplateResult
 export function CodeViewer(props?: CodeViewerProps): TemplateResult
+export function DatePicker(props?: DatePickerProps): TemplateResult
+export function DateTimePicker(props?: DateTimePickerProps): TemplateResult
 export function Popup(props?: PopupProps): TemplateResult
 export function Select(props?: SelectProps): TemplateResult
 export function Table<Row = Record<string, unknown>>(props?: TableProps<Row>): TemplateResult
@@ -930,6 +954,8 @@ export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
 export function ColorPickerComponent(props?: ColorPickerProps): ComponentResult
 export function CodeViewerComponent(props?: CodeViewerProps): ComponentResult
+export function DatePickerComponent(props?: DatePickerProps): ComponentResult
+export function DateTimePickerComponent(props?: DateTimePickerProps): ComponentResult
 export function PopupComponent(props?: PopupProps): ComponentResult
 export function SelectComponent(props?: SelectProps): ComponentResult
 export function TableComponent<Row = Record<string, unknown>>(props?: TableProps<Row>): ComponentResult
