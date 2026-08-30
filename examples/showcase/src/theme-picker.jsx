@@ -1,5 +1,5 @@
 import { computed, effect, signal } from '@mickyballadelli/matrix'
-import { Button, CheckBox, Popup, Select, SettingsIcon, treeViewModels } from 'prism-ui'
+import { Button, CheckBox, Popup, Select, SettingsIcon, readStorageValue, treeViewModels, writeStorageValue } from 'prism-ui'
 
 const storageKey = 'prism-showcase-settings'
 const animationIds = new Set([
@@ -8,12 +8,8 @@ const animationIds = new Set([
 ])
 
 function readStoredSettings() {
-  if (typeof localStorage === 'undefined') {
-    return {}
-  }
-
   try {
-    const parsed = JSON.parse(localStorage.getItem(storageKey) ?? '')
+    const parsed = JSON.parse(readStorageValue(storageKey, ''))
     return parsed && typeof parsed === 'object' ? parsed : {}
   } catch {
     return {}
@@ -83,19 +79,13 @@ export const showcaseBackgroundBaseColor = computed(() => showcaseBackground.val
 export const showcaseBackgroundAccentColor = computed(() => showcaseBackground.value.accentColor)
 export const showcaseBackgroundGlowColor = computed(() => showcaseBackground.value.glowColor)
 
-if (typeof localStorage !== 'undefined') {
-  effect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify({
-        theme: showcaseThemeModel.value,
-        animation: showcaseBackgroundAnimation.value,
-        animated: showcaseBackgroundAnimated.value
-      }))
-    } catch {
-      // Ignore quota or private-mode failures.
-    }
-  })
-}
+effect(() => {
+  writeStorageValue(storageKey, JSON.stringify({
+    theme: showcaseThemeModel.value,
+    animation: showcaseBackgroundAnimation.value,
+    animated: showcaseBackgroundAnimated.value
+  }))
+})
 
 const settingsExpanded = computed(() => String(settingsOpen.value))
 

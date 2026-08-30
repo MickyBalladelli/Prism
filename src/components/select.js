@@ -1,7 +1,8 @@
-import { component, computed, html, signal } from '@mickyballadelli/matrix'
+import { component, computed, html, onMount, signal } from '@mickyballadelli/matrix'
 
 const baseClassName = 'prism-select'
 const placementValues = new Set(['bottom', 'top', 'left', 'right'])
+let selectId = 0
 
 const isReactiveValue = value => value?.kind === 'signal' || value?.kind === 'computed'
 
@@ -25,6 +26,38 @@ function normalizeOption(option) {
   }
 }
 
+function SelectFormLifecycle({ triggerId, required, disabled, formValue, invalid }) {
+  onMount(() => {
+    if (typeof document === 'undefined') {
+      return
+    }
+
+    const trigger = document.getElementById(triggerId)
+    const form = trigger?.closest('form')
+    if (!form) {
+      return
+    }
+
+    const isRequired = () => Boolean(isReactiveValue(required) ? required.value : required)
+    const isDisabled = () => Boolean(isReactiveValue(disabled) ? disabled.value : disabled)
+    const handleSubmit = event => {
+      if (!isRequired() || isDisabled() || formValue.value !== '') {
+        invalid.value = false
+        return
+      }
+
+      event.preventDefault()
+      invalid.value = true
+      trigger.focus()
+    }
+
+    form.addEventListener('submit', handleSubmit, true)
+    return () => form.removeEventListener('submit', handleSubmit, true)
+  })
+
+  return null
+}
+
 export function Select(props = {}) {
   const {
     options = [],
@@ -43,6 +76,7 @@ export function Select(props = {}) {
   } = props
 
   const open = signal(false)
+  const invalid = signal(false)
   const selectedValue = value?.kind === 'signal'
     ? value
     : signal(isReactiveValue(value) ? value.value : value)
@@ -65,12 +99,17 @@ export function Select(props = {}) {
     const option = selectedOption.value
     return option ? renderOption(option, { location: 'trigger', selected: true }) : placeholder
   })
+  const formValue = computed(() => String(selectedValue.value ?? ''))
+  const isRequired = () => Boolean(isReactiveValue(required) ? required.value : required)
+  const isDisabled = () => Boolean(isReactiveValue(disabled) ? disabled.value : disabled)
 
   let activeTrigger
   let removeOpenListeners = () => {}
 
-  const listboxId = id === undefined ? undefined : `${id}-listbox`
-  const optionId = index => id === undefined ? undefined : `${id}-option-${index}`
+  const instanceId = id ?? `prism-select-${selectId += 1}`
+  const triggerId = id ?? `${instanceId}-trigger`
+  const listboxId = `${triggerId}-listbox`
+  const optionId = index => `${triggerId}-option-${index}`
 
   const getSelectedIndex = () => {
     const selected = String(selectedValue.value ?? '')
@@ -233,7 +272,8 @@ export function Select(props = {}) {
 
     event.preventDefault()
     activeIndex.value = index
-    selectedValue.value = String(option.value)
+    selectedValue.value = option.value
+    invalid.value = false
     onChange?.(event)
     closeMenu(true)
   }
@@ -335,10 +375,12 @@ export function Select(props = {}) {
     return readOptions().map((option, index) => html`<button type="button" class="${baseClassName}-option" id="${optionId(index)}" value="${option.value}" role="option" aria-selected="${String(option.value) === selected}" data-active="${index === activeIndex.value}" ?disabled=${option.disabled} .onclick=${event => selectOption(option, event, index)}>${renderOption(option, { location: 'option', selected: String(option.value) === selected })}</button>`)
   })
 
-  const activeOptionId = computed(() => optionId(activeIndex.value))
+  const activeOptionId = computed(() => activeIndex.value >= 0 ? optionId(activeIndex.value) : undefined)
   const menu = html`<div class="${baseClassName}-menu ${baseClassName}-menu-${currentPlacement}" id="${listboxId}" role="listbox" aria-label="${ariaLabel ?? 'Options'}" ?hidden=${computed(() => !open.value)}>${optionMarkup}</div>`
 
-  return html`<div class="${baseClassName} ${baseClassName}-${sizeValue} ${classValue}"><button type="button" class="${baseClassName}-trigger" id="${id}" name="${name}" role="combobox" aria-haspopup="listbox" aria-expanded="${open}" aria-controls="${listboxId}" aria-activedescendant="${activeOptionId}" aria-label="${ariaLabel}" aria-required="${required}" ?disabled=${disabled} @click=${toggleMenu} @keydown=${handleKeyDown}><span class="${baseClassName}-value">${selectedLabel}</span><span class="${baseClassName}-chevron" aria-hidden="true"></span></button>${menu}</div>`
+  const formLifecycle = component(SelectFormLifecycle, { triggerId, required, disabled, formValue, invalid })
+
+  return html`<div class="${baseClassName} ${baseClassName}-${sizeValue} ${classValue}"><button type="button" class="${baseClassName}-trigger" id="${triggerId}" role="combobox" aria-haspopup="listbox" aria-expanded="${open}" aria-controls="${listboxId}" aria-activedescendant="${activeOptionId}" aria-label="${ariaLabel}" aria-required="${isRequired()}" aria-invalid="${computed(() => invalid.value ? 'true' : undefined)}" ?disabled=${disabled} @click=${toggleMenu} @keydown=${handleKeyDown}><span class="${baseClassName}-value">${selectedLabel}</span><span class="${baseClassName}-chevron" aria-hidden="true"></span></button>${name === undefined ? null : html`<input type="hidden" name="${name}" .value=${formValue} ?disabled=${disabled}>`}${formLifecycle}${menu}</div>`
 }
 
 export const SelectComponent = props => component(Select, props)

@@ -130,16 +130,18 @@ function createCodePreview(initialCode, scope = {}) {
   const jsxCode = signal(jsxSource)
   const recipeLanguage = signal('jsx')
 
-  const preview = computed(() => {
+  // Showcase recipes are bundled trusted examples. Keep evaluation one-time so
+  // text shown in the editor never becomes executable preview code.
+  const preview = (() => {
     try {
       const names = Object.keys(scope)
       const values = Object.values(scope)
-      const source = recipeLanguage.value === 'jsx' ? compileJsx(jsxCode.value) : javascript.value
+      const source = compileJsx(jsxSource)
       return Function('jsx', 'Fragment', ...names, `'use strict'; return (${source})`)(jsx, Fragment, ...values)
     } catch (error) {
       return html`<div class="playground-code-error"><strong>Preview paused</strong><span>${String(error?.message ?? error)}</span></div>`
     }
-  })
+  })()
 
   return { javascript, jsxCode, recipeLanguage, preview, code: javascript }
 }
@@ -1426,7 +1428,7 @@ function CodeViewerPlayground() {
           ]}
         />
         <CheckBox checked={showLineNumbers}>Show line numbers</CheckBox>
-        <p class="playground-note">Edit the nested editor to change its source. Use the outer editor below to change how CodeViewer is configured.</p>
+        <p class="playground-note">Edit the nested editor to change its displayed source. Use the controls to change how CodeViewer is configured.</p>
       </div>
     )
   }
@@ -1619,8 +1621,8 @@ export function ComponentPage({ name, link }) {
           <Card class="detail-code-card">
             <div class="detail-code-heading">
               <div>
-                <p class="eyebrow">Editable source</p>
-                <h2>Change the recipe</h2>
+                <p class="eyebrow">Source recipe</p>
+                <h2>Inspect the recipe</h2>
               </div>
               <span class="detail-code-hint">Preview follows</span>
             </div>
@@ -1631,9 +1633,10 @@ export function ComponentPage({ name, link }) {
                 { id: 'jsx', label: 'JSX', language: 'jsx', filename: `${info.title}.recipe.jsx`, code: playground.jsxCode },
                 { id: 'javascript', label: 'JavaScript', language: 'javascript', filename: `${info.title}.recipe.js`, code: playground.javascript }
               ]}
-              ariaLabel={`${info.title} editable source`}
+              editable={false}
+              ariaLabel={`${info.title} source recipe`}
             />
-            <p class="playground-note">Edit the code above. A valid recipe renders in the live preview.</p>
+            <p class="playground-note">Read the recipe above. Use the controls to change the safe live preview.</p>
           </Card>
         </section>
       </main>

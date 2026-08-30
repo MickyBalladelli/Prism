@@ -267,7 +267,7 @@ const view = Select({
 
 Options can also be strings or numbers. Use `onRender(option, context)` for custom selected and option content. The context has `location` (`trigger` or `option`) and `selected`.
 
-Select uses a custom button/listbox surface. Pair it with your own hidden form value when native form submission is required.
+Pass `name` when the selected value must submit with a form. Select mirrors its current value to a hidden input and reports a required-but-empty selection as invalid on submit.
 
 ### Button
 

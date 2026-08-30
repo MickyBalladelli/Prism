@@ -4,25 +4,25 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P0 — Fix before wider use
 
-- [ ] **Keep Table row keys stable across pages.** `getRowKey()` falls back to the passed index (`src/components/table.js:380`), but many callers pass a page-local index (`:469`, `:687`, `:743`). Rows without IDs can collide across pages. Normalize rows once into `{ row, sourceIndex, key }`, then use that record for selection, sorting, rendering, and callbacks.
-- [ ] **Finish Popup focus behavior.** Give every dialog a guaranteed accessible name (`src/components/popup.js:116-121`), move focus into it on open, restore focus safely on close, and trap only actually visible focusable elements (`:63-79`). Add body scroll locking and consider a body-level portal for fixed overlays.
-- [ ] **Make Select a real form control or clearly mark it non-form UI.** `name` and `required` are put on a button (`src/components/select.js:341`), so the selected value is not submitted and browser validation does not work. Add a synchronized hidden input, or replace the custom control with a native/select-backed mode.
-- [ ] **Remove live `Function()` execution from the deployed showcase.** User-edited recipes execute through `Function()` (`examples/showcase/src/pages/component-page.jsx:138`). Run previews in a sandboxed iframe/worker with a strict CSP, or make the editor display-only for untrusted deployments.
-- [ ] **Protect storage and clipboard paths.** Table `localStorage.getItem`, `setItem`, and `removeItem` calls (`src/components/table.js:95`, `:405`, `:616`) can throw in privacy mode or under quota limits. Share one safe storage helper with the showcase. Give Table settings copy the same fallback behavior as CodeViewer.
+- [x] **Keep Table row keys stable across pages.** Table now normalizes rows into `{ row, sourceIndex, key }`, uses source indexes for callbacks and cell access, and reconciles visible rows with Matrix `keyed()`.
+- [x] **Finish Popup focus behavior.** Popup now guarantees an accessible name, moves focus into the dialog on open, restores focus safely on close, traps visible focusable elements, and locks body scrolling while open.
+- [x] **Make Select a real form control or clearly mark it non-form UI.** Select now mirrors its value into a hidden input and blocks form submission with an accessible invalid state when a required value is missing.
+- [x] **Remove live `Function()` execution from the deployed showcase.** The showcase editor is now read-only and bundled recipes evaluate only once; editor text cannot change preview execution.
+- [x] **Protect storage and clipboard paths.** Table and showcase persistence now use safe storage helpers, while Table settings copy shares the clipboard fallback used by CodeViewer.
 
 ## P1 — Accessibility and behavior
 
 - [ ] **Complete CodeViewer tabs semantics.** The tablist has tabs but no `aria-controls`, tabpanel, roving focus, or Arrow-key navigation (`src/components/code-viewer.js:404-414`). Add a real tabpanel and announce copy success/failure in a live region.
 - [ ] **Complete TreeView semantics.** Add `aria-level`, `aria-posinset`, `aria-setsize`, `aria-current` for active links, and roving `tabindex` (`src/components/tree-view.js:43-97`). Test the tree with a screen reader and keyboard-only navigation.
 - [ ] **Add controlled expansion to TreeView.** `expanded` is read once while rendering branches (`src/components/tree-view.js:53-86`) and there is no `onExpandedChange`. Add a controlled/uncontrolled API, stable item IDs, and support empty or lazy branches.
-- [ ] **Fix Table keyboard event bubbling.** A row handles keydown (`src/components/table.js:761`) but the row checkbox only stops click (`:762`). Space on a checkbox can activate the row or block checkbox behavior. Ignore events from form controls or stop their keyboard propagation.
+- [x] **Fix Table keyboard event bubbling.** Row checkboxes now stop both click and keydown propagation, so Space does not activate the row.
 - [ ] **Expose Table resize state to assistive tech.** The resize handle is a separator (`src/components/table.js:717`) but has no `aria-valuenow`, `aria-valuemin`, or `aria-valuemax`. Add those values and a clear keyboard help label.
 - [ ] **Add Table loading state semantics.** Add `aria-busy`, a status announcement, and a useful empty state distinction. Current empty copy always says “Try another search” even when the data set is simply empty (`src/components/table.js:737`).
-- [ ] **Fix Select active descendant on first render.** With an `id`, `activeIndex` starts at `-1`, producing `id-option--1` (`src/components/select.js:338`). Omit the attribute until an active option exists, or initialize it only when the menu opens.
+- [x] **Fix Select active descendant on first render.** Select omits `aria-activedescendant` until an active option exists.
 - [ ] **Handle Select viewport overflow.** Placement logic measures width but never clamps the menu to the viewport (`src/components/select.js:113-172`). Add horizontal bounds and a max width for left/right placement.
 - [ ] **Make reactive props consistent.** TextField and CheckBox bind only writable signals (`src/components/text-field.js:20`, `src/components/check-box.js:14`); Select, Popup, Table, and CodeViewer also copy some computed values into new signals. Define one Matrix reactive-value contract and use it everywhere, or narrow the TypeScript types to writable signals.
-- [ ] **Improve standard form props.** TextField and CheckBox lack class/style, accessible description, autocomplete, input type, input mode, maxlength, and error/invalid support. Select lacks numeric values in its `value` type. Add these before the library grows more form components.
-- [ ] **Add accessible names to icon-only and unlabeled surfaces.** Popup can render a dialog with neither title nor `ariaLabel` (`src/components/popup.js:118`), and form controls depend on wrapper markup. Add runtime development warnings and clearer required types.
+- [ ] **Improve standard form props.** TextField and CheckBox lack class/style, accessible description, autocomplete, input type, input mode, maxlength, and error/invalid support. Add these before the library grows more form components.
+- [ ] **Add accessible names to icon-only and unlabeled surfaces.** Popup now defaults to the accessible name `Dialog`, but runtime development warnings and clearer required types would still help form controls and icon-only surfaces.
 
 ## P1 — Visual and runtime quality
 
@@ -73,4 +73,3 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 - [ ] **Improve mobile navigation.** The sidebar becomes a long static block below 980px (`examples/showcase/src/style.css:2316-2329`). Add a compact navigation disclosure or drawer.
 - [ ] **Add showcase error and loading states.** Route failures, preview compile errors, clipboard failures, and storage failures should have visible, keyboard-accessible, screen-reader-friendly feedback.
 - [ ] **Add visual regression coverage.** Capture each theme, responsive breakpoint, component state, and reduced-motion mode. The visual system is a major product feature and needs a guard against CSS drift.
-

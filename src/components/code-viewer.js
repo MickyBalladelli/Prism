@@ -1,5 +1,6 @@
 import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { CopyIcon } from './icons.js'
+import { copyText } from './clipboard.js'
 
 const rootClassName = 'prism-code-viewer'
 const baseClassName = 'prism-code'
@@ -352,23 +353,7 @@ export function CodeViewer(props = {}) {
     const text = String(codeValue.value ?? '')
 
     try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text)
-      } else {
-        const helper = document.createElement('textarea')
-        helper.value = text
-        helper.setAttribute('readonly', '')
-        helper.style.position = 'fixed'
-        helper.style.opacity = '0'
-        document.body.append(helper)
-        helper.select()
-        const copied = document.execCommand('copy')
-        helper.remove()
-        if (!copied) {
-          throw new Error('Clipboard unavailable')
-        }
-      }
-
+      await copyText(text)
       copyState.value = 'copied'
       onCopy?.(text, event)
     } catch {

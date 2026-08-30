@@ -219,7 +219,7 @@ export interface SelectRenderContext {
 
 export interface SelectProps {
   options?: SelectOptionInput[] | Signal<SelectOptionInput[]>
-  value?: string | Signal<string>
+  value?: string | number | Signal<string | number>
   onChange?: (event: Event) => void
   onRender?: (option: SelectOption, context: SelectRenderContext) => unknown
   id?: string
@@ -499,3 +499,6 @@ export function TreeViewComponent(props?: TreeViewProps): ComponentResult
 export function PulseComponent(props?: PulseProps): ComponentResult
 export const prismTheme: StyleDefinition
 export const prismThemeValues: PrismThemeValues
+export function readStorageValue(key: string, fallback?: string | null): string | null
+export function writeStorageValue(key: string, value: unknown): boolean
+export function removeStorageValue(key: string): boolean

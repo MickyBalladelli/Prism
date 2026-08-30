@@ -85,3 +85,4 @@ export {
   UserIcon
 } from './components/index.js'
 export { prismTheme, prismThemeValues, treeViewModels } from './theme.js'
+export { readStorageValue, removeStorageValue, writeStorageValue } from './storage.js'

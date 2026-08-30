@@ -1,4 +1,4 @@
-import { component, computed, html, signal } from '@mickyballadelli/matrix'
+import { component, computed, effect, html, onMount, signal } from '@mickyballadelli/matrix'
 import { CloseIcon } from './icons.js'
 
 const baseClassName = 'prism-popup'
@@ -6,11 +6,146 @@ const reactiveKinds = new Set(['signal', 'computed'])
 const sizes = new Set(['small', 'medium', 'large', 'full'])
 const placements = new Set(['center', 'top', 'bottom'])
 let popupId = 0
+let bodyScrollLockCount = 0
+let previousBodyOverflow = ''
 
 const isReactive = value => reactiveKinds.has(value?.kind)
 const readValue = (value, fallback) => isReactive(value)
   ? value.value
   : value === undefined || value === null ? fallback : value
+
+function lockBodyScroll() {
+  if (typeof document === 'undefined' || !document.body) {
+    return
+  }
+
+  if (bodyScrollLockCount === 0) {
+    previousBodyOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+  }
+
+  bodyScrollLockCount += 1
+}
+
+function unlockBodyScroll() {
+  if (typeof document === 'undefined' || !document.body || bodyScrollLockCount === 0) {
+    return
+  }
+
+  bodyScrollLockCount -= 1
+  if (bodyScrollLockCount === 0) {
+    document.body.style.overflow = previousBodyOverflow
+    previousBodyOverflow = ''
+  }
+}
+
+function scheduleTask(callback) {
+  if (typeof requestAnimationFrame === 'function') {
+    return requestAnimationFrame(callback)
+  }
+
+  return setTimeout(callback, 0)
+}
+
+function cancelTask(task) {
+  if (task === null || task === undefined) {
+    return
+  }
+
+  if (typeof cancelAnimationFrame === 'function') {
+    cancelAnimationFrame(task)
+  } else {
+    clearTimeout(task)
+  }
+}
+
+function isVisible(element) {
+  if (element.hidden || element.getAttribute('aria-hidden') === 'true') {
+    return false
+  }
+
+  const styles = globalThis.getComputedStyle?.(element)
+  return !styles || (styles.display !== 'none' && styles.visibility !== 'hidden')
+}
+
+function getFocusableElements(panel) {
+  if (!panel) {
+    return []
+  }
+
+  return [...panel.querySelectorAll(
+    'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [contenteditable="true"], [tabindex]:not([tabindex="-1"])'
+  )].filter(isVisible)
+}
+
+function PopupLifecycle({ openValue, instanceId, restoreFocus, focusState }) {
+  onMount(() => {
+    let focusTask = null
+    let restoreTask = null
+    let bodyLocked = false
+    let wasOpen = false
+
+    const stop = effect(() => {
+      if (!openValue.value) {
+        cancelTask(focusTask)
+        focusTask = null
+
+        if (wasOpen && readValue(restoreFocus, true) && focusState.returnFocusTarget?.focus) {
+          const focusTarget = focusState.returnFocusTarget
+          restoreTask = scheduleTask(() => {
+            restoreTask = null
+            if (focusTarget.isConnected !== false) {
+              focusTarget.focus()
+            }
+          })
+        }
+        wasOpen = false
+
+        if (bodyLocked) {
+          unlockBodyScroll()
+          bodyLocked = false
+        }
+        return
+      }
+
+      if (!wasOpen) {
+        cancelTask(restoreTask)
+        restoreTask = null
+        focusState.returnFocusTarget = typeof document === 'undefined' ? undefined : document.activeElement
+        wasOpen = true
+      }
+
+      if (!bodyLocked) {
+        lockBodyScroll()
+        bodyLocked = true
+      }
+
+      cancelTask(focusTask)
+      focusTask = scheduleTask(() => {
+        focusTask = null
+        if (!openValue.value || typeof document === 'undefined') {
+          return
+        }
+
+        const panel = document.getElementById(instanceId)
+        const focusable = getFocusableElements(panel)
+        const target = focusable[0] ?? panel
+        target?.focus()
+      })
+    }, { flush: 'microtask' })
+
+    return () => {
+      stop()
+      cancelTask(focusTask)
+      cancelTask(restoreTask)
+      if (bodyLocked) {
+        unlockBodyScroll()
+      }
+    }
+  })
+
+  return null
+}
 
 export function Popup(props = {}) {
   const {
@@ -27,7 +162,7 @@ export function Popup(props = {}) {
     restoreFocus = true,
     class: classValue = '',
     id,
-    ariaLabel,
+    ariaLabel = 'Dialog',
     ariaDescription,
     onClose
   } = props
@@ -36,17 +171,12 @@ export function Popup(props = {}) {
   const instanceId = id ?? `prism-popup-${popupId += 1}`
   const titleId = `${instanceId}-title`
   const descriptionId = `${instanceId}-description`
-  let returnFocusTarget
-  let wasOpen = false
+  const focusState = {}
+  const lifecycle = component(PopupLifecycle, { openValue, instanceId, restoreFocus, focusState })
 
   const close = (reason = 'programmatic', event) => {
-    const focusTarget = returnFocusTarget
     openValue.value = false
     onClose?.(reason, event)
-
-    if (readValue(restoreFocus, true) && focusTarget?.focus) {
-      requestAnimationFrame(() => focusTarget.focus())
-    }
   }
 
   const handleKeydown = event => {
@@ -60,13 +190,12 @@ export function Popup(props = {}) {
       return
     }
 
-    const focusable = [...event.currentTarget.querySelectorAll(
-      'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
-    )].filter(element => !element.hidden)
+    const panel = event.currentTarget.querySelector(`.${baseClassName}-panel`)
+    const focusable = getFocusableElements(panel)
 
     if (focusable.length === 0) {
       event.preventDefault()
-      event.currentTarget.querySelector(`.${baseClassName}-panel`)?.focus()
+      panel?.focus()
       return
     }
 
@@ -83,20 +212,17 @@ export function Popup(props = {}) {
 
   const renderSlot = slot => typeof slot === 'function' ? slot({ close }) : slot
 
-  return computed(() => {
+  const popupMarkup = computed(() => {
     if (!openValue.value) {
-      wasOpen = false
       return null
-    }
-
-    if (!wasOpen) {
-      returnFocusTarget = typeof document === 'undefined' ? undefined : document.activeElement
-      wasOpen = true
     }
 
     const currentSize = sizes.has(readValue(size)) ? readValue(size) : 'medium'
     const currentPlacement = placements.has(readValue(placement)) ? readValue(placement) : 'center'
-    const hasHeader = title !== undefined || eyebrow !== undefined || readValue(showClose, true)
+    const titleValue = readValue(title)
+    const hasTitle = titleValue !== undefined && titleValue !== null && String(titleValue).trim() !== ''
+    const accessibleLabel = String(readValue(ariaLabel, 'Dialog') ?? '').trim() || 'Dialog'
+    const hasHeader = hasTitle || eyebrow !== undefined || readValue(showClose, true)
     const panelClass = [
       `${baseClassName}-panel`,
       `${baseClassName}-${currentSize}`,
@@ -115,8 +241,8 @@ export function Popup(props = {}) {
           id="${instanceId}"
           role="dialog"
           aria-modal="true"
-          aria-label="${title === undefined ? ariaLabel : undefined}"
-          aria-labelledby="${title === undefined ? undefined : titleId}"
+          aria-label="${hasTitle ? undefined : accessibleLabel}"
+          aria-labelledby="${hasTitle ? titleId : undefined}"
           aria-describedby="${ariaDescription === undefined ? undefined : descriptionId}"
           tabindex="-1"
           ?autofocus=${!readValue(showClose, true)}
@@ -125,7 +251,7 @@ export function Popup(props = {}) {
             <header class="${baseClassName}-header">
               <div class="${baseClassName}-heading">
                 ${eyebrow === undefined ? null : html`<span class="${baseClassName}-eyebrow">${eyebrow}</span>`}
-                ${title === undefined ? null : html`<strong class="${baseClassName}-title" id="${titleId}">${title}</strong>`}
+                ${hasTitle ? html`<strong class="${baseClassName}-title" id="${titleId}">${title}</strong>` : null}
                 ${ariaDescription === undefined ? null : html`<span class="${baseClassName}-description" id="${descriptionId}">${ariaDescription}</span>`}
               </div>
               ${readValue(showClose, true) ? html`<button type="button" class="${baseClassName}-close" aria-label="Close popup" autofocus @click=${event => close('close-button', event)}>${CloseIcon({ size: '1em' })}</button>` : null}
@@ -137,6 +263,8 @@ export function Popup(props = {}) {
       </div>
     `
   })
+
+  return html`${lifecycle}${popupMarkup}`
 }
 
 export const PopupComponent = props => component(Popup, props)

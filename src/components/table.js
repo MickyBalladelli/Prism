@@ -1,4 +1,4 @@
-import { component, computed, html, signal } from '@mickyballadelli/matrix'
+import { component, computed, html, keyed, signal } from '@mickyballadelli/matrix'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -7,6 +7,8 @@ import {
   SearchIcon,
   SettingsIcon
 } from './icons.js'
+import { copyText } from './clipboard.js'
+import { readStorageValue, removeStorageValue, writeStorageValue } from '../storage.js'
 
 const baseClassName = 'prism-table'
 const reactiveKinds = new Set(['signal', 'computed'])
@@ -93,11 +95,15 @@ export function parseTableSettings(value) {
 }
 
 function readStoredSettings(storageKey, fallback) {
-  if (!storageKey || typeof localStorage === 'undefined') {
-    return normalizeSettings(fallback)
-  }
+  return normalizeSettings(readStorageValue(storageKey, fallback))
+}
 
-  return normalizeSettings(localStorage.getItem(storageKey) ?? fallback)
+function writeStoredSettings(storageKey, value) {
+  writeStorageValue(storageKey, value)
+}
+
+function removeStoredSettings(storageKey) {
+  removeStorageValue(storageKey)
 }
 
 function normalizeColumn(column, index) {
@@ -286,18 +292,27 @@ export function Table(props = {}) {
   })
 
   const sourceRows = computed(() => readValue(rows, []) ?? [])
+  const getRowKey = (row, index) => String(typeof rowKey === 'function'
+    ? rowKey(row, index)
+    : getPathValue(row, rowKey) ?? index)
+  const sourceRecords = computed(() => sourceRows.value.map((row, sourceIndex) => ({
+    row,
+    sourceIndex,
+    key: getRowKey(row, sourceIndex)
+  })))
   const filteredRows = computed(() => {
     const query = String(queryValue.value ?? '').trim().toLocaleLowerCase()
     const filters = readValue(columnFilters, {}) ?? {}
     const availableColumns = normalizedColumns.value
 
-    return sourceRows.value.filter((row, rowIndex) => {
+    return sourceRecords.value.filter(record => {
+      const { row, sourceIndex } = record
       const matchesQuery = !query || availableColumns.some(column => {
         if (!column.searchable) {
           return false
         }
 
-        const value = getCellValue(row, column, rowIndex)
+        const value = getCellValue(row, column, sourceIndex)
         const text = typeof column.searchText === 'function'
           ? column.searchText(value, row)
           : valueToSearchText(value)
@@ -318,7 +333,7 @@ export function Table(props = {}) {
           return true
         }
 
-        const value = getCellValue(row, column, rowIndex)
+        const value = getCellValue(row, column, sourceIndex)
         if (typeof column.filter === 'function') {
           return column.filter(value, expected, row)
         }
@@ -340,17 +355,15 @@ export function Table(props = {}) {
     }
 
     const multiplier = activeSort.direction === 'desc' ? -1 : 1
-    return filteredRows.value
-      .map((row, index) => ({ row, index }))
+    return [...filteredRows.value]
       .sort((left, right) => {
-        const leftValue = getCellValue(left.row, column, left.index)
-        const rightValue = getCellValue(right.row, column, right.index)
+        const leftValue = getCellValue(left.row, column, left.sourceIndex)
+        const rightValue = getCellValue(right.row, column, right.sourceIndex)
         const result = typeof column.compare === 'function'
           ? column.compare(leftValue, rightValue, left.row, right.row)
           : compareValues(leftValue, rightValue)
-        return result === 0 ? left.index - right.index : result * multiplier
+        return result === 0 ? left.sourceIndex - right.sourceIndex : result * multiplier
       })
-      .map(entry => entry.row)
   })
 
   const rowsPerPage = computed(() => normalizePageSize(pageSizeValue.value, 10))
@@ -377,10 +390,6 @@ export function Table(props = {}) {
     ? sortedRows.value.length
     : Math.min(sortedRows.value.length, activePage.value * rowsPerPage.value))
 
-  const getRowKey = (row, index) => String(typeof rowKey === 'function'
-    ? rowKey(row, index)
-    : getPathValue(row, rowKey) ?? index)
-
   const selectedSet = () => new Set(Array.isArray(selectedValue.value)
     ? selectedValue.value.map(String)
     : selectedValue.value instanceof Set ? [...selectedValue.value].map(String) : [])
@@ -401,9 +410,7 @@ export function Table(props = {}) {
     const serialized = serializeTableSettings(snapshot)
     const key = readValue(storageKey)
 
-    if (key && typeof localStorage !== 'undefined') {
-      localStorage.setItem(key, serialized)
-    }
+    writeStoredSettings(key, serialized)
 
     onSettingsChange?.(snapshot, serialized)
   }
@@ -448,12 +455,14 @@ export function Table(props = {}) {
     const next = [...new Set(keys.map(String))]
     selectedValue.value = next
     const selected = new Set(next)
-    onSelectionChange?.(next, sourceRows.value.filter((row, index) => selected.has(getRowKey(row, index))))
+    onSelectionChange?.(next, sourceRecords.value
+      .filter(record => selected.has(record.key))
+      .map(record => record.row))
   }
 
-  const toggleRow = (row, rowIndex, event) => {
+  const toggleRow = (record, event) => {
     event?.stopPropagation()
-    const key = getRowKey(row, rowIndex)
+    const key = record.key
     const selected = selectedSet()
     if (selected.has(key)) {
       selected.delete(key)
@@ -466,7 +475,7 @@ export function Table(props = {}) {
   const togglePageRows = event => {
     event?.stopPropagation()
     const selected = selectedSet()
-    const keys = pageRows.value.map((row, index) => getRowKey(row, index))
+    const keys = pageRows.value.map(record => record.key)
     const allSelected = keys.length > 0 && keys.every(key => selected.has(key))
     keys.forEach(key => allSelected ? selected.delete(key) : selected.add(key))
     setSelected([...selected])
@@ -613,16 +622,14 @@ export function Table(props = {}) {
     pageSizeValue.value = normalizePageSize(readValue(pageSize), 10)
     densityValue.value = defaultDensity
     const key = readValue(storageKey)
-    if (key && typeof localStorage !== 'undefined') {
-      localStorage.removeItem(key)
-    }
+    removeStoredSettings(key)
     setPage(1)
     emitSettings()
   }
 
   const copySettings = async () => {
     try {
-      await navigator.clipboard.writeText(serializeTableSettings(settingsSnapshot()))
+      await copyText(serializeTableSettings(settingsSnapshot()))
       settingsCopyState.value = 'copied'
     } catch {
       settingsCopyState.value = 'error'
@@ -637,8 +644,8 @@ export function Table(props = {}) {
     const exportColumns = visibleColumns.value.filter(column => column.exportable !== false)
     const lines = [
       exportColumns.map(column => escapeCsv(column.header)).join(','),
-      ...sortedRows.value.map((row, rowIndex) => exportColumns
-        .map(column => escapeCsv(getCellValue(row, column, rowIndex)))
+      ...sortedRows.value.map(record => exportColumns
+        .map(column => escapeCsv(getCellValue(record.row, column, record.sourceIndex)))
         .join(','))
     ]
     const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' })
@@ -681,10 +688,45 @@ export function Table(props = {}) {
     column.class ?? ''
   ].filter(Boolean).join(' ')
 
+  const renderTableRow = ({ record }) => {
+    const columnsToRender = visibleColumns.value
+    const selected = selectedSet()
+    const selectionEnabled = readValue(selectable, false)
+    const { row, sourceIndex, key } = record
+    const isSelected = selected.has(key)
+    const rowClass = [
+      `${baseClassName}-row`,
+      isSelected ? `${baseClassName}-row-selected` : '',
+      onRowClick ? `${baseClassName}-row-interactive` : ''
+    ].filter(Boolean).join(' ')
+    const activateRow = event => {
+      if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') {
+        return
+      }
+      if (event.type === 'keydown') {
+        event.preventDefault()
+      }
+      onRowClick?.(row, { key, rowIndex: sourceIndex, event })
+    }
+
+    return html`
+      <tr class="${rowClass}" data-selected="${isSelected}" tabindex="${onRowClick ? 0 : undefined}" @click=${activateRow} @keydown=${activateRow}>
+        ${selectionEnabled ? html`<td class="${baseClassName}-selection-cell"><input type="checkbox" aria-label="Select row ${sourceIndex + 1}" .checked=${isSelected} @click=${event => event.stopPropagation()} @keydown=${event => event.stopPropagation()} @change=${event => toggleRow(record, event)}></td>` : null}
+        ${columnsToRender.map(column => {
+          const value = getCellValue(row, column, sourceIndex)
+          const content = typeof column.render === 'function'
+            ? column.render(value, row, { rowIndex: sourceIndex, column, selected: isSelected })
+            : value ?? column.fallback ?? '—'
+          return html`<td class="${columnClass(column)}" style="${columnStyle(column, columnsToRender)}">${content}</td>`
+        })}
+      </tr>
+    `
+  }
+
   const headerMarkup = computed(() => {
     const columnsToRender = visibleColumns.value
     const selected = selectedSet()
-    const currentKeys = pageRows.value.map((row, index) => getRowKey(row, index))
+    const currentKeys = pageRows.value.map(record => record.key)
     const allSelected = currentKeys.length > 0 && currentKeys.every(key => selected.has(key))
     const someSelected = !allSelected && currentKeys.some(key => selected.has(key))
 
@@ -725,7 +767,6 @@ export function Table(props = {}) {
 
   const bodyMarkup = computed(() => {
     const columnsToRender = visibleColumns.value
-    const selected = selectedSet()
     const selectionEnabled = readValue(selectable, false)
     const colspan = columnsToRender.length + (selectionEnabled ? 1 : 0)
 
@@ -739,37 +780,7 @@ export function Table(props = {}) {
 
     return html`
       <tbody class="${baseClassName}-body">
-        ${pageRows.value.map((row, rowIndex) => {
-          const key = getRowKey(row, rowIndex)
-          const isSelected = selected.has(key)
-          const rowClass = [
-            `${baseClassName}-row`,
-            isSelected ? `${baseClassName}-row-selected` : '',
-            onRowClick ? `${baseClassName}-row-interactive` : ''
-          ].filter(Boolean).join(' ')
-          const activateRow = event => {
-            if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') {
-              return
-            }
-            if (event.type === 'keydown') {
-              event.preventDefault()
-            }
-            onRowClick?.(row, { key, rowIndex, event })
-          }
-
-          return html`
-            <tr class="${rowClass}" data-selected="${isSelected}" tabindex="${onRowClick ? 0 : undefined}" @click=${activateRow} @keydown=${activateRow}>
-              ${selectionEnabled ? html`<td class="${baseClassName}-selection-cell"><input type="checkbox" aria-label="Select row ${rowIndex + 1}" .checked=${isSelected} @click=${event => event.stopPropagation()} @change=${event => toggleRow(row, rowIndex, event)}></td>` : null}
-              ${columnsToRender.map(column => {
-                const value = getCellValue(row, column, rowIndex)
-                const content = typeof column.render === 'function'
-                  ? column.render(value, row, { rowIndex, column, selected: isSelected })
-                  : value ?? column.fallback ?? '—'
-                return html`<td class="${columnClass(column)}" style="${columnStyle(column, columnsToRender)}">${content}</td>`
-              })}
-            </tr>
-          `
-        })}
+        ${keyed(pageRows.value.map(record => component(renderTableRow, { record }, record.key)), result => result.key)}
       </tbody>
     `
   })
