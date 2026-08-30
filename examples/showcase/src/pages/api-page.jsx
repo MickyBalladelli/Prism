@@ -104,17 +104,19 @@ function PropTable({ component }) {
 function ApiComponent({ component }) {
   return (
     <Card class="api-component-card">
-      <div class="api-component-heading">
-        <div>
-          <p class="eyebrow">Component</p>
-          <h3>{component.name}</h3>
+      <div class="api-readable-surface">
+        <div class="api-component-heading">
+          <div>
+            <p class="eyebrow">Component</p>
+            <h3>{component.name}</h3>
+          </div>
+          <span class="api-component-mark">API</span>
         </div>
-        <span class="api-component-mark">API</span>
-      </div>
-      <PropTable component={component} />
-      <div class="api-component-notes">
-        <p><strong>Events</strong> {component.events}</p>
-        <p><strong>Accessibility</strong> {component.a11y}</p>
+        <PropTable component={component} />
+        <div class="api-component-notes">
+          <p><strong>Events</strong> {component.events}</p>
+          <p><strong>Accessibility</strong> {component.a11y}</p>
+        </div>
       </div>
     </Card>
   )

@@ -1378,9 +1378,8 @@ h1 em {
   width: 100%;
 }
 
-/* Keep animated showcase backgrounds behind readable table surfaces. */
-.showcase-main .prism-table,
-.showcase-main .api-props-table-wrap {
+/* Keep animated backgrounds behind readable API tables. */
+.api-page .api-props-table-wrap {
   position: relative;
   z-index: 1;
   background: var(--prism-color-surface);
@@ -1388,7 +1387,7 @@ h1 em {
   isolation: isolate;
 }
 
-.showcase-main .api-props-table {
+.api-page .api-props-table {
   background: var(--prism-color-surface);
 }
 
@@ -2611,6 +2610,17 @@ input[type="text"]:required:invalid {
   gap: 1rem;
   min-width: 0;
   padding: 1.15rem;
+}
+
+.api-readable-surface {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: 1rem;
+  background: var(--prism-color-surface);
+  box-shadow: 0 .65rem 1.6rem rgb(20 29 61 / 10%);
 }
 
 .api-component-heading {
