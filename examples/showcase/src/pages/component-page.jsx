@@ -20,9 +20,9 @@ function PreviewState({ info, playgroundState }) {
   return playgroundState.value?.preview ?? html`<div class="playground-loading" role="status" aria-live="polite"><span class="playground-loading-spinner" aria-hidden="true"></span><span>Preparing ${info.title} preview…</span></div>`
 }
 
-function ComponentNotFound({ link }) {
+function ComponentNotFound({ link, navigateTo }) {
   return (
-    <ShowcaseShell link={link}>
+    <ShowcaseShell link={link} navigateTo={navigateTo}>
       <main class="app-shell empty-page" role="alert">
         <a class="back-link" href="/" onClick={link('/')}>← Back to components</a>
         <h1>Component not found</h1>
@@ -32,19 +32,19 @@ function ComponentNotFound({ link }) {
   )
 }
 
-export function ComponentPage({ name, link }) {
+export function ComponentPage({ name, link, navigateTo }) {
   const info = componentRegistryByKey[name]
   const createPlayground = playgrounds[name]
 
   if (!info || !createPlayground) {
-    return <ComponentNotFound link={link} />
+    return <ComponentNotFound link={link} navigateTo={navigateTo} />
   }
 
   const playgroundState = createPlaygroundState(createPlayground)
   const playground = playgroundState.value
 
   return (
-    <ShowcaseShell activeKey={name} link={link}>
+    <ShowcaseShell activeKey={name} link={link} navigateTo={navigateTo}>
       <main class="app-shell detail-page">
         <a class="back-link" href="/" onClick={link('/')}>← Back to components</a>
         <header class="detail-header">

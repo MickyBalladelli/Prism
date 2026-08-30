@@ -10,6 +10,8 @@ const apiGroups = [
       { name: 'Box', props: [['children', 'unknown', '—'], ['role', 'string', '—'], ['sticky', 'boolean | Signal<boolean>', 'false'], ['style', 'string | StyleObject', '—']], events: '—', a11y: 'Choose a semantic role when the wrapper represents more than layout.' },
       { name: 'Card', props: [['children', 'unknown', '—'], ['actions', 'unknown', '—'], ['class', 'string', '—']], events: '—', a11y: 'Renders an article surface; give it a heading when it is a standalone region.' },
       { name: 'Header', props: [['children', 'unknown', '—'], ['trailing', 'unknown', '—'], ['sticky', 'boolean | Signal<boolean>', 'true']], events: '—', a11y: 'Use ariaLabel when the app bar has no visible name.' },
+      { name: 'Layout', props: [['children', 'unknown', '—'], ['header / navigator / footer', 'unknown', '—'], ['contentClass / bodyClass', 'string', '—']], events: '—', a11y: 'Creates predictable page regions; preserve heading and landmark semantics in each slot.' },
+      { name: 'Footer', props: [['children', 'unknown', '—'], ['leading / trailing', 'unknown', '—'], ['ariaLabel', 'string', 'Site footer']], events: '—', a11y: 'Renders a footer landmark; use split slots when content has distinct start and end regions.' },
       { name: 'Label', props: [['children', 'unknown', '—'], ['size', 'LabelSize', 'medium'], ['tone', 'LabelTone', 'ink'], ['alwaysVisible', 'boolean', 'false']], events: '—', a11y: 'Use htmlFor for a form label; do not use it as a visual-only heading.' }
     ]
   },
@@ -43,6 +45,7 @@ const apiGroups = [
     description: 'Keyboard-first movement through hierarchy, actions, and focused content.',
     components: [
       { name: 'TreeView', props: [['items', 'TreeViewItem[] | Reactive<...>', '[]'], ['model', 'TreeViewModel', 'prism'], ['expanded', 'Record<string, boolean> | Reactive<...>', 'uncontrolled'], ['itemVariant', 'framed | minimal', 'framed']], events: 'onExpandedChange, item onClick, onRender', a11y: 'Tree roles, hierarchy metadata, roving focus, and branch keyboard behavior are built in.' },
+      { name: 'Navigator', props: [['children', 'unknown', '—'], ['title / description', 'unknown', '—'], ['sticky / stickyTop', 'boolean / string', 'false / 0px']], events: '—', a11y: 'Renders a named navigation landmark; pair it with TreeView or links that expose current state.' },
       { name: 'Tabs', props: [['items', 'TabsItem[] | Reactive<...>', '[]'], ['activeTab', 'string | number | Signal<...>', 'first enabled'], ['activation', 'automatic | manual', 'automatic'], ['orientation', 'horizontal | vertical', 'horizontal']], events: 'onTabChange', a11y: 'Linked tabpanels, roving focus, Arrow/Home/End navigation, and disabled tabs.' },
       { name: 'Pagination', props: [['page', 'number | Signal<number>', '1'], ['pageCount', 'number | Reactive<number>', '—'], ['totalItems', 'number | Reactive<number>', '—'], ['pageSize', 'number | Signal<number>', '10']], events: 'onPageChange, onPageSizeChange', a11y: 'Navigation landmark and labels identify previous, next, and page buttons.' },
       { name: 'Popup', props: [['open', 'boolean | Signal<boolean>', 'false'], ['title', 'unknown', '—'], ['size', 'small | medium | large | full', 'medium'], ['restoreFocus', 'boolean', 'true']], events: 'onClose', a11y: 'Dialog naming, focus placement, focus trap, Escape, backdrop close, and scroll lock.' },
@@ -122,9 +125,9 @@ function ApiComponent({ component }) {
   )
 }
 
-export function ApiPage({ link }) {
+export function ApiPage({ link, navigateTo }) {
   return (
-    <ShowcaseShell activeKey="api" link={link}>
+    <ShowcaseShell activeKey="api" link={link} navigateTo={navigateTo}>
       <main class="app-shell detail-page api-page">
         <a class="back-link" href="/" onClick={link('/')}>← Back to overview</a>
         <header class="detail-header api-header">
@@ -161,11 +164,6 @@ export function ApiPage({ link }) {
           ))}
         </div>
 
-        <footer class="footer">
-          <span>Prism API</span>
-          <span class="footer-line"></span>
-          <a href="/" onClick={link('/')}>Back to showcase</a>
-        </footer>
       </main>
     </ShowcaseShell>
   )

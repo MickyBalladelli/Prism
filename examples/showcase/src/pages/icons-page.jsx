@@ -61,7 +61,7 @@ function IconScaleDemo() {
   )
 }
 
-export function IconsPage({ category, link }) {
+export function IconsPage({ category, link, navigateTo }) {
   const selectedCategory = iconCategories.find(item => item.key === category)
   const categories = selectedCategory ? [selectedCategory] : iconCategories
   const pageTitle = selectedCategory ? selectedCategory.label : 'All icons'
@@ -74,7 +74,7 @@ export function IconsPage({ category, link }) {
 
   if (category && !selectedCategory) {
     return (
-      <ShowcaseShell activeKey="icons" link={link}>
+      <ShowcaseShell activeKey="icons" link={link} navigateTo={navigateTo}>
         <main class="app-shell empty-page">
           <a class="back-link" href="/icons" onClick={link('/icons')}>← Back to icons</a>
           <h1>Icon category not found</h1>
@@ -85,7 +85,7 @@ export function IconsPage({ category, link }) {
   }
 
   return (
-    <ShowcaseShell activeKey={activeKey} link={link}>
+    <ShowcaseShell activeKey={activeKey} link={link} navigateTo={navigateTo}>
       <main class="app-shell detail-page icons-page">
         <a class="back-link" href={backPath} onClick={link(backPath)}>{backLabel}</a>
         <header class="detail-header icons-header">

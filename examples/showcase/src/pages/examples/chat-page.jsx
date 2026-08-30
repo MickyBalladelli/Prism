@@ -56,7 +56,7 @@ function ChatMessage({ message }) {
   )
 }
 
-export function ChatPage({ example, link }) {
+export function ChatPage({ example, link, navigateTo }) {
   const socket = createDemoSocket()
   const messages = signal(initialMessages.map(message => ({ ...message })))
   const draft = signal('')
@@ -100,7 +100,7 @@ export function ChatPage({ example, link }) {
   }
 
   return (
-    <ExamplePageShell example={example} link={link}>
+    <ExamplePageShell example={example} link={link} navigateTo={navigateTo}>
       <section class="example-window chat-window" aria-label="Prism real-time chat">
         <header class="chat-app-header">
           <div class="chat-room-title"><span class="chat-room-icon" aria-hidden="true"><ChatIcon size="1.2em" /></span><div><p class="eyebrow">Workspace / #lounge</p><h2>Prism Lounge</h2><p>A small room for clear thinking.</p></div></div>

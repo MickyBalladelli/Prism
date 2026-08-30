@@ -1033,6 +1033,89 @@ export const prismTheme = globalCss(`
     color: var(--prism-code-punctuation);
   }
 
+  .prism-layout {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-width: 0;
+    min-height: 100%;
+  }
+
+  .prism-layout-body {
+    display: grid;
+    grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+    min-width: 0;
+    padding: 1rem 1.25rem 2rem;
+  }
+
+  .prism-layout-navigator,
+  .prism-layout-content {
+    min-width: 0;
+  }
+
+  .prism-layout-content {
+    min-height: 100%;
+  }
+
+  .prism-navigator {
+    display: grid;
+    align-content: start;
+    gap: .85rem;
+    min-width: 0;
+    color: var(--prism-color-text);
+  }
+
+  .prism-navigator-sticky {
+    position: sticky;
+    top: 0;
+  }
+
+  .prism-navigator-header,
+  .prism-navigator-footer {
+    display: grid;
+    gap: .25rem;
+  }
+
+  .prism-navigator-title {
+    color: var(--prism-color-ink);
+    font-size: .82rem;
+    font-weight: 800;
+  }
+
+  .prism-navigator-description {
+    color: var(--prism-color-text-muted);
+    font-size: .76rem;
+    line-height: 1.45;
+  }
+
+  .prism-navigator-body {
+    min-width: 0;
+  }
+
+  .prism-footer {
+    min-width: 0;
+    border-top: 1px solid var(--prism-color-border);
+    color: var(--prism-color-text-subtle);
+  }
+
+  .prism-footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+    padding: 1.25rem;
+  }
+
+  .prism-footer-start,
+  .prism-footer-end {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    min-width: 0;
+  }
+
   .prism-header {
     z-index: 40;
     width: 100%;
@@ -1070,6 +1153,21 @@ export const prismTheme = globalCss(`
   .prism-header-end {
     flex: 0 1 auto;
     justify-content: flex-end;
+  }
+
+  @media (max-width: 48rem) {
+    .prism-layout-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .prism-navigator-sticky {
+      position: static;
+    }
+
+    .prism-footer-inner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
   }
 
   .prism-background {

@@ -4,9 +4,9 @@ import { exampleRegistry } from '../example-registry.js'
 import { ShowcaseShell } from '../showcase-shell.jsx'
 import { ShowDetailsButton } from '../show-details-button.jsx'
 
-export function HomePage({ link }) {
+export function HomePage({ link, navigateTo }) {
   return (
-    <ShowcaseShell activeKey="overview" link={link}>
+    <ShowcaseShell activeKey="overview" link={link} navigateTo={navigateTo}>
       <main class="app-shell">
         <header class="hero">
           <p class="eyebrow">Matrix component library</p>
@@ -76,11 +76,6 @@ export function HomePage({ link }) {
           </div>
         </section>
 
-        <footer class="footer">
-          <span>Prism</span>
-          <span class="footer-line"></span>
-          <span>Built with Matrix + Vite</span>
-        </footer>
       </main>
     </ShowcaseShell>
   )

@@ -30,6 +30,26 @@ export const componentRegistry = [
     details: ['Pins to the top', 'Brand and tools', 'Works over animation']
   },
   {
+    key: 'layout',
+    path: '/components/layout',
+    eyebrow: 'Layout',
+    title: 'Layout',
+    mark: '35',
+    description: 'A page frame that keeps header, navigation, content, and footer regions in a clear hierarchy.',
+    highlights: ['Page structure', 'Optional regions', 'Responsive grid'],
+    details: ['Header and footer slots', 'Navigator-aware body', 'Mobile stacking']
+  },
+  {
+    key: 'footer',
+    path: '/components/footer',
+    eyebrow: 'Layout',
+    title: 'Footer',
+    mark: '37',
+    description: 'A semantic closing region for product metadata, utility links, and quiet status context.',
+    highlights: ['Semantic footer', 'Split content', 'Responsive stack'],
+    details: ['Leading and trailing slots', 'Accessible landmark', 'Theme-ready surface']
+  },
+  {
     key: 'box',
     path: '/components/box',
     eyebrow: 'Layout',
@@ -118,6 +138,16 @@ export const componentRegistry = [
     description: 'A polished navigation tree with nested branches, active items, and metadata chips.',
     highlights: ['Nested branches', 'Meta chips', 'Active states'],
     details: ['Expandable groups', 'Tree markers', 'Navigation structure']
+  },
+  {
+    key: 'navigator',
+    path: '/components/navigator',
+    eyebrow: 'Navigation',
+    title: 'Navigator',
+    mark: '36',
+    description: 'A semantic navigation pane for product sections, workspace trees, and persistent wayfinding.',
+    highlights: ['Nav landmark', 'Title and status', 'Sticky-ready'],
+    details: ['TreeView-friendly body', 'Optional footer slot', 'Mobile-aware composition']
   },
   {
     key: 'code-viewer',

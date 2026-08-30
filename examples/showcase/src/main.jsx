@@ -16,6 +16,7 @@ const withNavigation = Page => props => (
   <Page
     {...props}
     link={path => router.link(path)}
+    navigateTo={path => router.navigate(path, { scroll: false })}
   />
 )
 

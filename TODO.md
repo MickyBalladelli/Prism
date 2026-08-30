@@ -53,6 +53,7 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 - [x] **IconButton.** Icon-only Button wrapper with an accessible label fallback and Button behavior.
 - [x] **Pagination.** Standalone pagination with page windows, ellipses, remote totals, and optional page-size selection.
 - [x] **Avatar, Tag, Separator, Stack, and Grid.** Small composition primitives for common identity, metadata, divider, flex, and responsive grid layouts.
+- [x] **Layout / Navigator / Footer.** Semantic page framing with a dedicated navigation pane and a reusable footer region.
 
 ## P2 — API, docs, and packaging
 

@@ -79,6 +79,46 @@ export interface HeaderProps {
   ariaLabel?: string
 }
 
+export interface LayoutProps {
+  children?: unknown
+  header?: unknown | Reactive<unknown>
+  navigator?: unknown | Reactive<unknown>
+  footer?: unknown | Reactive<unknown>
+  class?: string | Reactive<string>
+  id?: string
+  role?: string
+  bodyClass?: string | Reactive<string>
+  contentClass?: string | Reactive<string>
+  headerClass?: string | Reactive<string>
+  navigatorClass?: string | Reactive<string>
+  footerClass?: string | Reactive<string>
+}
+
+export interface NavigatorProps {
+  children?: unknown
+  title?: unknown | Reactive<unknown>
+  description?: unknown | Reactive<unknown>
+  footer?: unknown | Reactive<unknown>
+  class?: string | Reactive<string>
+  id?: string
+  role?: string
+  ariaLabel?: string
+  style?: StyleValue
+  sticky?: boolean | Signal<boolean>
+  stickyTop?: string | Signal<string>
+}
+
+export interface FooterProps {
+  children?: unknown
+  leading?: unknown | Reactive<unknown>
+  trailing?: unknown | Reactive<unknown>
+  class?: string | Reactive<string>
+  id?: string
+  role?: string
+  ariaLabel?: string
+  style?: StyleValue
+}
+
 export interface CardProps extends BoxProps {
   actions?: unknown
 }
@@ -727,6 +767,9 @@ export interface TreeViewProps {
 export function Label(props?: LabelProps): TemplateResult
 export function Background(props?: BackgroundProps): TemplateResult
 export function Header(props?: HeaderProps): TemplateResult
+export function Layout(props?: LayoutProps): TemplateResult
+export function Navigator(props?: NavigatorProps): TemplateResult
+export function Footer(props?: FooterProps): TemplateResult
 export function Box(props?: BoxProps): TemplateResult
 export function Button(props?: ButtonProps): TemplateResult
 export function FormField(props?: FormFieldProps): TemplateResult
@@ -825,6 +868,9 @@ export function normalizeArray<T>(value: T[] | Reactive<T[]> | undefined, fallba
 export function LabelComponent(props?: LabelProps): ComponentResult
 export function BackgroundComponent(props?: BackgroundProps): ComponentResult
 export function HeaderComponent(props?: HeaderProps): ComponentResult
+export function LayoutComponent(props?: LayoutProps): ComponentResult
+export function NavigatorComponent(props?: NavigatorProps): ComponentResult
+export function FooterComponent(props?: FooterProps): ComponentResult
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function FormFieldComponent(props?: FormFieldProps): ComponentResult

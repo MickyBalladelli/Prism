@@ -1,8 +1,8 @@
 import { ShowcaseShell } from '../showcase-shell.jsx'
 
-export function NotFoundPage({ link }) {
+export function NotFoundPage({ link, navigateTo }) {
   return (
-    <ShowcaseShell link={link}>
+    <ShowcaseShell link={link} navigateTo={navigateTo}>
       <main class="app-shell empty-page" role="alert">
         <a class="back-link" href="/" onClick={link('/')}>← Back to components</a>
         <h1>Page not found</h1>

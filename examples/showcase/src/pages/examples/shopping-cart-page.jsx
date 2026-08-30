@@ -68,7 +68,7 @@ function CartSummary({ total, count, onCheckout }) {
   )
 }
 
-export function ShoppingCartPage({ example, link }) {
+export function ShoppingCartPage({ example, link, navigateTo }) {
   const activeView = signal('catalog')
   const cart = signal([])
   const orderStatus = signal('')
@@ -191,7 +191,7 @@ export function ShoppingCartPage({ example, link }) {
   const activeContent = computed(() => activeView.value === 'cart' ? cartView : activeView.value === 'checkout' ? checkoutView : catalogView)
 
   return (
-    <ExamplePageShell example={example} link={link}>
+    <ExamplePageShell example={example} link={link} navigateTo={navigateTo}>
       <section class="example-window shop-window" aria-label="Prism Supply shopping cart">
         <header class="shop-app-header">
           <div class="shop-brand"><span class="shop-brand-mark" aria-hidden="true">P</span><div><strong>Prism Supply</strong><small>Objects for focused work</small></div></div>

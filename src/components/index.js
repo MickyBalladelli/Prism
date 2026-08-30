@@ -1,4 +1,7 @@
 export { Header, HeaderComponent } from './header.js'
+export { Layout, LayoutComponent } from './layout.js'
+export { Navigator, NavigatorComponent } from './navigator.js'
+export { Footer, FooterComponent } from './footer.js'
 export { Alert, AlertComponent, Notice, NoticeComponent } from './alert.js'
 export { Avatar, AvatarComponent } from './avatar.js'
 export { Background, BackgroundComponent } from './background.js'

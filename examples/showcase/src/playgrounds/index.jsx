@@ -32,6 +32,9 @@ import { TagPlayground } from './tag.jsx'
 import { SeparatorPlayground } from './separator.jsx'
 import { StackPlayground } from './stack.jsx'
 import { GridPlayground } from './grid.jsx'
+import { LayoutPlayground } from './layout.jsx'
+import { NavigatorPlayground } from './navigator.jsx'
+import { FooterPlayground } from './footer.jsx'
 
 export {
   BackgroundPlayground,
@@ -67,7 +70,10 @@ export {
   TagPlayground,
   SeparatorPlayground,
   StackPlayground,
-  GridPlayground
+  GridPlayground,
+  LayoutPlayground,
+  NavigatorPlayground,
+  FooterPlayground
 }
 
 export const playgrounds = {
@@ -104,5 +110,8 @@ export const playgrounds = {
   tag: TagPlayground,
   separator: SeparatorPlayground,
   stack: StackPlayground,
-  grid: GridPlayground
+  grid: GridPlayground,
+  layout: LayoutPlayground,
+  navigator: NavigatorPlayground,
+  footer: FooterPlayground
 }

@@ -86,7 +86,7 @@ function TrendBar({ value, index }) {
   return <span class="dashboard-trend-bar" style={`height: ${value}%`} title={`${value}%`} aria-label={`${value}% traffic on day ${index + 1}`}></span>
 }
 
-export function DashboardPage({ example, link }) {
+export function DashboardPage({ example, link, navigateTo }) {
   const api = createDashboardApi()
   const range = signal('7d')
   const activityFilter = signal('all')
@@ -133,7 +133,7 @@ export function DashboardPage({ example, link }) {
   })
 
   return (
-    <ExamplePageShell example={example} link={link}>
+    <ExamplePageShell example={example} link={link} navigateTo={navigateTo}>
       <section class="example-window dashboard-window" aria-label="Prism operations dashboard">
         <header class="dashboard-app-header">
           <div><p class="eyebrow">Operations / Control room</p><h2>Signal health</h2><p>Live view of the systems that keep your workspace moving.</p></div>

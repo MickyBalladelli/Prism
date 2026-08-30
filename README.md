@@ -87,7 +87,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 
 | Group | Components | Use them for |
 | --- | --- | --- |
-| Layout | `Background`, `Box`, `Card`, `Header`, `Label` | Surfaces, app chrome, layout, and readable type |
+| Layout | `Background`, `Box`, `Card`, `Header`, `Layout`, `Navigator`, `Footer`, `Label` | Surfaces, app chrome, page structure, navigation panes, and readable type |
 | Forms | `TextField`, `Select`, `CheckBox` | Basic input and choice controls |
 | Actions | `Button` | Primary, secondary, status, and icon actions |
 | Feedback | `Badge`, `Pulse`, `Alert`, `ToastRegion`, `Progress`, `Spinner`, `Skeleton`, `EmptyState` | Counts, state, health, async work, and empty results |
@@ -199,6 +199,32 @@ const view = Header({
   stickyTop: '0px'
 })
 ```
+
+### Layout, Navigator, and Footer
+
+Use `Layout` when a page has named header, navigation, content, and footer regions. `Navigator` renders the navigation landmark, while `Footer` closes the frame with either one content slot or balanced `leading` and `trailing` slots.
+
+```js
+import { Card, Footer, Layout, Navigator, TreeView } from 'prism-ui'
+
+const view = Layout({
+  navigator: Navigator({
+    title: 'Workspace',
+    children: TreeView({
+      ariaLabel: 'Workspace navigation',
+      items: [{ id: 'overview', label: 'Overview', active: true }],
+      itemVariant: 'minimal'
+    })
+  }),
+  children: Card({ children: 'Workspace content' }),
+  footer: Footer({
+    leading: 'Prism UI',
+    trailing: 'Built with Matrix'
+  })
+})
+```
+
+`Layout` accepts `header`, `navigator`, and `footer` slots and keeps the content region flexible. `Navigator` supports `title`, `description`, `footer`, `sticky`, and `stickyTop`. Use `ariaLabel` to name the navigation and footer landmarks when visible text is not enough.
 
 ### Label
 

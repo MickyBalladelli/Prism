@@ -1,7 +1,7 @@
 import { computed, html, onMount, signal } from '@mickyballadelli/matrix'
 import { componentGroups, componentRegistry, componentRegistryByGroup } from './component-registry.js'
 import { exampleRegistry } from './example-registry.js'
-import { FileIcon, FolderIcon, Header, MatrixIcon, PrismIcon, TreeView } from 'prism-ui'
+import { FileIcon, FolderIcon, Footer, Header, Layout, MatrixIcon, Navigator, PrismIcon, TreeView } from 'prism-ui'
 import { iconCategories, iconCount } from './icon-catalog.js'
 import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'
 
@@ -119,12 +119,22 @@ function createSidebarItems(link, activeKey) {
 }
 
 
-export function ShowcaseShell({ activeKey = 'overview', link, children }) {
+export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, children }) {
   const mobileNavigationOpen = signal(false)
   const closeNavigation = () => mobileNavigationOpen.value = false
+  const isPlainPrimaryClick = event => event
+    && !event.defaultPrevented
+    && event.button === 0
+    && !event.metaKey
+    && !event.ctrlKey
+    && !event.shiftKey
+    && !event.altKey
   const navigate = path => event => {
     closeNavigation()
-    return link(path)(event)
+    if (typeof navigateTo !== 'function') return link(path)(event)
+    if (!isPlainPrimaryClick(event)) return
+    event.preventDefault()
+    return navigateTo(path)
   }
   const items = createSidebarItems(navigate, activeKey)
 
@@ -141,48 +151,67 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
 
   return (
     <div class="showcase-shell">
-      <Header
-        class="showcase-header"
-        ariaLabel="Prism UI"
-        trailing={(
-          <div class="showcase-header-actions">
-            <span class="showcase-matrix-badge" title="Powered by Matrix">
-              {MatrixIcon({ size: '1.35rem' })}
-              <span><small>Powered by</small><strong>Matrix</strong></span>
-            </span>
-            <ThemePicker />
-          </div>
+      <Layout
+        class="showcase-layout"
+        header={(
+          <Header
+            class="showcase-header"
+            ariaLabel="Prism UI"
+            trailing={(
+              <div class="showcase-header-actions">
+                <span class="showcase-matrix-badge" title="Powered by Matrix">
+                  {MatrixIcon({ size: '1.35rem' })}
+                  <span><small>Powered by</small><strong>Matrix</strong></span>
+                </span>
+                <ThemePicker />
+              </div>
+            )}
+          >
+            <a class="showcase-header-brand" href="/" onClick={navigate('/')}>
+              <span class="showcase-prism-mark" aria-hidden="true">{PrismIcon({ size: '1.8rem' })}</span>
+              <span class="showcase-header-brand-copy">
+                <strong>prism ui</strong>
+                <small>Component explorer</small>
+              </span>
+            </a>
+          </Header>
+        )}
+        navigator={(
+          <Navigator
+            id="showcase-navigator"
+            class={computed(() => `showcase-navigator ${mobileNavigationOpen.value ? 'is-open' : ''}`)}
+            ariaLabel="Prism UI navigation"
+          >
+            <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
+          </Navigator>
+        )}
+        footer={(
+          <Footer class="showcase-footer">
+            <span>Prism UI</span>
+            <span class="footer-line" aria-hidden="true"></span>
+            <span>Built with Matrix + Vite</span>
+          </Footer>
         )}
       >
-        <a class="showcase-header-brand" href="/" onClick={navigate('/')}>
-          <span class="showcase-prism-mark" aria-hidden="true">{PrismIcon({ size: '1.8rem' })}</span>
-          <span class="showcase-header-brand-copy">
-            <strong>prism ui</strong>
-            <small>Component explorer</small>
-          </span>
-        </a>
-      </Header>
-      <SettingsPopup />
-      <div class="showcase-frame">
-        <div class="showcase-mobile-nav-bar">
-          <span class="showcase-mobile-nav-label">Explore Prism</span>
-          <button
-            class="showcase-nav-toggle"
-            type="button"
-            aria-controls="showcase-sidebar"
-            aria-expanded={mobileNavigationOpen}
-            onClick={() => mobileNavigationOpen.value = !mobileNavigationOpen.value}
-          >
-            <span class="showcase-nav-toggle-icon" aria-hidden="true">{mobileNavigationOpen.value ? '×' : '☰'}</span>
-            <span>{mobileNavigationOpen.value ? 'Close navigation' : 'Browse navigation'}</span>
-          </button>
+        <SettingsPopup />
+        <div class="showcase-content">
+          <div class="showcase-mobile-nav-bar">
+            <span class="showcase-mobile-nav-label">Explore Prism</span>
+            <button
+              class="showcase-nav-toggle"
+              type="button"
+              aria-controls="showcase-navigator"
+              aria-expanded={mobileNavigationOpen}
+              onClick={() => mobileNavigationOpen.value = !mobileNavigationOpen.value}
+            >
+              <span class="showcase-nav-toggle-icon" aria-hidden="true">{mobileNavigationOpen.value ? '×' : '☰'}</span>
+              <span>{mobileNavigationOpen.value ? 'Close navigation' : 'Browse navigation'}</span>
+            </button>
+          </div>
+          {mobileNavigationOpen.value ? <button class="showcase-nav-backdrop" type="button" aria-label="Close navigation" onClick={closeNavigation}></button> : null}
+          <div class="showcase-main">{children}</div>
         </div>
-        {mobileNavigationOpen.value ? <button class="showcase-nav-backdrop" type="button" aria-label="Close navigation" onClick={closeNavigation}></button> : null}
-        <aside id="showcase-sidebar" class={computed(() => `showcase-sidebar ${mobileNavigationOpen.value ? 'is-open' : ''}`)}>
-          <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
-        </aside>
-        <div class="showcase-main">{children}</div>
-      </div>
+      </Layout>
     </div>
   )
 }

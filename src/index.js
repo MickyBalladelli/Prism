@@ -1,6 +1,12 @@
 export {
   Header,
   HeaderComponent,
+  Layout,
+  LayoutComponent,
+  Navigator,
+  NavigatorComponent,
+  Footer,
+  FooterComponent,
   Alert,
   AlertComponent,
   Notice,

@@ -43,7 +43,7 @@ function NoteRow({ note, selectedId, onSelect, onDelete }) {
   )
 }
 
-export function NotesPage({ example, link }) {
+export function NotesPage({ example, link, navigateTo }) {
   const initialNotes = readStoredNotes()
   const notes = signal(initialNotes)
   const search = signal('')
@@ -147,7 +147,7 @@ export function NotesPage({ example, link }) {
   }
 
   return (
-    <ExamplePageShell example={example} link={link}>
+    <ExamplePageShell example={example} link={link} navigateTo={navigateTo}>
       <section class="example-window notes-window" aria-label="Prism Notes application">
         <header class="notes-app-header">
           <div class="notes-app-brand"><span class="notes-brand-mark" aria-hidden="true">N</span><div><strong>Prism Notes</strong><small>A quieter place to think</small></div></div>
