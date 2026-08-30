@@ -1,11 +1,15 @@
-import type { ComponentResult, Reactive, Signal, StyleDefinition } from '@mickyballadelli/matrix'
+import type { ComponentResult, Reactive, Signal, StyleDefinition, TemplateResult } from '@mickyballadelli/matrix'
+
+export type MaybeReactive<T> = T | Reactive<T>
+export type StyleObject = Record<string, string | number>
+export type StyleValue = string | StyleObject
 
 export interface BoxProps {
   children?: unknown
   class?: string
   id?: string
   role?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
   sticky?: boolean | Signal<boolean>
   stickyTop?: string | Signal<string>
 }
@@ -35,7 +39,7 @@ export interface LabelProps {
   fontWeight?: string | number | Signal<string | number>
   letterSpacing?: string | Signal<string>
   lineHeight?: string | Signal<string>
-  style?: string | Record<string, string>
+  style?: StyleValue
 }
 
 export interface BackgroundProps {
@@ -44,8 +48,8 @@ export interface BackgroundProps {
   contentClass?: string
   id?: string
   role?: string
-  style?: string | Record<string, string>
-  contentStyle?: string | Record<string, string>
+  style?: StyleValue
+  contentStyle?: StyleValue
   palette?: BackgroundPalette | Signal<BackgroundPalette>
   animation?: BackgroundAnimation | Signal<BackgroundAnimation>
   animated?: boolean | Signal<boolean>
@@ -69,7 +73,7 @@ export interface HeaderProps {
   class?: string
   id?: string
   role?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
   sticky?: boolean | Signal<boolean>
   stickyTop?: string | Signal<string>
   ariaLabel?: string
@@ -138,7 +142,7 @@ export interface FormFieldProps {
   labelClass?: string
   hintClass?: string
   errorClass?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
 }
 
 export type AlertTone = 'success' | 'info' | 'warning' | 'error'
@@ -265,38 +269,38 @@ export interface ProgressProps {
   indeterminate?: boolean | Reactive<boolean>
   label?: unknown | Reactive<unknown>
   ariaLabel?: string
-  showValue?: boolean
-  tone?: 'accent' | 'success' | 'warning' | 'error'
-  size?: 'small' | 'medium' | 'large'
+  showValue?: boolean | Reactive<boolean>
+  tone?: 'accent' | 'success' | 'warning' | 'error' | Reactive<'accent' | 'success' | 'warning' | 'error'>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
   class?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
 }
 
 export interface SpinnerProps {
-  ariaLabel?: string
-  size?: 'small' | 'medium' | 'large'
-  tone?: 'accent' | 'success' | 'warning' | 'error'
+  ariaLabel?: string | Reactive<string>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  tone?: 'accent' | 'success' | 'warning' | 'error' | Reactive<'accent' | 'success' | 'warning' | 'error'>
   class?: string
 }
 
 export interface SkeletonProps {
-  width?: string
-  height?: string
-  variant?: 'text' | 'circle' | 'rect'
-  radius?: 'small' | 'medium' | 'pill'
-  ariaLabel?: string
+  width?: string | Reactive<string>
+  height?: string | Reactive<string>
+  variant?: 'text' | 'circle' | 'rect' | Reactive<'text' | 'circle' | 'rect'>
+  radius?: 'small' | 'medium' | 'pill' | Reactive<'small' | 'medium' | 'pill'>
+  ariaLabel?: string | Reactive<string>
   class?: string
 }
 
 export interface EmptyStateProps {
-  title?: unknown
-  description?: unknown
+  title?: unknown | Reactive<unknown>
+  description?: unknown | Reactive<unknown>
   children?: unknown
   icon?: unknown
   action?: unknown | (() => unknown)
   onRetry?: (event: MouseEvent) => void
-  retryLabel?: string
-  status?: 'empty' | 'filtered' | 'error'
+  retryLabel?: string | Reactive<string>
+  status?: 'empty' | 'filtered' | 'error' | Reactive<'empty' | 'filtered' | 'error'>
   class?: string
 }
 
@@ -310,10 +314,10 @@ export interface PaginationProps {
   pageCount?: number | Reactive<number>
   totalItems?: number | Reactive<number>
   pageSize?: number | Signal<number>
-  pageSizeOptions?: number[]
-  siblingCount?: number
-  showPageSize?: boolean
-  ariaLabel?: string
+  pageSizeOptions?: number[] | Reactive<number[]>
+  siblingCount?: number | Reactive<number>
+  showPageSize?: boolean | Reactive<boolean>
+  ariaLabel?: string | Reactive<string>
   onPageChange?: (page: number) => void
   onPageSizeChange?: (pageSize: number) => void
   class?: string
@@ -322,9 +326,9 @@ export interface PaginationProps {
 export interface AvatarProps {
   name?: string | Reactive<string>
   src?: string | Reactive<string>
-  alt?: string
-  size?: 'small' | 'medium' | 'large'
-  variant?: 'circle' | 'square'
+  alt?: string | Reactive<string>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  variant?: 'circle' | 'square' | Reactive<'circle' | 'square'>
   status?: 'online' | 'away' | 'offline' | string
   class?: string
 }
@@ -332,16 +336,16 @@ export interface AvatarProps {
 export interface TagProps {
   children?: unknown
   label?: unknown
-  tone?: 'neutral' | 'success' | 'warning' | 'error'
-  removable?: boolean
+  tone?: 'neutral' | 'success' | 'warning' | 'error' | Reactive<'neutral' | 'success' | 'warning' | 'error'>
+  removable?: boolean | Reactive<boolean>
   onRemove?: (event: MouseEvent) => void
   class?: string
 }
 
 export interface SeparatorProps {
-  orientation?: 'horizontal' | 'vertical'
-  decorative?: boolean
-  label?: unknown
+  orientation?: 'horizontal' | 'vertical' | Reactive<'horizontal' | 'vertical'>
+  decorative?: boolean | Reactive<boolean>
+  label?: unknown | Reactive<unknown>
   class?: string
 }
 
@@ -353,7 +357,7 @@ export interface StackProps {
   justify?: string
   wrap?: boolean
   class?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
 }
 
 export interface GridProps {
@@ -362,7 +366,7 @@ export interface GridProps {
   minColumnWidth?: string
   gap?: 'none' | 'small' | 'medium' | 'large'
   class?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
 }
 
 export interface TextFieldProps {
@@ -390,7 +394,7 @@ export interface TextFieldProps {
   ariaInvalid?: boolean | Reactive<boolean>
   error?: unknown
   class?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
 }
 
 export interface CheckBoxProps {
@@ -410,7 +414,7 @@ export interface CheckBoxProps {
   ariaInvalid?: boolean | Reactive<boolean>
   error?: unknown
   class?: string
-  style?: string | Record<string, string>
+  style?: StyleValue
 }
 
 export type CodeLanguage = 'javascript' | 'jsx' | 'typescript' | 'tsx' | 'json' | 'css' | 'html' | 'xml' | 'bash' | 'text'
@@ -440,7 +444,7 @@ export interface CodeViewerProps {
   tabSize?: number | Reactive<number>
   minHeight?: string | Reactive<string>
   maxHeight?: string | Reactive<string>
-  style?: string | Record<string, string>
+  style?: StyleValue
   class?: string
   id?: string
   ariaLabel?: string | Reactive<string>
@@ -496,6 +500,8 @@ export interface SelectProps {
   options?: SelectOptionInput[] | Reactive<SelectOptionInput[]>
   value?: string | number | Reactive<string | number>
   onChange?: (event: Event) => void
+  onFocus?: (event: FocusEvent) => void
+  onBlur?: (event: FocusEvent) => void
   onRender?: (option: SelectOption, context: SelectRenderContext) => unknown
   id?: string
   name?: string
@@ -509,7 +515,7 @@ export interface SelectProps {
   ariaDescribedBy?: string | Reactive<string>
   ariaInvalid?: boolean | Reactive<boolean>
   error?: unknown
-  style?: string | Record<string, string>
+  style?: StyleValue
   class?: string
 }
 
@@ -584,7 +590,7 @@ export interface TableProps<Row = Record<string, unknown>> {
   page?: number | Signal<number>
   pageSize?: TablePageSize | Signal<TablePageSize>
   pageSizeOptions?: TablePageSize[]
-  sort?: TableSort
+  sort?: TableSort | Reactive<TableSort | null>
   selectedKeys?: Array<string | number> | Signal<Array<string | number>>
   columnFilters?: Record<string, unknown> | Signal<Record<string, unknown>>
   serverSide?: boolean | Signal<boolean>
@@ -596,11 +602,11 @@ export interface TableProps<Row = Record<string, unknown>> {
   virtualizationThreshold?: number | Reactive<number>
   virtualRowHeight?: number | Reactive<number>
   virtualOverscan?: number | Reactive<number>
-  settings?: TableSettings | string
-  storageKey?: string
+  settings?: TableSettings | string | Reactive<TableSettings | string>
+  storageKey?: string | Reactive<string>
   title?: unknown
   description?: unknown
-  toolbar?: unknown
+  toolbar?: unknown | Reactive<unknown>
   searchable?: boolean | Signal<boolean>
   sortable?: boolean | Signal<boolean>
   resizable?: boolean | Signal<boolean>
@@ -614,7 +620,7 @@ export interface TableProps<Row = Record<string, unknown>> {
   hoverable?: boolean | Signal<boolean>
   loading?: boolean | Signal<boolean>
   density?: TableDensity | Signal<TableDensity>
-  emptyMessage?: unknown
+  emptyMessage?: unknown | Reactive<unknown>
   class?: string
   id?: string
   ariaLabel?: string | Reactive<string>
@@ -718,97 +724,104 @@ export interface TreeViewProps {
   onRender?: (item: TreeViewItem, context: TreeViewRenderContext) => unknown
 }
 
-export function Label(props?: LabelProps): unknown
-export function Background(props?: BackgroundProps): unknown
-export function Header(props?: HeaderProps): unknown
-export function Box(props?: BoxProps): unknown
-export function Button(props?: ButtonProps): unknown
-export function FormField(props?: FormFieldProps): unknown
-export function Alert(props?: AlertProps): unknown
-export function Notice(props?: AlertProps): unknown
-export function Toast(props?: ToastInput): unknown
-export function ToastRegion(props?: ToastRegionProps): unknown
+export function Label(props?: LabelProps): TemplateResult
+export function Background(props?: BackgroundProps): TemplateResult
+export function Header(props?: HeaderProps): TemplateResult
+export function Box(props?: BoxProps): TemplateResult
+export function Button(props?: ButtonProps): TemplateResult
+export function FormField(props?: FormFieldProps): TemplateResult
+export function Alert(props?: AlertProps): TemplateResult
+export function Notice(props?: AlertProps): TemplateResult
+export function Toast(props?: ToastInput): TemplateResult
+export function ToastRegion(props?: ToastRegionProps): TemplateResult
 export function createToastController(initial?: ToastItem[]): ToastController
-export function Menu(props?: MenuProps): unknown
-export function DropdownMenu(props?: DropdownMenuProps): unknown
-export function Tooltip(props?: TooltipProps): unknown
-export function Popover(props?: PopoverProps): unknown
-export function Tabs(props?: TabsProps): unknown
-export function Progress(props?: ProgressProps): unknown
-export function Spinner(props?: SpinnerProps): unknown
-export function Skeleton(props?: SkeletonProps): unknown
-export function EmptyState(props?: EmptyStateProps): unknown
-export function IconButton(props?: IconButtonProps): unknown
-export function Pagination(props?: PaginationProps): unknown
-export function Avatar(props?: AvatarProps): unknown
-export function Tag(props?: TagProps): unknown
-export function Separator(props?: SeparatorProps): unknown
-export function Stack(props?: StackProps): unknown
-export function Grid(props?: GridProps): unknown
-export function Card(props?: CardProps): unknown
-export function Badge(props?: BadgeProps): unknown
-export function TextField(props?: TextFieldProps): unknown
-export function CheckBox(props?: CheckBoxProps): unknown
-export function CodeViewer(props?: CodeViewerProps): unknown
-export function Popup(props?: PopupProps): unknown
-export function Select(props?: SelectProps): unknown
-export function Table<Row = Record<string, unknown>>(props?: TableProps<Row>): unknown
+export function Menu(props?: MenuProps): TemplateResult
+export function DropdownMenu(props?: DropdownMenuProps): TemplateResult
+export function Tooltip(props?: TooltipProps): TemplateResult
+export function Popover(props?: PopoverProps): TemplateResult
+export function Tabs(props?: TabsProps): TemplateResult
+export function Progress(props?: ProgressProps): TemplateResult
+export function Spinner(props?: SpinnerProps): TemplateResult
+export function Skeleton(props?: SkeletonProps): TemplateResult
+export function EmptyState(props?: EmptyStateProps): TemplateResult
+export function IconButton(props?: IconButtonProps): TemplateResult
+export function Pagination(props?: PaginationProps): TemplateResult
+export function Avatar(props?: AvatarProps): TemplateResult
+export function Tag(props?: TagProps): TemplateResult
+export function Separator(props?: SeparatorProps): TemplateResult
+export function Stack(props?: StackProps): TemplateResult
+export function Grid(props?: GridProps): TemplateResult
+export function Card(props?: CardProps): TemplateResult
+export function Badge(props?: BadgeProps): TemplateResult
+export function TextField(props?: TextFieldProps): TemplateResult
+export function CheckBox(props?: CheckBoxProps): TemplateResult
+export function CodeViewer(props?: CodeViewerProps): TemplateResult
+export function Popup(props?: PopupProps): TemplateResult
+export function Select(props?: SelectProps): TemplateResult
+export function Table<Row = Record<string, unknown>>(props?: TableProps<Row>): TemplateResult
 export function parseTableSettings(value: TableSettings | string | null | undefined): TableSettings | null
 export function serializeTableSettings(settings: TableSettings): string
-export function TreeView(props?: TreeViewProps): unknown
-export function PrismIcon(props?: IconProps): unknown
-export function MatrixIcon(props?: IconProps): unknown
-export function PrismMarkIcon(props?: IconProps): unknown
-export function EyeIcon(props?: IconProps): unknown
-export function TreeToggleIcon(props?: IconProps): unknown
-export function TreeBranchIcon(props?: IconProps): unknown
-export function TreeLeafIcon(props?: IconProps): unknown
-export function LiveStatusIcon(props?: IconProps): unknown
-export function ListBulletIcon(props?: IconProps): unknown
-export function PlusIcon(props?: IconProps): unknown
-export function MinusIcon(props?: IconProps): unknown
-export function CloseIcon(props?: IconProps): unknown
-export function SearchIcon(props?: IconProps): unknown
-export function FilterIcon(props?: IconProps): unknown
-export function MoreHorizontalIcon(props?: IconProps): unknown
-export function ArrowUpIcon(props?: IconProps): unknown
-export function ArrowDownIcon(props?: IconProps): unknown
-export function ArrowLeftIcon(props?: IconProps): unknown
-export function ArrowRightIcon(props?: IconProps): unknown
-export function ChevronDownIcon(props?: IconProps): unknown
-export function ChevronRightIcon(props?: IconProps): unknown
-export function MailIcon(props?: IconProps): unknown
-export function ChatIcon(props?: IconProps): unknown
-export function BellIcon(props?: IconProps): unknown
-export function LinkIcon(props?: IconProps): unknown
-export function ShareIcon(props?: IconProps): unknown
-export function SendIcon(props?: IconProps): unknown
-export function CheckIcon(props?: IconProps): unknown
-export function AlertIcon(props?: IconProps): unknown
-export function InfoIcon(props?: IconProps): unknown
-export function HelpIcon(props?: IconProps): unknown
-export function LoadingIcon(props?: IconProps): unknown
-export function LockIcon(props?: IconProps): unknown
-export function UnlockIcon(props?: IconProps): unknown
-export function FileIcon(props?: IconProps): unknown
-export function FolderIcon(props?: IconProps): unknown
-export function GroupIcon(props?: IconProps): unknown
-export function ImageIcon(props?: IconProps): unknown
-export function DownloadIcon(props?: IconProps): unknown
-export function UploadIcon(props?: IconProps): unknown
-export function CopyIcon(props?: IconProps): unknown
-export function CalendarIcon(props?: IconProps): unknown
-export function ClockIcon(props?: IconProps): unknown
-export function MapPinIcon(props?: IconProps): unknown
-export function UserIcon(props?: IconProps): unknown
-export function SettingsIcon(props?: IconProps): unknown
-export function SparkIcon(props?: IconProps): unknown
-export function GridIcon(props?: IconProps): unknown
-export function ListIcon(props?: IconProps): unknown
-export function CodeIcon(props?: IconProps): unknown
-export function TerminalIcon(props?: IconProps): unknown
-export function EyeOffIcon(props?: IconProps): unknown
-export function Pulse(props?: PulseProps): unknown
+export function TreeView(props?: TreeViewProps): TemplateResult
+export function PrismIcon(props?: IconProps): TemplateResult
+export function MatrixIcon(props?: IconProps): TemplateResult
+export function PrismMarkIcon(props?: IconProps): TemplateResult
+export function EyeIcon(props?: IconProps): TemplateResult
+export function TreeToggleIcon(props?: IconProps): TemplateResult
+export function TreeBranchIcon(props?: IconProps): TemplateResult
+export function TreeLeafIcon(props?: IconProps): TemplateResult
+export function LiveStatusIcon(props?: IconProps): TemplateResult
+export function ListBulletIcon(props?: IconProps): TemplateResult
+export function PlusIcon(props?: IconProps): TemplateResult
+export function MinusIcon(props?: IconProps): TemplateResult
+export function CloseIcon(props?: IconProps): TemplateResult
+export function SearchIcon(props?: IconProps): TemplateResult
+export function FilterIcon(props?: IconProps): TemplateResult
+export function MoreHorizontalIcon(props?: IconProps): TemplateResult
+export function ArrowUpIcon(props?: IconProps): TemplateResult
+export function ArrowDownIcon(props?: IconProps): TemplateResult
+export function ArrowLeftIcon(props?: IconProps): TemplateResult
+export function ArrowRightIcon(props?: IconProps): TemplateResult
+export function ChevronDownIcon(props?: IconProps): TemplateResult
+export function ChevronRightIcon(props?: IconProps): TemplateResult
+export function MailIcon(props?: IconProps): TemplateResult
+export function ChatIcon(props?: IconProps): TemplateResult
+export function BellIcon(props?: IconProps): TemplateResult
+export function LinkIcon(props?: IconProps): TemplateResult
+export function ShareIcon(props?: IconProps): TemplateResult
+export function SendIcon(props?: IconProps): TemplateResult
+export function CheckIcon(props?: IconProps): TemplateResult
+export function AlertIcon(props?: IconProps): TemplateResult
+export function InfoIcon(props?: IconProps): TemplateResult
+export function HelpIcon(props?: IconProps): TemplateResult
+export function LoadingIcon(props?: IconProps): TemplateResult
+export function LockIcon(props?: IconProps): TemplateResult
+export function UnlockIcon(props?: IconProps): TemplateResult
+export function FileIcon(props?: IconProps): TemplateResult
+export function FolderIcon(props?: IconProps): TemplateResult
+export function GroupIcon(props?: IconProps): TemplateResult
+export function ImageIcon(props?: IconProps): TemplateResult
+export function DownloadIcon(props?: IconProps): TemplateResult
+export function UploadIcon(props?: IconProps): TemplateResult
+export function CopyIcon(props?: IconProps): TemplateResult
+export function CalendarIcon(props?: IconProps): TemplateResult
+export function ClockIcon(props?: IconProps): TemplateResult
+export function MapPinIcon(props?: IconProps): TemplateResult
+export function UserIcon(props?: IconProps): TemplateResult
+export function SettingsIcon(props?: IconProps): TemplateResult
+export function SparkIcon(props?: IconProps): TemplateResult
+export function GridIcon(props?: IconProps): TemplateResult
+export function ListIcon(props?: IconProps): TemplateResult
+export function CodeIcon(props?: IconProps): TemplateResult
+export function TerminalIcon(props?: IconProps): TemplateResult
+export function EyeOffIcon(props?: IconProps): TemplateResult
+export function Pulse(props?: PulseProps): TemplateResult
+export function isReactiveValue(value: unknown): boolean
+export function readProp<T>(value: T | Reactive<T>, fallback?: T): T | undefined
+export function normalizeBoolean(value: boolean | Reactive<boolean> | undefined, fallback?: boolean): boolean
+export function normalizeString(value: string | Reactive<string> | undefined, fallback?: string): string
+export function normalizeNumber(value: number | Reactive<number> | undefined, fallback: number, options?: { min?: number, max?: number }): number
+export function normalizeChoice<T>(value: T | Reactive<T> | undefined, allowed: ReadonlySet<T>, fallback: T): T
+export function normalizeArray<T>(value: T[] | Reactive<T[]> | undefined, fallback?: T[]): T[]
 export function LabelComponent(props?: LabelProps): ComponentResult
 export function BackgroundComponent(props?: BackgroundProps): ComponentResult
 export function HeaderComponent(props?: HeaderProps): ComponentResult

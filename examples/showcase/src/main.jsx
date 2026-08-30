@@ -4,6 +4,7 @@ import { ComponentPage } from './pages/component-page.jsx'
 import { HomePage } from './pages/home-page.jsx'
 import { IconsPage } from './pages/icons-page.jsx'
 import { NotFoundPage } from './pages/not-found-page.jsx'
+import { ApiPage } from './pages/api-page.jsx'
 import { showcaseBackgroundAccentColor, showcaseBackgroundAnimated, showcaseBackgroundBaseColor, showcaseBackgroundGlowColor, showcaseBackgroundPalette, showcaseBackgroundRecipe, showcaseThemeClass } from './theme-picker.jsx'
 import './style.css'
 
@@ -18,6 +19,7 @@ const withNavigation = Page => props => (
 
 router = createRouter([
   { path: '/', view: withNavigation(HomePage) },
+  { path: '/api', view: withNavigation(ApiPage) },
   { path: '/icons', view: withNavigation(IconsPage) },
   { path: '/icons/:category', view: withNavigation(IconsPage) },
   { path: '/components/:name', view: withNavigation(ComponentPage) },

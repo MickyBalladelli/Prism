@@ -1,5 +1,6 @@
 import { component, computed, html } from '@mickyballadelli/matrix'
 import { readReactiveValue } from '../reactive.js'
+import { normalizeBoolean, normalizeChoice } from '../props.js'
 
 const baseClassName = 'prism-button'
 const variants = new Set(['primary', 'secondary', 'tertiary', 'error', 'warning', 'information', 'success'])
@@ -38,10 +39,10 @@ export function Button(props = {}) {
   } = props
 
   const buttonClass = computed(() => {
-    const currentVariant = variants.has(readValue(variant)) ? readValue(variant) : 'primary'
-    const currentSize = sizes.has(readValue(size)) ? readValue(size) : 'medium'
-    const currentShape = shapes.has(readValue(shape)) ? readValue(shape) : 'rounded'
-    const labelVisible = readValue(showLabel, true)
+    const currentVariant = normalizeChoice(variant, variants, 'primary')
+    const currentSize = normalizeChoice(size, sizes, 'medium')
+    const currentShape = normalizeChoice(shape, shapes, 'rounded')
+    const labelVisible = normalizeBoolean(showLabel, true)
 
     return [
       baseClassName,

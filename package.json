@@ -2,18 +2,50 @@
   "name": "prism-ui",
   "version": "0.0.1",
   "description": "Small UI components for Matrix",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MickyBalladelli/Prism.git"
+  },
+  "homepage": "https://github.com/MickyBalladelli/Prism",
+  "bugs": {
+    "url": "https://github.com/MickyBalladelli/Prism/issues"
+  },
+  "keywords": [
+    "matrix",
+    "ui",
+    "components",
+    "accessibility",
+    "signals"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "type": "module",
   "types": "./types/index.d.ts",
   "sideEffects": false,
-  "files": ["src", "types", "README.md"],
+  "files": ["src", "types", "README.md", "STYLING.md", "CHANGELOG.md", "MIGRATIONS.md", "LICENSE"],
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "coverage": "node --test --experimental-test-coverage",
+    "typecheck": "tsc --noEmit",
+    "build": "node scripts/build.mjs",
+    "check:package": "node scripts/check-package.mjs",
+    "pack:check": "npm pack --dry-run",
+    "check:accessibility": "node scripts/accessibility-smoke.mjs",
+    "check:imports": "node scripts/package-smoke.mjs",
+    "showcase:build": "npm run build --prefix examples/showcase",
+    "check": "npm run typecheck && npm run build && npm run check:package && npm run check:imports && npm run check:accessibility && npm run showcase:build"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "@mickyballadelli/matrix": "^0.1.0-alpha.0"
   },
   "devDependencies": {
-    "@mickyballadelli/matrix": "file:../Matrix"
+    "@mickyballadelli/matrix": "file:../Matrix",
+    "typescript": "^5.8.3"
   },
   "exports": {
     ".": "./src/index.js",

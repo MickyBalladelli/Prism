@@ -130,3 +130,4 @@ export {
 export { prismTheme, prismThemeValues } from './theme.js'
 export { treeViewModels } from './tree-view-models.js'
 export { readStorageValue, removeStorageValue, writeStorageValue } from './storage.js'
+export { isReactiveValue, normalizeArray, normalizeBoolean, normalizeChoice, normalizeNumber, normalizeString, readProp } from './props.js'

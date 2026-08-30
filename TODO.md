@@ -56,13 +56,13 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P2 — API, docs, and packaging
 
-- [ ] **Fix the root lockfile.** `package.json` uses `@mickyballadelli/matrix`, but `package-lock.json` still records a `matrix` peer and `../Matrix` link. Regenerate it from the current package manifest.
-- [ ] **Add package scripts and CI.** Add typecheck, build, and coverage scripts. CI should run Node 18/20/22, package import checks, DOM behavior checks, showcase build, and an accessibility smoke pass.
-- [ ] **Expand TypeScript declarations.** Replace broad `unknown` component returns with Matrix result types where possible. Add missing standard HTML/form props, reactive variants, `ButtonPalette`, `Select` numeric values, Table controlled state, and richer render contexts.
-- [ ] **Add runtime prop normalization helpers.** Choice validation and reactive detection are repeated in many component files. Centralize them to prevent drift and make invalid-prop behavior predictable.
-- [ ] **Document the styling contract.** Explain that consumers must apply `prismTheme`, list all token groups, document button palettes, explain CSS color support, and show form-label/error patterns.
-- [ ] **Add a component API page.** The showcase is a visual playground, but it does not replace concise prop tables, defaults, events, accessibility notes, and controlled-state examples.
-- [ ] **Add release hygiene.** Add `engines`, repository/license/keywords metadata, a changelog, migration notes, and a clear Matrix compatibility policy before publishing beyond alpha.
+- [x] **Fix the root lockfile.** Regenerated the lockfile against the scoped `@mickyballadelli/matrix` peer and local Matrix dev link.
+- [x] **Add package scripts and CI.** Added typecheck, syntax build, coverage, package import/pack, metadata, accessibility smoke, and showcase build scripts; CI runs Node 18/20/22 plus DOM behavior checks.
+- [x] **Expand TypeScript declarations.** Component functions now return Matrix `TemplateResult`, style values accept numeric CSS values, standard form callbacks are covered, reactive variants are declared, and controlled Table/Select APIs are typed.
+- [x] **Add runtime prop normalization helpers.** Added shared reactive reads, booleans, strings, numbers, choices, and arrays in `src/props.js`; Button and Select use the shared choice rules.
+- [x] **Document the styling contract.** Added `STYLING.md` and linked it from the README with tokens, palettes, CSS color support, forms, motion, and forced-colors guidance.
+- [x] **Add a component API page.** Added the `/api` showcase route with prop tables, defaults, events, accessibility notes, and a controlled Matrix signal example.
+- [x] **Add release hygiene.** Added Node engine metadata, repository/license/keywords metadata, public publish config, `CHANGELOG.md`, `MIGRATIONS.md`, and a Matrix compatibility note.
 
 ## P2 — Showcase maintainability
 

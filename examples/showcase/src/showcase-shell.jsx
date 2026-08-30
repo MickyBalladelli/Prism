@@ -39,6 +39,14 @@ function createSidebarItems(link, activeKey) {
       detail: 'Start of the explorer'
     },
     {
+      label: 'API reference',
+      href: '/api',
+      onClick: link('/api'),
+      active: activeKey === 'api',
+      meta: 'Docs',
+      detail: 'Props and contracts'
+    },
+    {
       label: 'Components',
       meta: '34',
       expanded: true,

@@ -81,6 +81,8 @@ const view = (
 
 `prismThemeValues` exposes the source token values. Components also accept normal `class` and `style` props so an app can add local styles on top of the theme.
 
+Read the full [styling contract](STYLING.md) for token groups, form patterns, button palettes, color support, reduced motion, and forced-colors behavior.
+
 ## Component map
 
 | Group | Components | Use them for |
@@ -562,3 +564,9 @@ prism-ui/theme       Theme values and theme models
 ```
 
 Main exports include the `*Component` wrappers for Matrix component composition, all visual components, all icons, `prismTheme`, `prismThemeValues`, `treeViewModels`, `serializeTableSettings`, and `parseTableSettings`.
+
+## API reference
+
+The [showcase API reference](examples/showcase/) gives each component a compact prop table, defaults, events, accessibility notes, and controlled-state examples. Open the running showcase at `/api`. The package also ships its declarations at `types/index.d.ts` for TypeScript consumers.
+
+Release notes live in [CHANGELOG.md](CHANGELOG.md), and migration guidance lives in [MIGRATIONS.md](MIGRATIONS.md).
