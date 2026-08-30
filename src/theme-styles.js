@@ -3318,13 +3318,16 @@ export const prismTheme = globalCss(`
 
   .prism-tooltip {
     position: fixed;
+    top: 0;
+    left: 0;
     width: max-content;
     max-width: min(20rem, calc(100vw - 1rem));
     padding: 0.45rem 0.6rem;
-    color: var(--prism-color-text-inverse);
-    background: var(--prism-color-surface-inverse);
+    color: var(--prism-color-page);
+    background: var(--prism-color-ink);
     font-size: 0.75rem;
     line-height: 1.35;
+    pointer-events: none;
   }
 
   .prism-popover {
