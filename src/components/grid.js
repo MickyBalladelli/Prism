@@ -1,4 +1,4 @@
-import { component, html } from '@mickyballadelli/matrix'
+import { component, computed, html } from '@mickyballadelli/matrix'
 import { readReactiveValue } from '../reactive.js'
 
 export function Grid(props = {}) {
@@ -11,8 +11,12 @@ export function Grid(props = {}) {
     style
   } = props
 
+  const columnsValue = computed(() => readReactiveValue(columns, 'auto-fit'))
+  const gapValue = computed(() => readReactiveValue(gap, 'medium'))
+  const minColumnWidthValue = computed(() => readReactiveValue(minColumnWidth, '12rem'))
+
   return html`
-    <div class="prism-grid prism-grid-gap-${readReactiveValue(gap, 'medium')} ${classValue}" style="--prism-grid-columns:${columns ?? 'auto-fit'};--prism-grid-min-column-width:${minColumnWidth};${style ?? ''}">${children}</div>
+    <div class="prism-grid prism-grid-gap-${gapValue.value} ${classValue}" style="--prism-grid-columns:${columnsValue.value};--prism-grid-min-column-width:${minColumnWidthValue.value};${style ?? ''}">${children}</div>
   `
 }
 

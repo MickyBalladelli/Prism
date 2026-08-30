@@ -1,4 +1,4 @@
-import { component, html } from '@mickyballadelli/matrix'
+import { component, computed, html } from '@mickyballadelli/matrix'
 import { readReactiveValue } from '../reactive.js'
 
 export function EmptyState(props = {}) {
@@ -14,17 +14,18 @@ export function EmptyState(props = {}) {
     title = 'Nothing here yet'
   } = props
 
-  const statusValue = readReactiveValue(status, 'empty')
-  const descriptionValue = description ?? children
-  const actionValue = typeof action === 'function' ? action() : action
+  const statusValue = computed(() => readReactiveValue(status, 'empty'))
+  const titleValue = computed(() => readReactiveValue(title, 'Nothing here yet'))
+  const descriptionValue = computed(() => readReactiveValue(description ?? children))
+  const actionValue = computed(() => typeof action === 'function' ? action() : action)
   const retry = onRetry ? html`<button class="prism-button prism-button-secondary" type="button" @click=${onRetry}>${retryLabel}</button>` : ''
 
   return html`
-    <section class="prism-empty-state prism-empty-state-${statusValue} ${classValue}" role="status">
+    <section class="prism-empty-state prism-empty-state-${statusValue.value} ${classValue}" role="status">
       ${icon ? html`<div class="prism-empty-state-icon" aria-hidden="true">${icon}</div>` : ''}
-      <h3>${title}</h3>
-      ${descriptionValue ? html`<p>${descriptionValue}</p>` : ''}
-      ${(actionValue || retry) ? html`<div class="prism-empty-state-actions">${actionValue}${retry}</div>` : ''}
+      <h3>${titleValue.value}</h3>
+      ${descriptionValue.value ? html`<p>${descriptionValue.value}</p>` : ''}
+      ${(actionValue.value || retry) ? html`<div class="prism-empty-state-actions">${actionValue.value}${retry}</div>` : ''}
     </section>
   `
 }

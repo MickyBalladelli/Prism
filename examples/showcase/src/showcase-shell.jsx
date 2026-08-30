@@ -40,7 +40,7 @@ function createSidebarItems(link, activeKey) {
     },
     {
       label: 'Components',
-      meta: '15',
+      meta: '34',
       expanded: true,
       children: [
         {
@@ -87,7 +87,7 @@ function createSidebarItems(link, activeKey) {
         },
         {
           label: 'Forms',
-          meta: '4',
+          meta: '5',
           expanded: true,
           children: [
             {
@@ -117,12 +117,19 @@ function createSidebarItems(link, activeKey) {
               onClick: link('/components/button'),
               active: activeKey === 'button',
               detail: 'Actions and palettes'
+            },
+            {
+              label: 'FormField',
+              href: '/components/form-field',
+              onClick: link('/components/form-field'),
+              active: activeKey === 'form-field',
+              detail: 'Label and validation'
             }
           ]
         },
         {
           label: 'Navigation',
-          meta: '1',
+          meta: '3',
           expanded: true,
           children: [
             {
@@ -131,12 +138,26 @@ function createSidebarItems(link, activeKey) {
               onClick: link('/components/tree-view'),
               active: activeKey === 'tree-view',
               detail: 'Nested navigation'
+            },
+            {
+              label: 'Tabs',
+              href: '/components/tabs',
+              onClick: link('/components/tabs'),
+              active: activeKey === 'tabs',
+              detail: 'Related panels'
+            },
+            {
+              label: 'Pagination',
+              href: '/components/pagination',
+              onClick: link('/components/pagination'),
+              active: activeKey === 'pagination',
+              detail: 'Result navigation'
             }
           ]
         },
         {
           label: 'Status',
-          meta: '2',
+          meta: '8',
           expanded: true,
           children: [
             {
@@ -152,12 +173,54 @@ function createSidebarItems(link, activeKey) {
               onClick: link('/components/pulse'),
               active: activeKey === 'pulse',
               detail: 'Live status beat'
+            },
+            {
+              label: 'Alert',
+              href: '/components/alert',
+              onClick: link('/components/alert'),
+              active: activeKey === 'alert',
+              detail: 'Inline feedback'
+            },
+            {
+              label: 'ToastRegion',
+              href: '/components/toast',
+              onClick: link('/components/toast'),
+              active: activeKey === 'toast',
+              detail: 'Transient feedback'
+            },
+            {
+              label: 'Progress',
+              href: '/components/progress',
+              onClick: link('/components/progress'),
+              active: activeKey === 'progress',
+              detail: 'Work completion'
+            },
+            {
+              label: 'Spinner',
+              href: '/components/spinner',
+              onClick: link('/components/spinner'),
+              active: activeKey === 'spinner',
+              detail: 'Short wait'
+            },
+            {
+              label: 'Skeleton',
+              href: '/components/skeleton',
+              onClick: link('/components/skeleton'),
+              active: activeKey === 'skeleton',
+              detail: 'Loading shape'
+            },
+            {
+              label: 'EmptyState',
+              href: '/components/empty-state',
+              onClick: link('/components/empty-state'),
+              active: activeKey === 'empty-state',
+              detail: 'No-result guidance'
             }
           ]
         },
         {
           label: 'Overlay',
-          meta: '1',
+          meta: '5',
           expanded: true,
           children: [
             {
@@ -166,6 +229,83 @@ function createSidebarItems(link, activeKey) {
               onClick: link('/components/popup'),
               active: activeKey === 'popup',
               detail: 'Focused dialog'
+            },
+            {
+              label: 'Menu',
+              href: '/components/menu',
+              onClick: link('/components/menu'),
+              active: activeKey === 'menu',
+              detail: 'Keyboard actions'
+            },
+            {
+              label: 'DropdownMenu',
+              href: '/components/dropdown-menu',
+              onClick: link('/components/dropdown-menu'),
+              active: activeKey === 'dropdown-menu',
+              detail: 'Anchored actions'
+            },
+            {
+              label: 'Tooltip',
+              href: '/components/tooltip',
+              onClick: link('/components/tooltip'),
+              active: activeKey === 'tooltip',
+              detail: 'Brief context'
+            },
+            {
+              label: 'Popover',
+              href: '/components/popover',
+              onClick: link('/components/popover'),
+              active: activeKey === 'popover',
+              detail: 'Rich context'
+            }
+          ]
+        },
+        {
+          label: 'Composition',
+          meta: '6',
+          expanded: true,
+          children: [
+            {
+              label: 'IconButton',
+              href: '/components/icon-button',
+              onClick: link('/components/icon-button'),
+              active: activeKey === 'icon-button',
+              detail: 'Compact action'
+            },
+            {
+              label: 'Avatar',
+              href: '/components/avatar',
+              onClick: link('/components/avatar'),
+              active: activeKey === 'avatar',
+              detail: 'Identity marker'
+            },
+            {
+              label: 'Tag',
+              href: '/components/tag',
+              onClick: link('/components/tag'),
+              active: activeKey === 'tag',
+              detail: 'Metadata chip'
+            },
+            {
+              label: 'Separator',
+              href: '/components/separator',
+              onClick: link('/components/separator'),
+              active: activeKey === 'separator',
+              detail: 'Content divider'
+            },
+            {
+              label: 'Stack',
+              href: '/components/stack',
+              onClick: link('/components/stack'),
+              active: activeKey === 'stack',
+              detail: 'Flex spacing'
+            },
+            {
+              label: 'Grid',
+              href: '/components/grid',
+              onClick: link('/components/grid'),
+              active: activeKey === 'grid',
+              detail: 'Responsive layout'
             }
           ]
         },

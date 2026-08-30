@@ -1,7 +1,8 @@
-import { computed, html, jsx, Fragment, signal } from '@mickyballadelli/matrix'
-import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, SettingsIcon, SparkIcon, Table, TextField, TreeView, serializeTableSettings } from 'prism-ui'
+import { computed, html, signal } from '@mickyballadelli/matrix'
+import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from 'prism-ui'
 import { ShowcaseShell } from '../showcase-shell.jsx'
-import { compileJsx, jsRecipeToJsx } from '../recipe-syntax.js'
+import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { AlertPlayground, AvatarPlayground, DropdownMenuPlayground, EmptyStatePlayground, FormFieldPlayground, GridPlayground, IconButtonPlayground, MenuPlayground, PaginationPlayground, PopoverPlayground, ProgressPlayground, SeparatorPlayground, SkeletonPlayground, SpinnerPlayground, StackPlayground, TabsPlayground, TagPlayground, ToastPlayground, TooltipPlayground } from './p2-playgrounds.jsx'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 const componentInfo = {
@@ -79,72 +80,107 @@ const componentInfo = {
     eyebrow: 'Overlay',
     title: 'Popup',
     description: 'Focus attention in an accessible dialog with flexible placement, sizing, content, and dismissal.'
+  },
+  'form-field': {
+    eyebrow: 'Forms',
+    title: 'FormField',
+    description: 'Keep labels, hints, validation, and control IDs together in one accessible field wrapper.'
+  },
+  alert: {
+    eyebrow: 'Status',
+    title: 'Alert',
+    description: 'Give important inline feedback a clear tone, title, description, and dismissal action.'
+  },
+  toast: {
+    eyebrow: 'Status',
+    title: 'ToastRegion',
+    description: 'Queue transient feedback without losing focus behavior, timeout control, or accessible announcements.'
+  },
+  menu: {
+    eyebrow: 'Overlay',
+    title: 'Menu',
+    description: 'Build keyboard-friendly action lists with groups, separators, shortcuts, and disabled items.'
+  },
+  'dropdown-menu': {
+    eyebrow: 'Overlay',
+    title: 'DropdownMenu',
+    description: 'Anchor a reusable action menu to a trigger with collision-aware placement.'
+  },
+  tooltip: {
+    eyebrow: 'Overlay',
+    title: 'Tooltip',
+    description: 'Add brief contextual help to controls with hover, focus, delay, and touch behavior.'
+  },
+  popover: {
+    eyebrow: 'Overlay',
+    title: 'Popover',
+    description: 'Reveal richer contextual content beside an anchor, with outside and Escape dismissal.'
+  },
+  tabs: {
+    eyebrow: 'Navigation',
+    title: 'Tabs',
+    description: 'Switch between related panels with linked semantics, roving focus, and orientation support.'
+  },
+  progress: {
+    eyebrow: 'Status',
+    title: 'Progress',
+    description: 'Show determinate or indeterminate work with real progressbar semantics.'
+  },
+  spinner: {
+    eyebrow: 'Status',
+    title: 'Spinner',
+    description: 'Signal a short wait with a compact, labeled loading indicator.'
+  },
+  skeleton: {
+    eyebrow: 'Status',
+    title: 'Skeleton',
+    description: 'Reserve the shape of incoming content while a page or surface loads.'
+  },
+  'empty-state': {
+    eyebrow: 'Status',
+    title: 'EmptyState',
+    description: 'Give empty, filtered, and error results a consistent next step.'
+  },
+  'icon-button': {
+    eyebrow: 'Actions',
+    title: 'IconButton',
+    description: 'Make compact icon-only actions accessible by requiring a meaningful label.'
+  },
+  pagination: {
+    eyebrow: 'Navigation',
+    title: 'Pagination',
+    description: 'Navigate local or remote result sets with page windows, ellipses, and page-size controls.'
+  },
+  avatar: {
+    eyebrow: 'Composition',
+    title: 'Avatar',
+    description: 'Represent a person or workspace with an image, initials fallback, size, and status.'
+  },
+  tag: {
+    eyebrow: 'Composition',
+    title: 'Tag',
+    description: 'Add compact metadata with clear tone and optional removal behavior.'
+  },
+  separator: {
+    eyebrow: 'Composition',
+    title: 'Separator',
+    description: 'Divide content with decorative or semantic horizontal and vertical rules.'
+  },
+  stack: {
+    eyebrow: 'Composition',
+    title: 'Stack',
+    description: 'Compose consistent row and column spacing without one-off flexbox CSS.'
+  },
+  grid: {
+    eyebrow: 'Composition',
+    title: 'Grid',
+    description: 'Create responsive card grids with a small, predictable set of layout props.'
   }
 }
 
 const createDetails = (visible, message) => computed(() => visible.value
   ? html`<p class="playground-note">${message}</p>`
   : null)
-
-const codeLines = (...lines) => lines.join('\n')
-
-const playgroundRuntime = {
-  AlertIcon,
-  Background,
-  Badge,
-  Box,
-  Button,
-  Card,
-  CheckBox,
-  CodeViewer,
-  DownloadIcon,
-  FileIcon,
-  FolderIcon,
-  Header,
-  ImageIcon,
-  Label,
-  MoreHorizontalIcon,
-  PlusIcon,
-  Popup,
-  Pulse,
-  Select,
-  SendIcon,
-  SettingsIcon,
-  SparkIcon,
-  Table,
-  TextField,
-  TreeView,
-  computed,
-  html,
-  signal
-}
-
-function createCodePreview(initialCode, scope = {}) {
-  const javascript = signal(initialCode)
-  let jsxSource = initialCode
-  try {
-    jsxSource = jsRecipeToJsx(initialCode)
-  } catch {
-    jsxSource = initialCode
-  }
-  const jsxCode = signal(jsxSource)
-  const recipeLanguage = signal('jsx')
-
-  // Showcase recipes are bundled trusted examples. Keep evaluation one-time so
-  // text shown in the editor never becomes executable preview code.
-  const preview = (() => {
-    try {
-      const names = Object.keys(scope)
-      const values = Object.values(scope)
-      const source = compileJsx(jsxSource)
-      return Function('jsx', 'Fragment', ...names, `'use strict'; return (${source})`)(jsx, Fragment, ...values)
-    } catch (error) {
-      return html`<div class="playground-code-error"><strong>Preview paused</strong><span>${String(error?.message ?? error)}</span></div>`
-    }
-  })()
-
-  return { javascript, jsxCode, recipeLanguage, preview, code: javascript }
-}
 
 function BackgroundPlayground() {
   const headline = signal('Deep focus, soft glow')
@@ -1564,7 +1600,26 @@ const playgrounds = {
   popup: PopupPlayground,
   table: TablePlayground,
   'code-viewer': CodeViewerPlayground,
-  'tree-view': TreeViewPlayground
+  'tree-view': TreeViewPlayground,
+  'form-field': FormFieldPlayground,
+  alert: AlertPlayground,
+  toast: ToastPlayground,
+  menu: MenuPlayground,
+  'dropdown-menu': DropdownMenuPlayground,
+  tooltip: TooltipPlayground,
+  popover: PopoverPlayground,
+  tabs: TabsPlayground,
+  progress: ProgressPlayground,
+  spinner: SpinnerPlayground,
+  skeleton: SkeletonPlayground,
+  'empty-state': EmptyStatePlayground,
+  'icon-button': IconButtonPlayground,
+  pagination: PaginationPlayground,
+  avatar: AvatarPlayground,
+  tag: TagPlayground,
+  separator: SeparatorPlayground,
+  stack: StackPlayground,
+  grid: GridPlayground
 }
 
 export function ComponentPage({ name, link }) {

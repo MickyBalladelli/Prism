@@ -17,6 +17,8 @@ export function Tabs(props = {}) {
   } = props
 
   const tabItems = computed(() => readReactiveValue(items, []) ?? [])
+  const orientationValue = computed(() => readReactiveValue(orientation, 'horizontal'))
+  const activationValue = computed(() => readReactiveValue(activation, 'automatic'))
   const firstId = tabItems.value.find(item => !item.disabled)?.id ?? tabItems.value[0]?.id
   const current = createWritableSignal(activeTab, firstId)
   const baseId = `prism-tabs-${++tabsId}`
@@ -33,7 +35,7 @@ export function Tabs(props = {}) {
       const tabs = Array.from(root.querySelectorAll('[role="tab"]')).filter(tab => !tab.disabled)
       const currentIndex = tabs.indexOf(event.target)
       if (currentIndex < 0) return
-      const horizontal = orientation === 'horizontal'
+      const horizontal = orientationValue.value === 'horizontal'
       const forward = horizontal ? 'ArrowRight' : 'ArrowDown'
       const backward = horizontal ? 'ArrowLeft' : 'ArrowUp'
       let nextIndex = currentIndex
@@ -44,7 +46,7 @@ export function Tabs(props = {}) {
       else return
       event.preventDefault()
       tabs[nextIndex].focus()
-      if (activation !== 'manual') tabs[nextIndex].click()
+      if (activationValue.value !== 'manual') tabs[nextIndex].click()
     }
     root.addEventListener('keydown', handleKeydown)
     return () => root.removeEventListener('keydown', handleKeydown)
@@ -64,8 +66,8 @@ export function Tabs(props = {}) {
   }))
 
   return html`
-    <div class="prism-tabs prism-tabs-${orientation} ${classValue}">
-      <div class="prism-tabs-list" role="tablist" aria-label="${ariaLabel}" aria-orientation="${orientation}">${tabMarkup}</div>
+    <div class="prism-tabs prism-tabs-${orientationValue.value} ${classValue}">
+      <div class="prism-tabs-list" role="tablist" aria-label="${ariaLabel}" aria-orientation="${orientationValue.value}">${tabMarkup}</div>
       <div class="prism-tabs-panels">${panelMarkup}</div>
     </div>
   `

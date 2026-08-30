@@ -21,16 +21,21 @@ export function Progress(props = {}) {
   const maxValue = computed(() => Math.max(1, Number(readReactiveValue(max, 100)) || 100))
   const indeterminateValue = computed(() => Boolean(readReactiveValue(indeterminate, false)) || valueValue.value === undefined || valueValue.value === null)
   const progressValue = computed(() => Math.min(maxValue.value, Math.max(0, Number(valueValue.value) || 0)))
-  const toneValue = computed(() => progressTones.has(readReactiveValue(tone, 'accent')) ? readReactiveValue(tone, 'accent') : 'accent')
+  const sizeValue = computed(() => readReactiveValue(size, 'medium'))
+  const showValueValue = computed(() => Boolean(readReactiveValue(showValue, false)))
+  const toneValue = computed(() => {
+    const value = readReactiveValue(tone, 'accent')
+    return progressTones.has(value) ? value : 'accent'
+  })
   const labelValue = computed(() => readReactiveValue(label))
   const labelText = labelValue.value ?? ariaLabel ?? 'Progress'
   const valueText = `${Math.round((progressValue.value / maxValue.value) * 100)}%`
 
   return html`
-    <div class="prism-progress prism-progress-${size} prism-progress-${toneValue.value} ${classValue}" style="${style ?? ''}">
+    <div class="prism-progress prism-progress-${sizeValue.value} prism-progress-${toneValue.value} ${classValue}" style="${style ?? ''}">
       <div class="prism-progress-header">
         <span>${labelText}</span>
-        ${showValue && !indeterminateValue.value ? html`<span>${valueText}</span>` : ''}
+        ${showValueValue.value && !indeterminateValue.value ? html`<span>${valueText}</span>` : ''}
       </div>
       <div
         class="prism-progress-track"

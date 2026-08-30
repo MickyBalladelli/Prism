@@ -1,4 +1,4 @@
-import { component, html } from '@mickyballadelli/matrix'
+import { component, computed, html } from '@mickyballadelli/matrix'
 import { CloseIcon } from './icons.js'
 import { readReactiveValue } from '../reactive.js'
 
@@ -12,12 +12,13 @@ export function Tag(props = {}) {
     tone = 'neutral'
   } = props
 
-  const labelValue = label ?? children
+  const labelValue = computed(() => readReactiveValue(label ?? children))
+  const toneValue = computed(() => readReactiveValue(tone, 'neutral'))
 
   return html`
-    <span class="prism-tag prism-tag-${readReactiveValue(tone, 'neutral')} ${classValue}">
-      <span>${labelValue}</span>
-      ${removable ? html`<button class="prism-tag-remove" type="button" aria-label="Remove ${labelValue ?? 'tag'}" @click=${onRemove}>${CloseIcon({ size: 12 })}</button>` : ''}
+    <span class="prism-tag prism-tag-${toneValue.value} ${classValue}">
+      <span>${labelValue.value}</span>
+      ${removable ? html`<button class="prism-tag-remove" type="button" aria-label="Remove ${labelValue.value ?? 'tag'}" @click=${onRemove}>${CloseIcon({ size: 12 })}</button>` : ''}
     </span>
   `
 }

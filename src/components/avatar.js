@@ -1,4 +1,4 @@
-import { component, html } from '@mickyballadelli/matrix'
+import { component, computed, html } from '@mickyballadelli/matrix'
 import { readReactiveValue } from '../reactive.js'
 
 const initialsFor = name => String(name ?? '?')
@@ -21,14 +21,16 @@ export function Avatar(props = {}) {
     variant = 'circle'
   } = props
 
-  const nameValue = readReactiveValue(name, 'User')
-  const srcValue = readReactiveValue(src)
-  const statusValue = readReactiveValue(status)
+  const nameValue = computed(() => readReactiveValue(name, 'User'))
+  const srcValue = computed(() => readReactiveValue(src))
+  const statusValue = computed(() => readReactiveValue(status))
+  const sizeValue = computed(() => readReactiveValue(size, 'medium'))
+  const variantValue = computed(() => readReactiveValue(variant, 'circle'))
 
   return html`
-    <span class="prism-avatar prism-avatar-${size} prism-avatar-${variant} ${classValue}" aria-label="${nameValue}">
-      ${srcValue ? html`<img src="${srcValue}" alt="${alt ?? nameValue}" loading="lazy">` : html`<span aria-hidden="true">${initialsFor(nameValue)}</span>`}
-      ${statusValue ? html`<span class="prism-avatar-status prism-avatar-status-${statusValue}" aria-label="${statusValue}"></span>` : ''}
+    <span class="prism-avatar prism-avatar-${sizeValue.value} prism-avatar-${variantValue.value} ${classValue}" aria-label="${nameValue.value}">
+      ${srcValue.value ? html`<img src="${srcValue.value}" alt="${alt ?? nameValue.value}" loading="lazy">` : html`<span aria-hidden="true">${initialsFor(nameValue.value)}</span>`}
+      ${statusValue.value ? html`<span class="prism-avatar-status prism-avatar-status-${statusValue.value}" aria-label="${statusValue.value}"></span>` : ''}
     </span>
   `
 }
