@@ -1,5 +1,11 @@
 # Prism UI
 
+[![npm version](https://img.shields.io/npm/v/prism-ui?logo=npm&logoColor=white)](https://www.npmjs.com/package/prism-ui)
+[![npm downloads](https://img.shields.io/npm/dm/prism-ui?logo=npm&logoColor=white)](https://www.npmjs.com/package/prism-ui)
+[![License](https://img.shields.io/npm/l/prism-ui)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Built for Matrix](https://img.shields.io/badge/built%20for-Matrix-6958de)](https://github.com/MickyBalladelli/Matrix)
+
 Prism is a small UI kit for [Matrix](https://github.com/MickyBalladelli/Matrix). It gives Matrix apps polished layout, form, navigation, feedback, overlay, data, code, and icon components.
 
 Prism is alpha software. The API is small and useful today, but can change before the first stable release.
