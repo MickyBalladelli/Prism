@@ -66,8 +66,8 @@ export function Tabs(props = {}) {
   }))
 
   return html`
-    <div class="prism-tabs prism-tabs-${orientationValue.value} ${classValue}">
-      <div class="prism-tabs-list" role="tablist" aria-label="${ariaLabel}" aria-orientation="${orientationValue.value}">${tabMarkup}</div>
+    <div class="prism-tabs prism-tabs-${orientationValue} ${classValue}">
+      <div class="prism-tabs-list" role="tablist" aria-label="${ariaLabel}" aria-orientation="${orientationValue}">${tabMarkup}</div>
       <div class="prism-tabs-panels">${panelMarkup}</div>
     </div>
   `

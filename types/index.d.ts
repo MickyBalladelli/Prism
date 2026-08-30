@@ -314,6 +314,9 @@ export interface ProgressProps {
   showValue?: boolean | Reactive<boolean>
   tone?: 'accent' | 'success' | 'warning' | 'error' | Reactive<'accent' | 'success' | 'warning' | 'error'>
   size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  gradient?: boolean | Reactive<boolean>
+  gradientStart?: string | Reactive<string>
+  gradientEnd?: string | Reactive<string>
   class?: string
   style?: StyleValue
 }
