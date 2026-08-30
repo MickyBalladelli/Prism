@@ -37,13 +37,3 @@ export function ToastPlayground() {
   }
 }
 
-const menuItems = [
-  { id: 'rename', label: 'Rename', shortcut: 'R' },
-  { id: 'duplicate', label: 'Duplicate', shortcut: '⌘D' },
-  { type: 'separator' },
-  { type: 'group', label: 'Danger zone', items: [
-    { id: 'archive', label: 'Archive', disabled: true },
-    { id: 'delete', label: 'Delete project' }
-  ] }
-]
-

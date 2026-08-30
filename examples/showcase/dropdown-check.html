@@ -1,0 +1,43 @@
+<!doctype html>
+<meta charset="UTF-8">
+<title>DropdownMenu click check</title>
+<div id="app"></div>
+<script type="module">
+  import { component, html, mount } from '@mickyballadelli/matrix'
+  import { DropdownMenu, prismTheme } from 'prism-ui'
+
+  const { flushJobs } = await import('@mickyballadelli/matrix')
+
+  mount(() => html`
+    <div use:style=${prismTheme}>
+      ${component(DropdownMenu, {
+        label: 'Project actions',
+        items: [
+          { label: 'Rename' },
+          { label: 'Duplicate' },
+          { type: 'separator' },
+          { type: 'group', label: 'Danger zone', items: [{ label: 'Delete project' }] }
+        ]
+      })}
+    </div>
+  `, document.getElementById('app'))
+
+  flushJobs()
+  await new Promise(resolve => setTimeout(resolve, 50))
+
+  const trigger = document.querySelector('.prism-dropdown-trigger')
+  trigger?.click()
+  flushJobs()
+  await new Promise(resolve => setTimeout(resolve, 50))
+
+  const items = [...document.querySelectorAll('.prism-menu-item, .prism-menu-group-label')]
+    .map(node => node.textContent.trim())
+    .filter(Boolean)
+  document.body.dataset.result = JSON.stringify({
+    trigger: Boolean(trigger),
+    expanded: document.querySelector('.prism-dropdown-trigger')?.getAttribute('aria-expanded') ?? null,
+    panel: Boolean(document.querySelector('.prism-dropdown-panel')),
+    items,
+    html: document.querySelector('.prism-dropdown')?.outerHTML.slice(0, 400) ?? null
+  })
+</script>

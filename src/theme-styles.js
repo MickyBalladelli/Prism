@@ -14,6 +14,10 @@ const buttonPaletteRules = Object.entries(buttonPalettes)
   .join('\n')
 
 const themeModelRules = `
+  .prism-theme-model-prism {
+    color-scheme: light;
+  }
+
   .prism-theme-model-aurora {
     color-scheme: light;
     --prism-color-page: #f3f6ff;
@@ -3279,6 +3283,9 @@ export const prismTheme = globalCss(`
     min-width: 12rem;
     padding: 0.35rem;
   }
+  .prism-dropdown-panel[hidden] {
+    display: none;
+  }
 
   .prism-menu { min-width: 11rem; padding: 0.25rem; outline: none; }
   .prism-menu-item {
@@ -3525,10 +3532,12 @@ export const prismTheme = globalCss(`
     }
 
     .prism-tree-summary-active,
-    .prism-tree-link-active {
+    .prism-tree-link-active,
+    .prism-table-row-selected td {
       color: HighlightText;
       background: Highlight;
       border-color: Highlight;
+      --prism-table-row-background: Highlight;
     }
 
     :where(button, input, select, textarea, [tabindex]):focus-visible {

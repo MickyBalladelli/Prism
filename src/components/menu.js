@@ -107,10 +107,11 @@ export function Menu(props = {}) {
   const itemMarkup = computed(() => itemValue.value.map((item, index) => {
     if (item.type === 'separator') return html`<div class="prism-menu-separator" role="separator"></div>`
     if (item.type === 'group') {
-      return html`<div class="prism-menu-group" role="group" aria-label="${item.label ?? ''}"><div class="prism-menu-group-label">${item.label}</div>${component(Menu, { items: item.items ?? [], nested: true, onSelect })}</div>`
+      return html`<div class="prism-menu-group" role="group" aria-label="${item.label ?? ''}"><div class="prism-menu-group-label">${item.label}</div>${component(Menu, { items: item.items ?? [], nested: true, onSelect }, item.id ?? `group-${index}`)}</div>`
     }
     if (Array.isArray(item.items)) return component(MenuSubmenu, { item, onSelect }, item.id ?? index)
 
+    const tabIndex = computed(() => item.disabled ? -1 : activeIndex.value === index ? 0 : -1)
     const hasLink = item.href !== undefined && item.href !== null
     const content = html`
       ${item.icon ? html`<span class="prism-menu-item-icon" aria-hidden="true">${item.icon}</span>` : ''}
@@ -118,11 +119,11 @@ export function Menu(props = {}) {
       ${item.shortcut ? html`<span class="prism-menu-item-shortcut">${item.shortcut}</span>` : ''}
     `
     return hasLink
-      ? html`<a class="prism-menu-item" href="${item.href}" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${item.disabled ? -1 : activeIndex.value === index ? 0 : -1}" @click=${event => {
+      ? html`<a class="prism-menu-item" href="${item.href}" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${tabIndex}" @click=${event => {
         if (item.disabled) event.preventDefault()
         activate(item, event)
       }}>${content}</a>`
-      : html`<button class="prism-menu-item" type="button" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${item.disabled ? -1 : activeIndex.value === index ? 0 : -1}" ?disabled=${item.disabled} @click=${event => activate(item, event)}>${content}</button>`
+      : html`<button class="prism-menu-item" type="button" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${tabIndex}" ?disabled=${item.disabled} @click=${event => activate(item, event)}>${content}</button>`
   }))
 
   return html`<div id="${rootId}" class="prism-menu ${nested ? 'prism-menu-nested' : ''} ${classValue}" role="menu" aria-label="${ariaLabel}" @keydown=${handleKeydown}>${itemMarkup}</div>`
@@ -152,21 +153,36 @@ export function DropdownMenu(props = {}) {
     onOpenChange?.(false)
   }
   const triggerValue = typeof trigger === 'function'
-    ? trigger({ open: open.value, toggle, close })
-    : html`<button type="button" class="prism-dropdown-trigger" aria-haspopup="menu" aria-expanded="${open.value}" aria-controls="${dropdownMenuId}" @click=${toggle}>${label}<span aria-hidden="true">${MoreHorizontalIcon({ size: 16 })}</span></button>`
+    ? trigger({ open, toggle, close })
+    : html`<button type="button" class="prism-dropdown-trigger" aria-haspopup="menu" aria-expanded="${computed(() => open.value ? 'true' : 'false')}" aria-controls="${dropdownMenuId}" @click=${toggle}>${label}<span aria-hidden="true">${MoreHorizontalIcon({ size: 16 })}</span></button>`
 
+  const currentPlacement = computed(() => normalizePlacement(readReactiveValue(placement, 'bottom-start'), 'bottom-start'))
+  const panel = computed(() => {
+    if (!open.value) {
+      return null
+    }
+
+    return html`<div class="prism-dropdown-panel" data-placement="${currentPlacement.value}">${component(Menu, { ...menuProps, id: dropdownMenuId, items, ariaLabel, onSelect: (item, event) => {
+      menuProps.onSelect?.(item, event)
+      close()
+    } })}</div>`
+  })
+
+  let dropdownRoot = null
   onMount(root => {
+    dropdownRoot = root
     if (typeof document === 'undefined') return
     const updatePosition = () => {
+      if (!open.value) return
       const anchor = root.querySelector('.prism-dropdown-trigger') ?? root.querySelector('button') ?? root
-      const panel = root.querySelector('.prism-dropdown-panel')
-      positionFloatingElement(anchor, panel, normalizePlacement(readReactiveValue(placement, 'bottom-start')))
+      const panelNode = root.querySelector('.prism-dropdown-panel')
+      positionFloatingElement(anchor, panelNode, currentPlacement.value)
     }
     const handleOutside = event => {
-      if (!root.contains(event.target)) close()
+      if (open.value && !root.contains(event.target)) close()
     }
     const handleKeydown = event => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && open.value) {
         event.preventDefault()
         close()
         root.querySelector('.prism-dropdown-trigger')?.focus()
@@ -178,6 +194,7 @@ export function DropdownMenu(props = {}) {
       if (open.value) requestAnimationFrame(updatePosition)
     })
     return () => {
+      dropdownRoot = null
       dispose?.()
       document.removeEventListener('pointerdown', handleOutside)
       root.removeEventListener('keydown', handleKeydown)
@@ -190,14 +207,11 @@ export function DropdownMenu(props = {}) {
         event.preventDefault()
         open.value = true
         onOpenChange?.(true)
-        requestAnimationFrame(() => root.querySelector(`#${dropdownMenuId} [data-menu-index]`)?.focus())
+        requestAnimationFrame(() => dropdownRoot?.querySelector(`#${dropdownMenuId} [data-menu-index]`)?.focus())
       }
     }}>
       ${triggerValue}
-      ${open.value ? html`<div class="prism-dropdown-panel" data-placement="${placement}">${component(Menu, { ...menuProps, id: dropdownMenuId, items, ariaLabel, onSelect: (item, event) => {
-        menuProps.onSelect?.(item, event)
-        close()
-      } })}</div>` : ''}
+      ${panel}
     </div>
   `
 }

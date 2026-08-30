@@ -12,6 +12,7 @@ export default defineConfig({
     jsx: matrixJsx
   },
   optimizeDeps: {
+    exclude: ['prism-ui'],
     rolldownOptions: {
       transform: {
         jsx: matrixJsx
