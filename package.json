@@ -24,7 +24,15 @@
   "type": "module",
   "types": "./types/index.d.ts",
   "sideEffects": false,
-  "files": ["src", "types", "README.md", "STYLING.md", "CHANGELOG.md", "MIGRATIONS.md", "LICENSE"],
+  "files": [
+    "src",
+    "types",
+    "README.md",
+    "STYLING.md",
+    "CHANGELOG.md",
+    "MIGRATIONS.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "node --test",
     "coverage": "node --test --experimental-test-coverage",
@@ -44,7 +52,7 @@
     "@mickyballadelli/matrix": "^1.0.1"
   },
   "devDependencies": {
-    "@mickyballadelli/matrix": "file:../Matrix",
+    "@mickyballadelli/matrix": "^1.0.1",
     "typescript": "^6.0.3"
   },
   "exports": {

@@ -57,7 +57,7 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P2 — API, docs, and packaging
 
-- [x] **Fix the root lockfile.** Regenerated the lockfile against the scoped `@mickyballadelli/matrix` peer and local Matrix dev link.
+ - [x] **Fix the root lockfile.** Regenerated the lockfile against the published `@mickyballadelli/matrix` package.
 - [x] **Add package scripts and CI.** Added typecheck, syntax build, coverage, package import/pack, metadata, accessibility smoke, and showcase build scripts; CI runs Node 18/20/22 plus DOM behavior checks.
 - [x] **Expand TypeScript declarations.** Component functions now return Matrix `TemplateResult`, style values accept numeric CSS values, standard form callbacks are covered, reactive variants are declared, and controlled Table/Select APIs are typed.
 - [x] **Add runtime prop normalization helpers.** Added shared reactive reads, booleans, strings, numbers, choices, and arrays in `src/props.js`; Button and Select use the shared choice rules.
