@@ -8,3 +8,4 @@ coverage/
 .env.*
 !.env.example
 AGENTS.md
+NOTES.md
