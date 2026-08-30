@@ -375,6 +375,8 @@ export interface AvatarProps {
   size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
   variant?: 'circle' | 'square' | Reactive<'circle' | 'square'>
   status?: 'online' | 'away' | 'offline' | string
+  statusSize?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  showStatus?: boolean | Reactive<boolean>
   class?: string
 }
 

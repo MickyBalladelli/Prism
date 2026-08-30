@@ -1,6 +1,8 @@
 import { component, computed, html } from '@mickyballadelli/matrix'
 import { readReactiveValue } from '../reactive.js'
 
+const statusSizes = new Set(['small', 'medium', 'large'])
+
 const initialsFor = name => String(name ?? '?')
   .trim()
   .split(/\s+/)
@@ -18,6 +20,8 @@ export function Avatar(props = {}) {
     size = 'medium',
     src,
     status,
+    statusSize = 'large',
+    showStatus = true,
     variant = 'circle'
   } = props
 
@@ -26,11 +30,23 @@ export function Avatar(props = {}) {
   const statusValue = computed(() => readReactiveValue(status))
   const sizeValue = computed(() => readReactiveValue(size, 'medium'))
   const variantValue = computed(() => readReactiveValue(variant, 'circle'))
+  const statusSizeValue = computed(() => {
+    const value = String(readReactiveValue(statusSize, 'large'))
+    return statusSizes.has(value) ? value : 'large'
+  })
+  const showStatusValue = computed(() => Boolean(readReactiveValue(showStatus, true)))
+  const altValue = computed(() => readReactiveValue(alt))
+  const avatarMarkup = computed(() => srcValue.value
+    ? html`<img src="${srcValue}" alt="${altValue.value ?? nameValue.value}" loading="lazy">`
+    : html`<span aria-hidden="true">${initialsFor(nameValue.value)}</span>`)
+  const statusMarkup = computed(() => showStatusValue.value && statusValue.value
+    ? html`<span class="prism-avatar-status prism-avatar-status-${statusValue} prism-avatar-status-size-${statusSizeValue}" aria-label="${statusValue}"></span>`
+    : null)
 
   return html`
-    <span class="prism-avatar prism-avatar-${sizeValue.value} prism-avatar-${variantValue.value} ${classValue}" aria-label="${nameValue.value}">
-      ${srcValue.value ? html`<img src="${srcValue.value}" alt="${alt ?? nameValue.value}" loading="lazy">` : html`<span aria-hidden="true">${initialsFor(nameValue.value)}</span>`}
-      ${statusValue.value ? html`<span class="prism-avatar-status prism-avatar-status-${statusValue.value}" aria-label="${statusValue.value}"></span>` : ''}
+    <span class="prism-avatar prism-avatar-${sizeValue} prism-avatar-${variantValue} ${classValue}" aria-label="${nameValue}">
+      ${avatarMarkup}
+      ${statusMarkup}
     </span>
   `
 }

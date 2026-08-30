@@ -4182,7 +4182,10 @@ export const prismTheme = globalCss(`
   .prism-avatar-medium { width: 2.5rem; height: 2.5rem; font-size: 0.8rem; }
   .prism-avatar-large { width: 3.5rem; height: 3.5rem; font-size: 1rem; }
   .prism-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
-  .prism-avatar-status { position: absolute; right: -0.05rem; bottom: -0.05rem; width: 0.55rem; height: 0.55rem; border: 2px solid var(--prism-color-surface-raised); border-radius: 50%; background: var(--prism-color-text-muted); }
+  .prism-avatar-status { position: absolute; right: -0.05rem; bottom: -0.05rem; width: 0.72rem; height: 0.72rem; border: 2px solid var(--prism-color-surface-raised); border-radius: 50%; background: var(--prism-color-text-muted); }
+  .prism-avatar-status-size-small { width: 0.58rem; height: 0.58rem; }
+  .prism-avatar-status-size-medium { width: 0.72rem; height: 0.72rem; }
+  .prism-avatar-status-size-large { width: 0.86rem; height: 0.86rem; }
   .prism-avatar-status-online { background: var(--prism-color-success); }
   .prism-avatar-status-away { background: var(--prism-color-warning); }
   .prism-avatar-status-offline { background: var(--prism-color-text-muted); }
