@@ -503,6 +503,8 @@ For compact composition, use `IconButton` with `ariaLabel`, then combine `Avatar
 
 `Stack` arranges children in a row or column. Use `gap` (`none`, `small`, `medium`, or `large`) for consistent spacing and `align` (`left`, `center`, or `right`) for horizontal placement. The alignment adapts to the stack direction; `justify` remains available for direct flex-axis control.
 
+`Grid` keeps its requested column count while there is room, then reduces columns automatically as its parent narrows so children stay inside the available width.
+
 ```js
 import { Stack, Tag } from '@mickyballadelli/prism'
 

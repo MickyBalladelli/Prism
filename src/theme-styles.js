@@ -4205,11 +4205,11 @@ export const prismTheme = globalCss(`
   .prism-stack-gap-small { gap: 0.5rem; }
   .prism-stack-gap-medium { gap: 1rem; }
   .prism-stack-gap-large { gap: 1.5rem; }
-  .prism-grid { display: grid; grid-template-columns: repeat(var(--prism-grid-columns), minmax(min(var(--prism-grid-min-column-width), 100%), 1fr)); gap: 1rem; }
-  .prism-grid-gap-none { gap: 0; }
-  .prism-grid-gap-small { gap: 0.5rem; }
-  .prism-grid-gap-medium { gap: 1rem; }
-  .prism-grid-gap-large { gap: 1.5rem; }
+  .prism-grid { --prism-grid-gap: 1rem; display: grid; gap: var(--prism-grid-gap); }
+  .prism-grid-gap-none { --prism-grid-gap: 0; }
+  .prism-grid-gap-small { --prism-grid-gap: 0.5rem; }
+  .prism-grid-gap-medium { --prism-grid-gap: 1rem; }
+  .prism-grid-gap-large { --prism-grid-gap: 1.5rem; }
 
   @media (prefers-reduced-motion: reduce) {
     .prism-toast,
