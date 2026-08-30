@@ -493,6 +493,14 @@ h1 em {
   gap: .85rem;
 }
 
+.settings-list .prism-select {
+  z-index: 2;
+}
+
+.settings-list .prism-select-menu {
+  z-index: 30;
+}
+
 .detail-code-card {
   grid-column: 1 / -1;
   padding: 1.5rem;
@@ -2489,6 +2497,9 @@ input[type="text"]:required:invalid {
 .p2-skeleton-demo {
   width: min(100%, 28rem);
   margin: 0 auto;
+  padding: 1.25rem 1.1rem;
+  border-radius: var(--prism-radius-surface);
+  background: var(--prism-color-surface);
 }
 
 .p2-separator-demo {

@@ -3380,9 +3380,30 @@ export const prismTheme = globalCss(`
   .prism-spinner-warning .prism-spinner-ring { color: var(--prism-color-warning); }
   .prism-spinner-error .prism-spinner-ring { color: var(--prism-color-danger); }
   @keyframes prism-spin { to { transform: rotate(360deg); } }
-  .prism-skeleton { display: block; min-height: 0.8rem; overflow: hidden; background: linear-gradient(90deg, var(--prism-color-surface-hover), color-mix(in srgb, var(--prism-color-surface-hover) 60%, var(--prism-color-surface-raised)), var(--prism-color-surface-hover)); background-size: 200% 100%; animation: prism-skeleton-shimmer 1.4s ease-in-out infinite; }
-  .prism-skeleton-circle { aspect-ratio: 1; border-radius: 50%; }
-  .prism-skeleton-rect { border-radius: var(--prism-radius-small); }
+  .prism-skeleton {
+    display: block;
+    min-height: 0.9rem;
+    overflow: hidden;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--prism-color-ink) 16%, var(--prism-color-surface)),
+      color-mix(in srgb, var(--prism-color-ink) 6%, var(--prism-color-surface)),
+      color-mix(in srgb, var(--prism-color-ink) 16%, var(--prism-color-surface))
+    );
+    background-size: 200% 100%;
+    animation: prism-skeleton-shimmer 1.4s ease-in-out infinite;
+  }
+  .prism-skeleton-circle {
+    flex: 0 0 auto;
+    aspect-ratio: 1;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    border-radius: 50%;
+  }
+  .prism-skeleton-rect {
+    min-height: 2.75rem;
+    border-radius: var(--prism-radius-small);
+  }
   .prism-skeleton-radius-small { border-radius: var(--prism-radius-small); }
   .prism-skeleton-radius-medium { border-radius: var(--prism-radius-medium); }
   .prism-skeleton-radius-pill { border-radius: 999px; }

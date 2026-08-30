@@ -22,18 +22,7 @@ function renderLabel(item, label, onRender, context) {
     : label
 }
 
-function renderLeaf(item = {}, context) {
-  const {
-    key,
-    domId,
-    depth,
-    position,
-    setSize,
-    onRender,
-    onKeyDown,
-    setFocus,
-    getTabIndex
-  } = context
+function TreeLeaf({ item = {}, itemKey, domId, depth, position, setSize, onRender, onKeyDown, setFocus, getTabIndex }) {
   const {
     label = 'Untitled',
     href,
@@ -41,6 +30,7 @@ function renderLeaf(item = {}, context) {
     active = false,
     meta
   } = item
+  const tabIndex = computed(() => getTabIndex(itemKey))
   const content = html`
     <span class="prism-tree-entry-copy">
       <span class="prism-tree-dot" aria-hidden="true"></span>
@@ -52,41 +42,54 @@ function renderLeaf(item = {}, context) {
     ? 'prism-tree-link prism-tree-link-active'
     : 'prism-tree-link'
   const handleClick = event => {
-    setFocus(key)
     onClick?.(event)
+    setFocus(itemKey)
   }
   if (href !== undefined) {
-    return html`<li class="prism-tree-leaf"><a class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${active ? 'page' : undefined}" tabindex="${getTabIndex(key)}" data-tree-key="${key}" @click=${handleClick} @focus=${() => setFocus(key)} @keydown=${onKeyDown}>${content}</a></li>`
+    return html`<li class="prism-tree-leaf"><a class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${active ? 'page' : undefined}" tabindex="${tabIndex}" data-tree-key="${itemKey}" @click=${handleClick} @focus=${() => setFocus(itemKey)} @keydown=${onKeyDown}>${content}</a></li>`
   }
 
   if (onClick) {
-    return html`<li class="prism-tree-leaf"><button type="button" class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${undefined}" tabindex="${getTabIndex(key)}" data-tree-key="${key}" @click=${handleClick} @focus=${() => setFocus(key)} @keydown=${onKeyDown}>${content}</button></li>`
+    return html`<li class="prism-tree-leaf"><button type="button" class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${active ? 'true' : undefined}" tabindex="${tabIndex}" data-tree-key="${itemKey}" @click=${handleClick} @focus=${() => setFocus(itemKey)} @keydown=${onKeyDown}>${content}</button></li>`
   }
 
-  return html`<li class="prism-tree-leaf"><div class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${undefined}" tabindex="${getTabIndex(key)}" data-tree-key="${key}" @focus=${() => setFocus(key)} @keydown=${onKeyDown}>${content}</div></li>`
+  return html`<li class="prism-tree-leaf"><div class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${active ? 'true' : undefined}" tabindex="${tabIndex}" data-tree-key="${itemKey}" @focus=${() => setFocus(itemKey)} @keydown=${onKeyDown}>${content}</div></li>`
 }
 
-function renderBranch(item = {}, context) {
-  const {
-    key,
-    domId,
-    depth,
-    position,
-    setSize,
-    expanded,
-    children,
-    onRender,
-    onKeyDown,
-    setFocus,
-    getTabIndex,
-    setExpanded
-  } = context
+function TreeBranch({ item = {}, itemKey, domId, depth, position, setSize, onRender, onKeyDown, setFocus, getTabIndex, getExpanded, setExpanded, getItemKey, getDomId, renderItem }) {
   const {
     label = 'Section',
     active = false,
     onClick,
     meta
   } = item
+  const expanded = computed(() => getExpanded(itemKey, item))
+  const tabIndex = computed(() => getTabIndex(itemKey))
+  const childItems = computed(() => {
+    const children = readValue(item.children, [])
+    return Array.isArray(children) ? children : []
+  })
+  const childMarkup = computed(() => childItems.value.map((child, index) => {
+    const childKey = getItemKey(child, index, itemKey)
+    return renderItem(child, {
+      onRender,
+      onKeyDown,
+      setFocus,
+      getTabIndex,
+      getExpanded,
+      setExpanded,
+      getItemKey,
+      getDomId,
+      renderItem,
+      key: childKey,
+      itemKey: childKey,
+      domId: getDomId(childKey),
+      depth: depth + 1,
+      position: index + 1,
+      setSize: childItems.value.length,
+      parentKey: itemKey
+    })
+  }))
   const summaryClass = active
     ? 'prism-tree-summary prism-tree-summary-active'
     : 'prism-tree-summary'
@@ -94,21 +97,11 @@ function renderBranch(item = {}, context) {
 
   const handleSummaryClick = event => {
     event.preventDefault()
-    setFocus(key)
-    setExpanded(key, !expanded, item)
     onClick?.(event)
-
-    if (!event.currentTarget.isConnected) {
-      return
-    }
-
-    const details = event.currentTarget.parentElement
-    if (details?.tagName === 'DETAILS') {
-      details.open = !expanded
-    }
+    setFocus(itemKey)
+    setExpanded(itemKey, !expanded.value, item)
   }
 
-  const childItems = Array.isArray(children) ? children : []
   return html`
     <li class="prism-tree-branch">
       <details class="prism-tree-details" .open=${expanded}>
@@ -121,10 +114,10 @@ function renderBranch(item = {}, context) {
           aria-setsize="${setSize}"
           aria-expanded="${expanded}"
           aria-owns="${groupId}"
-          tabindex="${getTabIndex(key)}"
-          data-tree-key="${key}"
+          tabindex="${tabIndex}"
+          data-tree-key="${itemKey}"
           @click=${handleSummaryClick}
-          @focus=${() => setFocus(key)}
+          @focus=${() => setFocus(itemKey)}
           @keydown=${onKeyDown}
         >
           <span class="prism-tree-entry-copy">
@@ -133,20 +126,12 @@ function renderBranch(item = {}, context) {
               <span class="prism-tree-toggle-bar prism-tree-toggle-bar-vertical"></span>
             </span>
             <span class="prism-tree-marker" aria-hidden="true"></span>
-            <span class="prism-tree-label">${renderLabel(item, label, onRender, { location: 'item', type: 'branch', selected: active, expanded, depth })}</span>
+            <span class="prism-tree-label">${renderLabel(item, label, onRender, { location: 'item', type: 'branch', selected: active, expanded: expanded.value, depth })}</span>
           </span>
           ${renderMeta(meta)}
         </summary>
         <ul class="prism-tree-list prism-tree-list-nested" id="${groupId}" role="group">
-          ${childItems.map((child, index) => context.renderItem(child, {
-            ...context,
-            key: context.getItemKey(child, index, key),
-            domId: context.getDomId(context.getItemKey(child, index, key)),
-            depth: depth + 1,
-            position: index + 1,
-            setSize: childItems.length,
-            parentKey: key
-          }))}
+          ${childMarkup}
         </ul>
       </details>
     </li>
@@ -156,15 +141,13 @@ function renderBranch(item = {}, context) {
 function renderItem(item = {}, context) {
   const children = readValue(item.children, undefined)
   const isBranch = item.hasChildren === true || Array.isArray(children) || isReactive(item.children)
+  const itemKey = context.itemKey ?? context.key
+  const props = { ...context, item, itemKey }
   if (!isBranch) {
-    return renderLeaf(item, context)
+    return component(TreeLeaf, props, itemKey)
   }
 
-  return renderBranch(item, {
-    ...context,
-    children: children ?? [],
-    expanded: context.getExpanded(context.key, item)
-  })
+  return component(TreeBranch, props, itemKey)
 }
 
 export function TreeView(props = {}) {
@@ -255,6 +238,9 @@ export function TreeView(props = {}) {
   const getTabIndex = key => focusedTarget.value === key ? 0 : -1
 
   const setFocus = key => {
+    if (focusedKey.value === key) {
+      return
+    }
     focusedKey.value = key
   }
   const setExpanded = (key, nextValue, item) => {
