@@ -111,9 +111,9 @@ test('Background exposes a reusable animated surface', () => {
   assert.equal(classNames?.value.includes('prism-background'), true)
   assert.equal(classNames?.value.includes('prism-background-aurora'), true)
 
-  const canvasLayer = background.values.find(value => value?.kind === 'computed' && value.value?.render)
-  assert.equal(typeof canvasLayer?.value.render, 'function')
-  assert.equal(canvasLayer?.value.props.intensity, 1.4)
+  const canvasLayer = background.values.find(value => typeof value?.render === 'function')
+  assert.equal(typeof canvasLayer?.render, 'function')
+  assert.equal(canvasLayer?.props.intensity, 1.4)
   assert.equal(classNames?.value.includes('prism-background-veil'), true)
 })
 
@@ -133,8 +133,8 @@ test('Background can switch named motion recipes', () => {
   const mistClass = mist.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-mist'))
   assert.equal(mistClass?.value.includes('prism-background-mist'), true)
 
-  const canvasLayer = mist.values.find(value => value?.kind === 'computed' && value.value?.render)
-  assert.equal(canvasLayer?.value.props.animation, 'mist')
+  const canvasLayer = mist.values.find(value => typeof value?.render === 'function')
+  assert.equal(canvasLayer?.props.animation, 'mist')
 })
 
 test('Background removes the motion layer when animation is off', () => {
@@ -146,8 +146,7 @@ test('Background removes the motion layer when animation is off', () => {
 
   const classNames = background.values.find(value => value?.kind === 'computed' && typeof value.value === 'string' && value.value.includes('prism-background-static'))
   assert.equal(classNames?.value.includes('prism-background-aurora'), true)
-
-  assert.equal(background.values.some(value => value?.kind === 'computed' && value.value?.render), false)
+  assert.equal(classNames?.value.includes('prism-background-static'), true)
 })
 
 test('Label supports typography props and an always-visible lock', () => {

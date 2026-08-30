@@ -237,6 +237,10 @@ input {
   min-width: 0;
 }
 
+.showcase-route {
+  display: contents;
+}
+
 .showcase-mobile-nav-bar {
   display: none;
 }

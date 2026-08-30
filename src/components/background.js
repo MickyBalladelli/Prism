@@ -382,6 +382,10 @@ function resolveColors(props) {
       accent: readValue(props.accentColor, palette.accent),
       glow: readValue(props.glowColor, palette.glow)
     }
+  }, {
+    equals: (left, right) => left?.base === right?.base
+      && left?.accent === right?.accent
+      && left?.glow === right?.glow
   })
 }
 
@@ -437,49 +441,57 @@ function prefersReducedMotion() {
   return Boolean(globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches)
 }
 
-function createMotionPreference() {
-  const reducedMotion = signal(prefersReducedMotion())
+const reducedMotionPreference = signal(prefersReducedMotion())
+let motionPreferenceBound = false
 
-  onMount(() => {
-    const mediaQuery = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')
-    if (!mediaQuery) {
-      return
-    }
+function bindMotionPreference() {
+  if (motionPreferenceBound) {
+    return reducedMotionPreference
+  }
 
-    const update = () => {
-      reducedMotion.value = Boolean(mediaQuery.matches)
-    }
-    update()
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', update)
-    } else {
-      mediaQuery.addListener?.(update)
-    }
+  const mediaQuery = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')
+  if (!mediaQuery) {
+    return reducedMotionPreference
+  }
 
-    return () => {
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener('change', update)
-      } else {
-        mediaQuery.removeListener?.(update)
-      }
+  motionPreferenceBound = true
+  const update = () => {
+    const next = Boolean(mediaQuery.matches)
+    if (reducedMotionPreference.peek() !== next) {
+      reducedMotionPreference.value = next
     }
-  })
+  }
+  update()
+  if (mediaQuery.addEventListener) {
+    mediaQuery.addEventListener('change', update)
+  } else {
+    mediaQuery.addListener?.(update)
+  }
 
-  return reducedMotion
+  return reducedMotionPreference
 }
 
 function isMotionEnabled(animated, reducedMotion) {
   return Boolean(readValue(animated, true)) && !reducedMotion.value
 }
 
+function peekReactive(value, fallback) {
+  if (value && typeof value.peek === 'function') {
+    return value.peek()
+  }
+  return readValue(value, fallback)
+}
+
 function readAnimationState(props) {
-  const colors = props.colors?.value ?? { base: '#071427', accent: '#3657d6', glow: '#7ac7ff' }
+  // Animation frames / ResizeObserver run outside Matrix observers — use peek so a
+  // stray tracking context cannot subscribe the parent dynamic-value effect.
+  const colors = peekReactive(props.colors, { base: '#071427', accent: '#3657d6', glow: '#7ac7ff' })
 
   return {
-    animation: normalizeAnimation(readValue(props.animation, 'veil')),
-    speed: normalizeNumber(props.speed, 1, 0, 4),
-    intensity: normalizeNumber(props.intensity, 1, 0.2, 4),
-    grain: normalizeNumber(props.grain, 0.018, 0, 0.12),
+    animation: normalizeAnimation(peekReactive(props.animation, 'veil')),
+    speed: normalizeNumber(peekReactive(props.speed, 1), 1, 0, 4),
+    intensity: normalizeNumber(peekReactive(props.intensity, 1), 1, 0.2, 4),
+    grain: normalizeNumber(peekReactive(props.grain, 0.018), 0.018, 0, 0.12),
     base: colors.base,
     accent: colors.accent,
     glow: colors.glow
@@ -765,7 +777,7 @@ export function Background(props = {}) {
   const colors = resolveColors({ palette, baseColor, accentColor, glowColor })
   const styleValue = createStyleValue({ style, overlayOpacity, minHeight, height, padding, radius }, colors)
   const contentStyleValue = createContentStyleValue({ contentStyle })
-  const reducedMotion = createMotionPreference()
+  const reducedMotion = bindMotionPreference()
 
   const classNames = computed(() => [
     baseClassName,
@@ -780,13 +792,19 @@ export function Background(props = {}) {
     contentClass
   ].filter(Boolean).join(' '))
 
-  const motionLayer = computed(() => isMotionEnabled(animated, reducedMotion)
-    ? component(BackgroundCanvas, { animation, speed, intensity, grain, colors })
-    : null)
-
-  const washLayer = computed(() => isMotionEnabled(animated, reducedMotion)
-    ? html`<span class="${baseClassName}-wash" aria-hidden="true"></span>`
-    : null)
+  const motionEnabled = computed(() => isMotionEnabled(animated, reducedMotion))
+  const canvasLayer = component(BackgroundCanvas, {
+    animation,
+    speed,
+    intensity,
+    grain,
+    colors
+  })
+  const washMarkup = html`<span class="${baseClassName}-wash" aria-hidden="true"></span>`
+  // Stable component/template identities — only the enabled flag changes — so Matrix can
+  // skip remounts when motion toggles back to the same layer instance.
+  const motionLayer = computed(() => motionEnabled.value ? canvasLayer : null)
+  const washLayer = computed(() => motionEnabled.value ? washMarkup : null)
 
   return html`
     <section class="${classNames}" id="${id}" role="${role}" style="${styleValue}" aria-label="${ariaLabel}">

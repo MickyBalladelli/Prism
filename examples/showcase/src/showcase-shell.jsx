@@ -30,6 +30,9 @@ const iconCategoryDetails = {
   data: 'Lists, code, grids'
 }
 
+const navigatorExpanded = signal({})
+let navigatorScrollTop = 0
+
 function createComponentSidebarGroup(group, link, activeKey) {
   const components = componentRegistryByGroup(group.label)
 
@@ -122,6 +125,22 @@ function createSidebarItems(link, activeKey) {
 export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, children }) {
   const mobileNavigationOpen = signal(false)
   const closeNavigation = () => mobileNavigationOpen.value = false
+  const restoreScrollPosition = (pageLeft, pageTop, treeTop) => {
+    const restore = () => {
+      window.scrollTo?.({ left: pageLeft, top: pageTop })
+      const nextNavigator = document.querySelector('#showcase-navigator')
+      if (nextNavigator) {
+        nextNavigator.scrollTop = treeTop
+      }
+    }
+
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(restore)
+      return
+    }
+
+    setTimeout(restore, 0)
+  }
   const isPlainPrimaryClick = event => event
     && !event.defaultPrevented
     && event.button === 0
@@ -129,12 +148,19 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
     && !event.ctrlKey
     && !event.shiftKey
     && !event.altKey
-  const navigate = path => event => {
+  const navigate = path => async event => {
     closeNavigation()
     if (typeof navigateTo !== 'function') return link(path)(event)
     if (!isPlainPrimaryClick(event)) return
     event.preventDefault()
-    return navigateTo(path)
+    const pageLeft = window.scrollX
+    const pageTop = window.scrollY
+    const currentNavigator = document.querySelector('#showcase-navigator')
+    const treeTop = currentNavigator?.scrollTop ?? navigatorScrollTop
+    navigatorScrollTop = treeTop
+    const result = await navigateTo(path)
+    restoreScrollPosition(pageLeft, pageTop, treeTop)
+    return result
   }
   const items = createSidebarItems(navigate, activeKey)
 
@@ -146,7 +172,20 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
     }
 
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    const navigator = document.querySelector('#showcase-navigator')
+    const handleNavigatorScroll = event => {
+      navigatorScrollTop = event.currentTarget.scrollTop
+    }
+
+    if (navigator) {
+      navigator.scrollTop = navigatorScrollTop
+      navigator.addEventListener('scroll', handleNavigatorScroll)
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      navigator?.removeEventListener('scroll', handleNavigatorScroll)
+    }
   })
 
   return (
@@ -185,7 +224,16 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
             sticky={true}
             stickyTop="5.4rem"
           >
-            <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
+            <TreeView
+              class="showcase-tree"
+              ariaLabel="Prism UI navigation"
+              items={items}
+              model={showcaseThemeModel}
+              itemVariant="minimal"
+              expanded={navigatorExpanded}
+              onExpandedChange={nextExpanded => navigatorExpanded.value = nextExpanded}
+              onRender={renderSidebarItem}
+            />
           </Navigator>
         )}
         footer={(

@@ -4,17 +4,6 @@ import { readReactiveValue } from '../reactive.js'
 const baseClassName = 'prism-layout'
 const readValue = readReactiveValue
 
-function isEmptySlot(value) {
-  return value === undefined || value === null || typeof value === 'boolean'
-}
-
-function slotMarkup(value, className) {
-  const nextValue = readValue(value)
-  return isEmptySlot(nextValue)
-    ? null
-    : html`<div class="${className}">${nextValue}</div>`
-}
-
 export function Layout(props = {}) {
   const {
     children = [],
@@ -32,22 +21,15 @@ export function Layout(props = {}) {
   } = props
 
   const classNames = computed(() => [baseClassName, readValue(classValue, '')].filter(Boolean).join(' '))
-  const contentMarkup = computed(() => {
-    const content = readValue(children)
-    return isEmptySlot(content) ? null : content
-  })
-  const headerMarkup = computed(() => slotMarkup(header, `prism-layout-header ${readValue(headerClass, '')}`))
-  const navigatorMarkup = computed(() => slotMarkup(navigator, `prism-layout-navigator ${readValue(navigatorClass, '')}`))
-  const footerMarkup = computed(() => slotMarkup(footer, `prism-layout-footer ${readValue(footerClass, '')}`))
 
   return html`
     <div class="${classNames}" id="${id}" role="${role}">
-      ${headerMarkup}
+      <div class="prism-layout-header ${readValue(headerClass, '')}">${header}</div>
       <div class="prism-layout-body ${readValue(bodyClass, '')}">
-        ${navigatorMarkup}
-        <div class="prism-layout-content ${readValue(contentClass, '')}">${contentMarkup}</div>
+        <div class="prism-layout-navigator ${readValue(navigatorClass, '')}">${navigator}</div>
+        <div class="prism-layout-content ${readValue(contentClass, '')}">${children}</div>
       </div>
-      ${footerMarkup}
+      <div class="prism-layout-footer ${readValue(footerClass, '')}">${footer}</div>
     </div>
   `
 }

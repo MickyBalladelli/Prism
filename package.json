@@ -41,7 +41,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@mickyballadelli/matrix": "^1.0.0"
+    "@mickyballadelli/matrix": "^1.0.1"
   },
   "devDependencies": {
     "@mickyballadelli/matrix": "file:../Matrix",

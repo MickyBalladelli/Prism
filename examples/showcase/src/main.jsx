@@ -1,4 +1,4 @@
-import { createRouter, mount, routerView } from '@mickyballadelli/matrix'
+import { component, createRouter, effect, html, mount, onMount } from '@mickyballadelli/matrix'
 import { Background, prismTheme } from 'prism-ui'
 import { ComponentPage } from './pages/component-page.jsx'
 import { ExamplePage } from './pages/example-page.jsx'
@@ -32,7 +32,37 @@ router = createRouter([
 
 router.start()
 
-const appView = routerView(router)
+function AppView() {
+  onMount(node => {
+    let handle
+    let pageKey = ''
+    const stop = effect(() => {
+      const route = router.current.value
+      const nextKey = route && typeof route.view === 'function'
+        ? `${router.path.value}\0${JSON.stringify(route.params ?? {})}`
+        : ''
+      if (nextKey === pageKey) {
+        return
+      }
+
+      pageKey = nextKey
+      handle?.unmount()
+      handle = undefined
+      if (!route || typeof route.view !== 'function') {
+        return
+      }
+
+      handle = mount(() => component(route.view, { ...route.params, route }), node)
+    })
+
+    return () => {
+      stop()
+      handle?.unmount()
+    }
+  })
+
+  return html`<div class="showcase-route"></div>`
+}
 
 mount(() => (
   <div class={showcaseThemeClass} use:style={prismTheme}>
@@ -51,7 +81,7 @@ mount(() => (
       radius="0"
       ariaLabel="Prism UI"
     >
-      {appView}
+      <AppView />
     </Background>
   </div>
 ), document.querySelector('#app'))
