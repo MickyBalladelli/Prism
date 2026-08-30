@@ -16,7 +16,7 @@ export function Grid(props = {}) {
   const minColumnWidthValue = computed(() => readReactiveValue(minColumnWidth, '12rem'))
 
   return html`
-    <div class="prism-grid prism-grid-gap-${gapValue.value} ${classValue}" style="--prism-grid-columns:${columnsValue.value};--prism-grid-min-column-width:${minColumnWidthValue.value};${style ?? ''}">${children}</div>
+    <div class="prism-grid prism-grid-gap-${gapValue} ${classValue}" style="--prism-grid-columns:${columnsValue};--prism-grid-min-column-width:${minColumnWidthValue};${style ?? ''}">${children}</div>
   `
 }
 

@@ -501,6 +501,22 @@ const view = [
 
 For compact composition, use `IconButton` with `ariaLabel`, then combine `Avatar`, `Tag`, `Separator`, `Stack`, and `Grid` without adding one-off layout CSS.
 
+`Stack` arranges children in a row or column. Use `gap` (`none`, `small`, `medium`, or `large`) for consistent spacing and `align` (`left`, `center`, or `right`) for horizontal placement. The alignment adapts to the stack direction; `justify` remains available for direct flex-axis control.
+
+```js
+import { Stack, Tag } from '@mickyballadelli/prism'
+
+const view = Stack({
+  direction: 'row',
+  gap: 'medium',
+  align: 'center',
+  children: [
+    Tag({ label: 'Research', tone: 'info' }),
+    Tag({ label: 'Design', tone: 'success' })
+  ]
+})
+```
+
 ## Overlay
 
 ### Popup

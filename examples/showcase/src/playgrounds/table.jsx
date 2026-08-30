@@ -88,7 +88,11 @@ export function TablePlayground() {
   })
   const renderMomentum = (value, row) => html`
     <span class="table-momentum">
-      <span class="table-sparkline" aria-hidden="true">${keyed(row.trend.map((point, index) => html`<i style="height: ${point}%"></i>`), (_point, index) => index)}</span>
+      <span class="table-sparkline" aria-hidden="true">${keyed(row.trend.map((point, index) => {
+        const trendPoint = html`<i style="height: ${point}%"></i>`
+        trendPoint.key = `${row.id}-trend-${index}`
+        return trendPoint
+      }), trendPoint => trendPoint.key)}</span>
       <strong>${value}%</strong>
     </span>
   `

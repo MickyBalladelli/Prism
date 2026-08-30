@@ -396,11 +396,11 @@ export interface SeparatorProps {
 
 export interface StackProps {
   children?: unknown
-  direction?: 'row' | 'column'
-  gap?: 'none' | 'small' | 'medium' | 'large'
-  align?: string
+  direction?: 'row' | 'column' | Reactive<'row' | 'column'>
+  gap?: 'none' | 'small' | 'medium' | 'large' | Reactive<'none' | 'small' | 'medium' | 'large'>
+  align?: 'left' | 'center' | 'right' | Reactive<'left' | 'center' | 'right'>
   justify?: string
-  wrap?: boolean
+  wrap?: boolean | Reactive<boolean>
   class?: string
   style?: StyleValue
 }

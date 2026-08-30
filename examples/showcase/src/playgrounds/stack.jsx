@@ -7,10 +7,12 @@ import { selectOptions, SelectForP2, SettingLabel } from './helpers.jsx'
 export function StackPlayground() {
   const direction = signal('row')
   const gap = signal('medium')
+  const align = signal('center')
   const codePreview = createCodePreview(codeLines(
     'Stack({',
     '  direction,',
     '  gap,',
+    '  align,',
     '  wrap: true,',
     '  children: [',
     '    Tag({ label: "Research", tone: "info" }),',
@@ -18,12 +20,11 @@ export function StackPlayground() {
     '    Tag({ label: "Launch", tone: "warning" })',
     '  ]',
     '})'
-  ), { ...playgroundRuntime, direction, gap })
+  ), { ...playgroundRuntime, direction, gap, align })
 
   return {
     ...codePreview,
-    preview: Stack({ class: 'p2-stack-demo', direction, gap, wrap: true, children: [Tag({ label: 'Research', tone: 'info' }), Tag({ label: 'Design', tone: 'success' }), Tag({ label: 'Launch', tone: 'warning' })] }),
-    controls: <div class="settings-list"><SettingLabel htmlFor="p2-stack-direction">Direction</SettingLabel><SelectForP2 id="p2-stack-direction" value={direction} options={selectOptions(['row', 'column'])} /><SettingLabel htmlFor="p2-stack-gap">Gap</SettingLabel><SelectForP2 id="p2-stack-gap" value={gap} options={selectOptions(['small', 'medium', 'large'])} /></div>
+    preview: Stack({ class: 'p2-stack-demo', direction, gap, align, wrap: true, children: [Tag({ label: 'Research', tone: 'info' }), Tag({ label: 'Design', tone: 'success' }), Tag({ label: 'Launch', tone: 'warning' })] }),
+    controls: <div class="settings-list"><SettingLabel htmlFor="p2-stack-direction">Direction</SettingLabel><SelectForP2 id="p2-stack-direction" value={direction} options={selectOptions(['row', 'column'])} /><SettingLabel htmlFor="p2-stack-gap">Gap</SettingLabel><SelectForP2 id="p2-stack-gap" value={gap} options={selectOptions(['small', 'medium', 'large'])} /><SettingLabel htmlFor="p2-stack-align">Align</SettingLabel><SelectForP2 id="p2-stack-align" value={align} options={selectOptions(['left', 'center', 'right'])} /></div>
   }
 }
-

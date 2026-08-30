@@ -556,6 +556,10 @@ h1 em {
   z-index: 2;
 }
 
+.settings-list .prism-select:focus-within {
+  z-index: 31;
+}
+
 .settings-list .prism-select-menu {
   z-index: 30;
 }
