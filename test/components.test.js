@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Background, Box, Button, Card, CheckBox, CodeViewer, Header, Label, TextField, ToastRegion, TreeView } from '../src/index.js'
+import { Background, Box, Button, Card, CheckBox, CodeViewer, FormField, Header, Label, TextField, ToastRegion, TreeView } from '../src/index.js'
 import { signal } from '@mickyballadelli/matrix'
 
 test('components expose Matrix templates', () => {
@@ -175,6 +175,20 @@ test('Label supports typography props and an always-visible lock', () => {
 test('Label can associate with a control', () => {
   const label = Label({ htmlFor: 'name', children: 'Name' })
   assert.equal(label.values.includes('name'), true)
+})
+
+test('FormField keeps hint and error interpolations reactive', () => {
+  const error = signal('')
+  const field = FormField({
+    label: 'Title',
+    hint: 'Required',
+    error,
+    control: () => 'control'
+  })
+
+  assert.equal(field.values.some(value => value?.kind === 'computed' && value.value === null), true)
+  error.value = 'Title is required'
+  assert.equal(field.values.some(value => value?.kind === 'computed' && value.value?.values?.includes('Title is required')), true)
 })
 
 test('ToastRegion interpolates a reactive toast list', () => {

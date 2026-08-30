@@ -1,4 +1,4 @@
-import { component, computed, html } from '@mickyballadelli/matrix'
+import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { readReactiveValue } from '../reactive.js'
 
 let formFieldId = 0
@@ -21,7 +21,11 @@ export function FormField(props = {}) {
     style
   } = props
 
-  const fieldId = id ?? `prism-form-field-${++formFieldId}`
+  const autoId = signal()
+  if (id === undefined && autoId.peek() === undefined) {
+    autoId.value = `prism-form-field-${++formFieldId}`
+  }
+  const fieldId = id ?? autoId.peek()
   const hintId = `${fieldId}-hint`
   const errorId = `${fieldId}-error`
   const requiredValue = computed(() => Boolean(readReactiveValue(required, false)))
@@ -37,25 +41,34 @@ export function FormField(props = {}) {
   const controlValue = typeof control === 'function'
     ? control({
       id: fieldId,
-      ariaDescribedBy: describedBy.value,
-      ariaInvalid: hasError.value,
-      required: requiredValue.value
+      ariaDescribedBy: describedBy,
+      ariaInvalid: hasError,
+      required: requiredValue
     })
     : children
+  const requiredMark = computed(() => requiredValue.value
+    ? html`<span class="prism-form-field-required" aria-hidden="true">*</span>`
+    : null)
+  const hintMarkup = computed(() => hasValue(hintValue.value)
+    ? html`<div class="prism-form-field-hint ${hintClass}" id="${hintId}">${hintValue.value}</div>`
+    : null)
+  const errorMarkup = computed(() => hasError.value
+    ? html`<div class="prism-form-field-error ${errorClass}" id="${errorId}" role="alert">${errorValue.value}</div>`
+    : null)
 
   return html`
     <div class="prism-form-field ${classValue}" style="${style ?? ''}">
       ${hasValue(label) ? html`
         <label class="prism-form-field-label ${labelClass}" for="${fieldId}">
           <span>${label}</span>
-          ${requiredValue.value ? html`<span class="prism-form-field-required" aria-hidden="true">*</span>` : ''}
+          ${requiredMark}
         </label>
       ` : ''}
       <div class="prism-form-field-control">
         ${controlValue}
       </div>
-      ${hasValue(hintValue.value) ? html`<div class="prism-form-field-hint ${hintClass}" id="${hintId}">${hintValue.value}</div>` : ''}
-      ${hasError.value ? html`<div class="prism-form-field-error ${errorClass}" id="${errorId}" role="alert">${errorValue.value}</div>` : ''}
+      ${hintMarkup}
+      ${errorMarkup}
     </div>
   `
 }
