@@ -42,6 +42,11 @@ export function Pagination(props = {}) {
     values.push(count.value)
     return values
   })
+  const previousDisabled = computed(() => current.value <= 1)
+  const nextDisabled = computed(() => current.value >= count.value)
+  const pageMarkup = computed(() => pageItems.value.map(item => typeof item === 'string'
+    ? html`<span class="prism-pagination-ellipsis" aria-hidden="true">…</span>`
+    : html`<button type="button" class="prism-pagination-button ${item === current.value ? 'is-active' : ''}" aria-current="${item === current.value ? 'page' : undefined}" aria-label="Page ${item}" @click=${() => changePage(item)}>${item}</button>`))
 
   return html`
     <nav class="prism-pagination ${classValue}" aria-label="${ariaLabel}">
@@ -51,11 +56,9 @@ export function Pagination(props = {}) {
         changePage(1)
       }}>${pageSizeOptions.map(size => html`<option value="${size}">${size}</option>`)}</select></label>` : ''}
       <div class="prism-pagination-pages">
-        <button type="button" class="prism-pagination-button" aria-label="Previous page" ?disabled=${current.value <= 1} @click=${() => changePage(current.value - 1)}>${ArrowLeftIcon({ size: 15 })}</button>
-        ${pageItems.value.map(item => typeof item === 'string'
-          ? html`<span class="prism-pagination-ellipsis" aria-hidden="true">…</span>`
-          : html`<button type="button" class="prism-pagination-button ${item === current.value ? 'is-active' : ''}" aria-current="${item === current.value ? 'page' : undefined}" aria-label="Page ${item}" @click=${() => changePage(item)}>${item}</button>`)}
-        <button type="button" class="prism-pagination-button" aria-label="Next page" ?disabled=${current.value >= count.value} @click=${() => changePage(current.value + 1)}>${ArrowRightIcon({ size: 15 })}</button>
+        <button type="button" class="prism-pagination-button" aria-label="Previous page" ?disabled=${previousDisabled} @click=${() => changePage(current.value - 1)}>${ArrowLeftIcon({ size: 15 })}</button>
+        ${pageMarkup}
+        <button type="button" class="prism-pagination-button" aria-label="Next page" ?disabled=${nextDisabled} @click=${() => changePage(current.value + 1)}>${ArrowRightIcon({ size: 15 })}</button>
       </div>
     </nav>
   `
