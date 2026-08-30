@@ -1,4 +1,4 @@
-import { component, effect, html, onMount, signal } from '@mickyballadelli/matrix'
+import { component, computed, effect, html, onMount, signal } from '@mickyballadelli/matrix'
 import { normalizePlacement, positionFloatingElement } from './overlay-utils.js'
 import { createWritableSignal, readReactiveValue } from '../reactive.js'
 
@@ -26,9 +26,15 @@ export function Popover(props = {}) {
   }
   const toggle = () => setOpen(!open.value)
   const close = () => setOpen(false)
-  const triggerValue = typeof trigger === 'function'
+  const triggerValue = computed(() => typeof trigger === 'function'
     ? trigger({ open: open.value, toggle, close })
-    : children
+    : children)
+  const popoverMarkup = computed(() => {
+    if (!open.value) return null
+
+    const currentPlacement = normalizePlacement(readReactiveValue(placement, 'bottom'))
+    return html`<div id="${popoverDomId}" class="prism-popover prism-popover-${currentPlacement}" role="dialog" tabindex="-1" aria-label="${props.ariaLabel ?? ''}">${typeof content === 'function' ? content({ close, open: open.value }) : content}</div>`
+  })
 
   onMount(root => {
     if (typeof document === 'undefined') return
@@ -61,8 +67,8 @@ export function Popover(props = {}) {
 
   return html`
     <span class="prism-popover-anchor ${classValue}">
-      <span class="prism-popover-trigger" aria-expanded="${open.value}" aria-controls="${popoverDomId}" @click=${toggle}>${triggerValue}</span>
-      ${open.value ? html`<div id="${popoverDomId}" class="prism-popover prism-popover-${normalizePlacement(readReactiveValue(placement, 'bottom'))}" role="dialog" tabindex="-1" aria-label="${props.ariaLabel ?? ''}">${typeof content === 'function' ? content({ close, open: open.value }) : content}</div>` : ''}
+      <span class="prism-popover-trigger" aria-expanded="${open}" aria-controls="${popoverDomId}" @click=${toggle}>${triggerValue}</span>
+      ${popoverMarkup}
     </span>
   `
 }
