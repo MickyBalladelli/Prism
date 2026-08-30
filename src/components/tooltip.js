@@ -1,4 +1,4 @@
-import { component, effect, html, onMount, signal } from '@mickyballadelli/matrix'
+import { component, computed, effect, html, onMount, signal } from '@mickyballadelli/matrix'
 import { normalizePlacement, positionFloatingElement } from './overlay-utils.js'
 import { readReactiveValue } from '../reactive.js'
 
@@ -32,9 +32,19 @@ export function Tooltip(props = {}) {
   const toggleTouch = event => {
     if (event.pointerType === 'touch') {
       event.preventDefault()
-      open.value ? hide() : show()
+      open.peek() ? hide() : show()
     }
   }
+
+  const describedBy = computed(() => open.value ? tooltipDomId : undefined)
+  const tooltipMarkup = computed(() => {
+    if (!open.value || readReactiveValue(disabled, false)) {
+      return null
+    }
+
+    const currentPlacement = normalizePlacement(readReactiveValue(placement, 'top'), 'top')
+    return html`<span id="${tooltipDomId}" class="prism-tooltip prism-tooltip-${currentPlacement}" role="tooltip">${typeof content === 'function' ? content() : content}</span>`
+  })
 
   onMount(root => {
     if (typeof document === 'undefined' || !root?.addEventListener) return
@@ -67,9 +77,9 @@ export function Tooltip(props = {}) {
   })
 
   return html`
-    <span class="prism-tooltip-anchor ${classValue}" aria-describedby="${open.value ? tooltipDomId : ''}">
+    <span class="prism-tooltip-anchor ${classValue}" aria-describedby="${describedBy}">
       ${children}
-      ${open.value && !readReactiveValue(disabled, false) ? html`<span id="${tooltipDomId}" class="prism-tooltip prism-tooltip-${normalizePlacement(readReactiveValue(placement, 'top'), 'top')}" role="tooltip">${typeof content === 'function' ? content() : content}</span>` : ''}
+      ${tooltipMarkup}
     </span>
   `
 }
