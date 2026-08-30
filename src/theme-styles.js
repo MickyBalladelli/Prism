@@ -3197,12 +3197,12 @@ export const prismTheme = globalCss(`
   }
 
   .prism-alert-success { border-color: color-mix(in srgb, var(--prism-color-success) 45%, var(--prism-color-border)); }
-  .prism-alert-info { border-color: color-mix(in srgb, var(--prism-color-accent) 45%, var(--prism-color-border)); }
-  .prism-alert-warning { border-color: color-mix(in srgb, var(--prism-color-warning) 55%, var(--prism-color-border)); }
+  .prism-alert-info { border-color: color-mix(in srgb, var(--prism-color-information) 45%, var(--prism-color-border)); }
+  .prism-alert-warning { border-color: color-mix(in srgb, var(--prism-color-warning-end) 60%, var(--prism-color-border)); }
   .prism-alert-error { border-color: color-mix(in srgb, var(--prism-color-danger) 55%, var(--prism-color-border)); }
   .prism-alert-success .prism-alert-icon { color: var(--prism-color-success); }
-  .prism-alert-info .prism-alert-icon { color: var(--prism-color-accent); }
-  .prism-alert-warning .prism-alert-icon,
+  .prism-alert-info .prism-alert-icon { color: var(--prism-color-information); }
+  .prism-alert-warning .prism-alert-icon { color: var(--prism-color-warning-end); }
   .prism-alert-error .prism-alert-icon { color: var(--prism-color-danger); }
   .prism-alert-icon {
     display: grid;

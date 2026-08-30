@@ -14,7 +14,7 @@ export function AlertPlayground() {
     '  children: "Your new workspace is ready.",',
     '  dismissible: true,',
     '  onDismiss: () => visible.value = false',
-    '}) : html``)'
+    '}) : null)'
   ), { ...playgroundRuntime, tone, visible, computed, html })
 
   return {
@@ -27,4 +27,3 @@ export function AlertPlayground() {
     </div>
   }
 }
-
