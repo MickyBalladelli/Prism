@@ -90,6 +90,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'error' | 'wa
 export type ButtonSize = 'small' | 'medium' | 'large'
 export type ButtonShape = 'rounded' | 'pill' | 'square'
 export type ButtonIconPosition = 'start' | 'end'
+export type ButtonPalette = 'cobalt' | 'iris' | 'teal'
 
 export interface ButtonProps {
   children?: unknown
@@ -105,6 +106,7 @@ export interface ButtonProps {
   variant?: ButtonVariant | Signal<ButtonVariant>
   size?: ButtonSize | Signal<ButtonSize>
   shape?: ButtonShape | Signal<ButtonShape>
+  palette?: ButtonPalette | Signal<ButtonPalette>
   fullWidth?: boolean | Signal<boolean>
   loading?: boolean | Signal<boolean>
   loadingLabel?: string | Signal<string>

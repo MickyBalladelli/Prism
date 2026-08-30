@@ -1,4 +1,4 @@
-import { component, computed, html, onMount } from '@mickyballadelli/matrix'
+import { component, computed, html, onMount, signal } from '@mickyballadelli/matrix'
 import { readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-background'
@@ -237,19 +237,140 @@ function normalizeNumber(value, fallback, minimum, maximum) {
   return clamp(number, minimum, maximum)
 }
 
-function parseHex(hex) {
-  const value = String(hex ?? '').replace('#', '')
-  const normalized = value.length === 3
-    ? value.split('').map(part => part + part).join('')
-    : value
-  if (normalized.length !== 6) {
-    return [0.03, 0.08, 0.15]
+const colorCache = new Map()
+
+function parseColorChannel(value) {
+  const source = String(value).trim()
+  if (source.endsWith('%')) {
+    const percentage = Number.parseFloat(source.slice(0, -1))
+    return Number.isFinite(percentage) ? clamp(percentage / 100, 0, 1) : null
   }
-  return [0, 2, 4].map(index => parseInt(normalized.slice(index, index + 2), 16) / 255)
+
+  const number = Number.parseFloat(source)
+  return Number.isFinite(number) ? clamp(number / 255, 0, 1) : null
 }
 
-function toRgba(hex, alpha) {
-  const [red, green, blue] = parseHex(hex).map(value => Math.round(value * 255))
+function parsePercentage(value) {
+  const source = String(value).trim()
+  const number = Number.parseFloat(source.replace('%', ''))
+  return Number.isFinite(number) ? clamp(number / 100, 0, 1) : null
+}
+
+function parseHue(value) {
+  const source = String(value).trim().toLowerCase()
+  const number = Number.parseFloat(source)
+  if (!Number.isFinite(number)) {
+    return null
+  }
+
+  if (source.endsWith('turn')) {
+    return number * 360
+  }
+
+  if (source.endsWith('rad')) {
+    return number * 180 / Math.PI
+  }
+
+  if (source.endsWith('grad')) {
+    return number * 0.9
+  }
+
+  return number
+}
+
+function parseRgbFunction(source) {
+  const match = source.match(/^rgba?\((.*)\)$/i)
+  if (!match) {
+    return null
+  }
+
+  const parts = match[1].replace('/', ' ').replaceAll(',', ' ').trim().split(/\s+/)
+  if (parts.length < 3) {
+    return null
+  }
+
+  const channels = parts.slice(0, 3).map(parseColorChannel)
+  return channels.every(channel => channel !== null) ? channels : null
+}
+
+function parseHslFunction(source) {
+  const match = source.match(/^hsla?\((.*)\)$/i)
+  if (!match) {
+    return null
+  }
+
+  const parts = match[1].replace('/', ' ').replaceAll(',', ' ').trim().split(/\s+/)
+  if (parts.length < 3) {
+    return null
+  }
+
+  const hue = parseHue(parts[0])
+  const saturation = parsePercentage(parts[1])
+  const lightness = parsePercentage(parts[2])
+  if (hue === null || saturation === null || lightness === null) {
+    return null
+  }
+
+  const normalizedHue = ((hue / 360) % 1 + 1) % 1
+  if (saturation === 0) {
+    return [lightness, lightness, lightness]
+  }
+
+  const q = lightness < 0.5 ? lightness * (1 + saturation) : lightness + saturation - lightness * saturation
+  const p = 2 * lightness - q
+  const channel = value => {
+    const next = (value + 1) % 1
+    if (next < 1 / 6) return p + (q - p) * 6 * next
+    if (next < 1 / 2) return q
+    if (next < 2 / 3) return p + (q - p) * (2 / 3 - next) * 6
+    return p
+  }
+
+  return [channel(normalizedHue + 1 / 3), channel(normalizedHue), channel(normalizedHue - 1 / 3)]
+}
+
+function parseColor(value) {
+  const source = String(value ?? '').trim().toLowerCase()
+  if (colorCache.has(source)) {
+    return colorCache.get(source)
+  }
+
+  let parsed = null
+  const hexMatch = source.match(/^#([\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i)
+  if (hexMatch) {
+    const hex = hexMatch[1].length <= 4
+      ? hexMatch[1].slice(0, 3).split('').map(part => part + part).join('')
+      : hexMatch[1].slice(0, 6)
+    parsed = [0, 2, 4].map(index => Number.parseInt(hex.slice(index, index + 2), 16) / 255)
+  }
+
+  parsed ??= parseRgbFunction(source)
+  parsed ??= parseHslFunction(source)
+
+  if (!parsed && typeof document !== 'undefined' && typeof document.createElement === 'function') {
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d', { willReadFrequently: true })
+    if (context) {
+      const sentinel = 'rgb(1, 2, 3)'
+      context.fillStyle = sentinel
+      context.fillStyle = source
+      if (context.fillStyle !== sentinel || source === sentinel) {
+        context.clearRect(0, 0, 1, 1)
+        context.fillStyle = source
+        context.fillRect(0, 0, 1, 1)
+        const pixels = context.getImageData(0, 0, 1, 1).data
+        parsed = [pixels[0] / 255, pixels[1] / 255, pixels[2] / 255]
+      }
+    }
+  }
+
+  const result = parsed ?? [0.03, 0.08, 0.15]
+  colorCache.set(source, result)
+  return result
+}
+
+function toRgba(color, alpha) {
+  const [red, green, blue] = parseColor(color).map(value => Math.round(value * 255))
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`
 }
 
@@ -313,12 +434,42 @@ function createContentStyleValue(props) {
 }
 
 function prefersReducedMotion() {
-  return typeof matchMedia === 'function'
-    && matchMedia('(prefers-reduced-motion: reduce)').matches
+  return Boolean(globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches)
 }
 
-function isMotionEnabled(animated) {
-  return Boolean(readValue(animated, true)) && !prefersReducedMotion()
+function createMotionPreference() {
+  const reducedMotion = signal(prefersReducedMotion())
+
+  onMount(() => {
+    const mediaQuery = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')
+    if (!mediaQuery) {
+      return
+    }
+
+    const update = () => {
+      reducedMotion.value = Boolean(mediaQuery.matches)
+    }
+    update()
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', update)
+    } else {
+      mediaQuery.addListener?.(update)
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', update)
+      } else {
+        mediaQuery.removeListener?.(update)
+      }
+    }
+  })
+
+  return reducedMotion
+}
+
+function isMotionEnabled(animated, reducedMotion) {
+  return Boolean(readValue(animated, true)) && !reducedMotion.value
 }
 
 function readAnimationState(props) {
@@ -362,7 +513,7 @@ function renderFallback(canvas, time, options) {
   context.setTransform(1, 0, 0, 1, 0, 0)
   context.clearRect(0, 0, width, height)
   context.scale(ratio, ratio)
-  context.fillStyle = options.base
+  context.fillStyle = toRgba(options.base, 1)
   context.fillRect(0, 0, logicalWidth, logicalHeight)
 
   const driftX = sanctum
@@ -489,9 +640,9 @@ function startWebglAnimation(canvas, props) {
   const render = time => {
     const options = readAnimationState(props)
     const { width, height } = resizeCanvas(canvas)
-    const base = parseHex(options.base)
-    const accent = parseHex(options.accent)
-    const glow = parseHex(options.glow)
+    const base = parseColor(options.base)
+    const accent = parseColor(options.accent)
+    const glow = parseColor(options.glow)
 
     gl.viewport(0, 0, width, height)
     gl.uniform2f(resolutionLocation, width, height)
@@ -514,18 +665,45 @@ function startWebglAnimation(canvas, props) {
   }
 }
 
-function attachBackgroundAnimation(canvas, props) {
-  if (!canvas || canvas.nodeName !== 'CANVAS') {
+function attachBackgroundAnimation(container, props) {
+  if (!container || container.nodeName !== 'DIV') {
+    return undefined
+  }
+
+  const canvas = container.querySelector(`.${baseClassName}-layer`)
+  const fallbackCanvas = container.querySelector(`.${baseClassName}-fallback`)
+  if (!canvas || !fallbackCanvas) {
     return undefined
   }
 
   let renderer = startWebglAnimation(canvas, props)
+  let contextLost = false
+  const now = () => globalThis.performance?.now?.() ?? Date.now()
+  const setRendererMode = mode => {
+    container.dataset.renderer = mode
+  }
   const render = time => {
-    if (renderer) {
+    if (renderer && !contextLost) {
       renderer.render(time)
       return
     }
-    renderFallback(canvas, time, readAnimationState(props))
+    renderFallback(fallbackCanvas, time, readAnimationState(props))
+  }
+
+  const handleContextLost = event => {
+    event.preventDefault()
+    contextLost = true
+    renderer?.dispose()
+    renderer = null
+    setRendererMode('fallback')
+    render(now())
+  }
+
+  const handleContextRestored = () => {
+    contextLost = false
+    renderer = startWebglAnimation(canvas, props)
+    setRendererMode(renderer ? 'webgl' : 'fallback')
+    render(now())
   }
 
   let frame = 0
@@ -535,14 +713,19 @@ function attachBackgroundAnimation(canvas, props) {
   }
 
   const observer = typeof ResizeObserver === 'function'
-    ? new ResizeObserver(() => render(performance.now()))
+    ? new ResizeObserver(() => render(now()))
     : null
-  observer?.observe(canvas)
+  observer?.observe(fallbackCanvas)
+  canvas.addEventListener('webglcontextlost', handleContextLost)
+  canvas.addEventListener('webglcontextrestored', handleContextRestored)
+  setRendererMode(renderer ? 'webgl' : 'fallback')
   frame = requestAnimationFrame(tick)
 
   return () => {
     cancelAnimationFrame(frame)
     observer?.disconnect()
+    canvas.removeEventListener('webglcontextlost', handleContextLost)
+    canvas.removeEventListener('webglcontextrestored', handleContextRestored)
     renderer?.dispose()
     renderer = null
   }
@@ -550,7 +733,7 @@ function attachBackgroundAnimation(canvas, props) {
 
 function BackgroundCanvas(props) {
   onMount(node => attachBackgroundAnimation(node, props))
-  return html`<canvas class="${baseClassName}-layer" aria-hidden="true"></canvas>`
+  return html`<div class="${baseClassName}-canvas" data-renderer="fallback" aria-hidden="true"><canvas class="${baseClassName}-layer"></canvas><canvas class="${baseClassName}-fallback"></canvas></div>`
 }
 
 export function Background(props = {}) {
@@ -582,12 +765,13 @@ export function Background(props = {}) {
   const colors = resolveColors({ palette, baseColor, accentColor, glowColor })
   const styleValue = createStyleValue({ style, overlayOpacity, minHeight, height, padding, radius }, colors)
   const contentStyleValue = createContentStyleValue({ contentStyle })
+  const reducedMotion = createMotionPreference()
 
   const classNames = computed(() => [
     baseClassName,
     `${baseClassName}-${normalizePalette(readValue(palette, 'midnight'))}`,
     `${baseClassName}-${normalizeAnimation(readValue(animation, 'veil'))}`,
-    isMotionEnabled(animated) ? `${baseClassName}-live` : `${baseClassName}-static`,
+    isMotionEnabled(animated, reducedMotion) ? `${baseClassName}-live` : `${baseClassName}-static`,
     classValue
   ].filter(Boolean).join(' '))
 
@@ -596,11 +780,11 @@ export function Background(props = {}) {
     contentClass
   ].filter(Boolean).join(' '))
 
-  const motionLayer = computed(() => isMotionEnabled(animated)
+  const motionLayer = computed(() => isMotionEnabled(animated, reducedMotion)
     ? component(BackgroundCanvas, { animation, speed, intensity, grain, colors })
     : null)
 
-  const washLayer = computed(() => isMotionEnabled(animated)
+  const washLayer = computed(() => isMotionEnabled(animated, reducedMotion)
     ? html`<span class="${baseClassName}-wash" aria-hidden="true"></span>`
     : null)
 

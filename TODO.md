@@ -26,12 +26,12 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P1 — Visual and runtime quality
 
-- [ ] **Fix custom Background colors.** WebGL calls `parseHex()` (`src/components/background.js:244`) even though color props accept any string. `rgb()`, `hsl()`, named colors, and invalid hex values can render with the wrong color or NaN uniforms. Support CSS color formats or restrict and document hex input.
-- [ ] **React to reduced-motion changes.** `prefersReducedMotion()` is checked during render (`src/components/background.js:319`) but no media-query listener exists. Stop and restart animation when the OS preference changes, and avoid starting WebGL when motion is already reduced.
-- [ ] **Handle WebGL context loss.** The canvas renderer (`src/components/background.js:442-549`) has no `webglcontextlost`/`webglcontextrestored` path. Fall back to 2D and recover after GPU context loss.
-- [ ] **Reduce theme file weight and duplication.** `src/theme.js` is 3,451 lines and mixes token data, palette recipes, model recipes, and all CSS. Split tokens, theme models, component styles, and generated CSS so changes are easier to review and consumers can load only what they need.
-- [ ] **Add dark/native control support.** Theme models change Prism colors but do not declare `color-scheme` (`src/theme.js:452-726`). Native inputs and scrollbars can fight the Nocturne theme. Add `color-scheme: light` / `dark` per model and test forced-colors mode.
-- [ ] **Make Button palette first-class.** Palette recipes exist in `src/theme.js:204-274`, but Button has no `palette` prop and the showcase needs a wrapper with `data-prism-palette`. Export a typed `ButtonPalette` and support it directly on Button.
+- [x] **Fix custom Background colors.** Background now parses hex, `rgb()`/`rgba()`, `hsl()`/`hsla()`, and browser-supported named colors, with a finite fallback for invalid values.
+- [x] **React to reduced-motion changes.** Background listens for live `prefers-reduced-motion` changes, avoids creating WebGL while reduced motion is active, and switches between live and static layers as the preference changes.
+- [x] **Handle WebGL context loss.** Background now owns a separate 2D fallback canvas, handles `webglcontextlost`, and retries WebGL after `webglcontextrestored`.
+- [x] **Reduce theme file weight and duplication.** Button palette recipes and TreeView model data now live in focused `src/theme-palettes.js` and `src/tree-view-models.js` modules; `theme.js` consumes them and keeps the existing public exports.
+- [x] **Add dark/native control support.** Theme models now declare light or dark `color-scheme` values, and forced-colors rules map controls, surfaces, focus, and selection to system colors.
+- [x] **Make Button palette first-class.** Button now accepts reactive `palette` values (`cobalt`, `iris`, or `teal`), while the typed `ButtonPalette` API and legacy wrapper selector remain supported.
 
 ## P1 — Data and performance
 

@@ -1,6 +1,6 @@
 import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { Badge } from './badge.js'
-import { normalizeTreeViewModel } from '../theme.js'
+import { normalizeTreeViewModel } from '../tree-view-models.js'
 import { isReactiveValue, readReactiveValue } from '../reactive.js'
 
 const itemVariants = new Set(['framed', 'minimal'])

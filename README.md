@@ -163,9 +163,9 @@ Important props:
 - `speed`, `intensity`, `grain`: tune the effect
 - `overlayOpacity`: add a readable wash over the effect
 - `minHeight`, `height`, `padding`, `radius`: shape the surface
-- `baseColor`, `accentColor`, `glowColor`: provide custom hex colors
+- `baseColor`, `accentColor`, `glowColor`: provide CSS colors such as hex, `rgb()`, `hsl()`, or named colors
 
-The component respects `prefers-reduced-motion`.
+The component respects live `prefers-reduced-motion` changes. It uses a 2D fallback when WebGL is unavailable or loses its context, then retries WebGL when the context returns.
 
 ### Box and Card
 
@@ -302,9 +302,9 @@ Props include:
 - `shape`: `rounded`, `pill`, or `square`
 - `icon`, `iconPosition`, `showLabel`
 - `fullWidth`, `loading`, `loadingLabel`, `pressed`, `disabled`
-- `type`, `name`, `value`, `title`, `ariaLabel`
+- `type`, `name`, `value`, `title`, `ariaLabel`, `palette`
 
-For a palette recipe, wrap buttons in an element with `data-prism-palette="cobalt"`, `"iris"`, or `"teal"`.
+Set `palette` to `cobalt`, `iris`, or `teal` for a first-class palette recipe. The older wrapper form with `data-prism-palette` also works for groups of buttons.
 
 ## Feedback
 

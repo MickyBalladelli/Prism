@@ -6,6 +6,7 @@ const variants = new Set(['primary', 'secondary', 'tertiary', 'error', 'warning'
 const sizes = new Set(['small', 'medium', 'large'])
 const shapes = new Set(['rounded', 'pill', 'square'])
 const iconPositions = new Set(['start', 'end'])
+const palettes = new Set(['cobalt', 'iris', 'teal'])
 const readValue = readReactiveValue
 
 export function Button(props = {}) {
@@ -23,6 +24,7 @@ export function Button(props = {}) {
     variant = 'primary',
     size = 'medium',
     shape = 'rounded',
+    palette,
     fullWidth = false,
     loading = false,
     loadingLabel = 'Loading',
@@ -78,6 +80,10 @@ export function Button(props = {}) {
   const disabledValue = computed(() => readValue(disabled, false) || readValue(loading, false))
   const busyValue = computed(() => String(readValue(loading, false)))
   const pressedValue = computed(() => pressed === undefined ? undefined : String(readValue(pressed, false)))
+  const paletteValue = computed(() => {
+    const currentPalette = readValue(palette)
+    return palettes.has(currentPalette) ? currentPalette : undefined
+  })
   const accessibleLabel = computed(() => {
     const explicitLabel = readValue(ariaLabel)
     if (explicitLabel !== undefined) {
@@ -101,7 +107,7 @@ export function Button(props = {}) {
       : 'Button'
   })
 
-  return html`<button type="${type}" class="${buttonClass}" id="${id}" name="${name}" value="${value}" title="${title}" aria-label="${accessibleLabel}" aria-busy="${busyValue}" aria-pressed="${pressedValue}" ?disabled=${disabledValue} @click=${onClick} @focus=${onFocus} @blur=${onBlur}>${buttonContent}</button>`
+  return html`<button type="${type}" class="${buttonClass}" id="${id}" name="${name}" value="${value}" title="${title}" data-prism-palette="${paletteValue}" aria-label="${accessibleLabel}" aria-busy="${busyValue}" aria-pressed="${pressedValue}" ?disabled=${disabledValue} @click=${onClick} @focus=${onFocus} @blur=${onBlur}>${buttonContent}</button>`
 }
 
 export const ButtonComponent = props => component(Button, props)
