@@ -94,7 +94,7 @@ export function IconsPage({ category, link }) {
           <p class="hero-copy">{pageDescription} Every icon is a lightweight SVG component with a named import.</p>
         </header>
 
-        {!selectedCategory && <IconScaleDemo />}
+        {!selectedCategory ? <IconScaleDemo /> : null}
 
         <div class="icon-catalog">
           {categories.map(categoryItem => (
@@ -105,11 +105,11 @@ export function IconsPage({ category, link }) {
                   <h2 id={`icon-category-${categoryItem.key}`}>{categoryItem.label}</h2>
                   <p>{categoryItem.description}</p>
                 </div>
-                {!selectedCategory && (
+                {!selectedCategory ? (
                   <a class="icon-category-link" href={`/icons/${categoryItem.key}`} onClick={link(`/icons/${categoryItem.key}`)}>
                     Open category <span aria-hidden="true">↗</span>
                   </a>
-                )}
+                ) : null}
               </div>
               <div class="icon-grid" aria-label={`${categoryItem.label} icons`}>
                 {categoryItem.icons.map(icon => (

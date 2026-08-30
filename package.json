@@ -41,11 +41,11 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@mickyballadelli/matrix": "^0.1.0-alpha.0"
+    "@mickyballadelli/matrix": "^1.0.0"
   },
   "devDependencies": {
     "@mickyballadelli/matrix": "file:../Matrix",
-    "typescript": "^5.8.3"
+    "typescript": "^6.0.3"
   },
   "exports": {
     ".": "./src/index.js",

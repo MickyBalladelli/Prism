@@ -49,9 +49,9 @@ function ChatMessage({ message }) {
   const self = message.author === 'You'
   return (
     <li class={`chat-message ${self ? 'is-self' : ''}`}>
-      {!self && <Avatar name={message.author} size="small" status="online" />}
+      {!self ? <Avatar name={message.author} size="small" status="online" /> : null}
       <div class="chat-message-bubble"><span class="chat-message-meta"><strong>{message.author}</strong><small>{message.time}</small></span><p>{message.text}</p></div>
-      {self && <Avatar name={message.author} size="small" status="online" />}
+      {self ? <Avatar name={message.author} size="small" status="online" /> : null}
     </li>
   )
 }

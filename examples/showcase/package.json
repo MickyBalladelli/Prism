@@ -10,14 +10,14 @@
     "test:visual:update": "playwright test --config=visual-regression.config.js --update-snapshots"
   },
   "dependencies": {
-    "@mickyballadelli/matrix": "^0.1.0-alpha.1",
+    "@mickyballadelli/matrix": "^1.0.0",
     "prism-ui": "file:../.."
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0",
+    "@playwright/test": "^1.62.1",
     "vite": "^8.2.2"
   },
   "allowScripts": {
-    "@mickyballadelli/matrix@0.1.0-alpha.1": true
+    "@mickyballadelli/matrix@1.0.0": true
   }
 }

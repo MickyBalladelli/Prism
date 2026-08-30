@@ -22,7 +22,7 @@ const initialTheme = Object.prototype.hasOwnProperty.call(treeViewModels, stored
   : 'nocturne'
 const initialAnimation = animationIds.has(storedSettings.animation)
   ? storedSettings.animation
-  : 'theme'
+  : 'halo'
 const initialAnimated = storedSettings.animated !== false
 
 export const showcaseThemeModel = signal(initialTheme)
@@ -136,7 +136,7 @@ export function SettingsPopup() {
           ariaLabel="Background animation"
         />
         <CheckBox checked={showcaseBackgroundAnimated}>Animate background</CheckBox>
-        {storageWarning.value && <p class="showcase-storage-warning" role="status" aria-live="polite">Settings could not be saved in this browser. Your current choices still work.</p>}
+        {storageWarning.value ? <p class="showcase-storage-warning" role="status" aria-live="polite">Settings could not be saved in this browser. Your current choices still work.</p> : null}
       </div>
     </Popup>
   )

@@ -177,7 +177,7 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
             <span>{mobileNavigationOpen.value ? 'Close navigation' : 'Browse navigation'}</span>
           </button>
         </div>
-        {mobileNavigationOpen.value && <button class="showcase-nav-backdrop" type="button" aria-label="Close navigation" onClick={closeNavigation}></button>}
+        {mobileNavigationOpen.value ? <button class="showcase-nav-backdrop" type="button" aria-label="Close navigation" onClick={closeNavigation}></button> : null}
         <aside id="showcase-sidebar" class={computed(() => `showcase-sidebar ${mobileNavigationOpen.value ? 'is-open' : ''}`)}>
           <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
         </aside>
