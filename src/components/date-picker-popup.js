@@ -274,7 +274,8 @@ export function DatePickerPopup(props = {}) {
 
     const handleOutsideClick = event => {
       const field = event.target?.closest?.('.prism-date-input')
-      if (openValue.value && !field) {
+      const popup = event.target?.closest?.('.prism-date-picker-popup')
+      if (openValue.value && !field && !popup) {
         closePicker()
       }
     }
@@ -291,6 +292,7 @@ export function DatePickerPopup(props = {}) {
       aria-modal="false"
       aria-labelledby="${titleId}"
       ?hidden=${computed(() => !openValue.value)}
+      @click=${event => event.stopPropagation()}
       @keydown=${handlePanelKeydown}
     >
       <div class="prism-date-picker-popup-header">
