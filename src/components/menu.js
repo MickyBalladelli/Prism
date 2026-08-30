@@ -17,17 +17,63 @@ function MenuSubmenu({ item, onSelect }) {
   const select = (value, event) => {
     onSelect?.(value, event)
   }
+  const submenuClass = computed(() => `prism-menu-submenu ${open.value ? 'is-open' : ''}`)
+  const expanded = computed(() => open.value ? 'true' : 'false')
+  const submenu = computed(() => open.value ? component(Menu, { items: item.items, id, nested: true, onSelect: select }) : null)
 
   return html`
-    <div class="prism-menu-submenu ${open.value ? 'is-open' : ''}" @mouseenter=${() => open.value = true} @mouseleave=${() => open.value = false}>
-      <button type="button" class="prism-menu-item prism-menu-submenu-trigger" role="menuitem" aria-haspopup="menu" aria-expanded="${open.value}" aria-controls="${id}" ?disabled=${item.disabled} @click=${toggle}>
+    <div class="${submenuClass}" @mouseenter=${() => open.value = true} @mouseleave=${() => open.value = false}>
+      <button type="button" class="prism-menu-item prism-menu-submenu-trigger" role="menuitem" aria-haspopup="menu" aria-expanded="${expanded}" aria-controls="${id}" ?disabled=${item.disabled} @click=${toggle}>
         ${item.icon ? html`<span class="prism-menu-item-icon" aria-hidden="true">${item.icon}</span>` : ''}
         <span class="prism-menu-item-label">${item.label}</span>
         <span class="prism-menu-item-end" aria-hidden="true">${ChevronRightIcon({ size: 14 })}</span>
       </button>
-      ${open.value ? component(Menu, { items: item.items, id, nested: true, onSelect: select }) : ''}
+      ${submenu}
     </div>
   `
+}
+
+function flattenMenuRows(items) {
+  const rows = []
+
+  for (const item of items) {
+    if (item.type === 'separator') {
+      rows.push({ kind: 'separator', item })
+      continue
+    }
+    if (item.type === 'group') {
+      rows.push({ kind: 'group-label', item })
+      for (const child of item.items ?? []) {
+        if (child.type === 'separator') rows.push({ kind: 'separator', item: child })
+        else if (Array.isArray(child.items)) rows.push({ kind: 'submenu', item: child })
+        else rows.push({ kind: 'item', item: child })
+      }
+      continue
+    }
+    if (Array.isArray(item.items)) {
+      rows.push({ kind: 'submenu', item })
+      continue
+    }
+    rows.push({ kind: 'item', item })
+  }
+
+  return rows
+}
+
+function MenuItem({ item, index, activeIndex, activate }) {
+  const tabIndex = computed(() => item.disabled ? -1 : activeIndex.value === index ? 0 : -1)
+  const hasLink = item.href !== undefined && item.href !== null
+  const content = html`
+    ${item.icon ? html`<span class="prism-menu-item-icon" aria-hidden="true">${item.icon}</span>` : ''}
+    <span class="prism-menu-item-label">${item.label ?? item.children ?? ''}</span>
+    ${item.shortcut ? html`<span class="prism-menu-item-shortcut">${item.shortcut}</span>` : ''}
+  `
+  return hasLink
+    ? html`<a class="prism-menu-item" href="${item.href}" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${tabIndex}" @click=${event => {
+      if (item.disabled) event.preventDefault()
+      activate(item, event)
+    }}>${content}</a>`
+    : html`<button class="prism-menu-item" type="button" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${tabIndex}" ?disabled=${item.disabled} @click=${event => activate(item, event)}>${content}</button>`
 }
 
 function normalizeItems(value) {
@@ -104,27 +150,18 @@ export function Menu(props = {}) {
     if (first && activeIndex.value < 0) activeIndex.value = Number(first.dataset.menuIndex)
   })
 
-  const itemMarkup = computed(() => itemValue.value.map((item, index) => {
-    if (item.type === 'separator') return html`<div class="prism-menu-separator" role="separator"></div>`
-    if (item.type === 'group') {
-      return html`<div class="prism-menu-group" role="group" aria-label="${item.label ?? ''}"><div class="prism-menu-group-label">${item.label}</div>${component(Menu, { items: item.items ?? [], nested: true, onSelect }, item.id ?? `group-${index}`)}</div>`
-    }
-    if (Array.isArray(item.items)) return component(MenuSubmenu, { item, onSelect }, item.id ?? index)
-
-    const tabIndex = computed(() => item.disabled ? -1 : activeIndex.value === index ? 0 : -1)
-    const hasLink = item.href !== undefined && item.href !== null
-    const content = html`
-      ${item.icon ? html`<span class="prism-menu-item-icon" aria-hidden="true">${item.icon}</span>` : ''}
-      <span class="prism-menu-item-label">${item.label ?? item.children ?? ''}</span>
-      ${item.shortcut ? html`<span class="prism-menu-item-shortcut">${item.shortcut}</span>` : ''}
-    `
-    return hasLink
-      ? html`<a class="prism-menu-item" href="${item.href}" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${tabIndex}" @click=${event => {
-        if (item.disabled) event.preventDefault()
-        activate(item, event)
-      }}>${content}</a>`
-      : html`<button class="prism-menu-item" type="button" role="menuitem" data-menu-index="${index}" aria-disabled="${item.disabled ? 'true' : undefined}" tabindex="${tabIndex}" ?disabled=${item.disabled} @click=${event => activate(item, event)}>${content}</button>`
-  }))
+  const itemMarkup = computed(() => {
+    let index = 0
+    return flattenMenuRows(itemValue.value).map((row, rowIndex) => {
+      if (row.kind === 'separator') return html`<div class="prism-menu-separator" role="separator"></div>`
+      if (row.kind === 'group-label') {
+        return html`<div class="prism-menu-group-label" role="presentation">${row.item.label}</div>`
+      }
+      if (row.kind === 'submenu') return component(MenuSubmenu, { item: row.item, onSelect }, row.item.id ?? `submenu-${rowIndex}`)
+      const current = index++
+      return component(MenuItem, { item: row.item, index: current, activeIndex, activate }, row.item.id ?? current)
+    })
+  })
 
   return html`<div id="${rootId}" class="prism-menu ${nested ? 'prism-menu-nested' : ''} ${classValue}" role="menu" aria-label="${ariaLabel}" @keydown=${handleKeydown}>${itemMarkup}</div>`
 }
@@ -162,7 +199,7 @@ export function DropdownMenu(props = {}) {
       return null
     }
 
-    return html`<div class="prism-dropdown-panel" data-placement="${currentPlacement.value}">${component(Menu, { ...menuProps, id: dropdownMenuId, items, ariaLabel, onSelect: (item, event) => {
+    return html`<div class="prism-dropdown-panel" data-placement="${currentPlacement}">${component(Menu, { ...menuProps, id: dropdownMenuId, items, ariaLabel, onSelect: (item, event) => {
       menuProps.onSelect?.(item, event)
       close()
     } })}</div>`
