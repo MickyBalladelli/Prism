@@ -1,5 +1,6 @@
 export {
   AlertPlayground,
+  AutoCompletePlayground,
   AvatarPlayground,
   ColorPickerPlayground,
   DatePickerPlayground,

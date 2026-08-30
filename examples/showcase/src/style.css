@@ -2482,6 +2482,7 @@ input[type="text"]:required:invalid {
 
 .p2-menu-demo,
 .p2-dropdown-demo,
+.p2-auto-complete-demo,
 .p2-toast-demo,
 .p2-tooltip-demo,
 .p2-popover-demo,
@@ -2496,6 +2497,15 @@ input[type="text"]:required:invalid {
   gap: 1rem;
   justify-items: start;
   width: 100%;
+}
+
+.p2-auto-complete-demo {
+  min-height: 10rem;
+  align-content: center;
+  padding: 1.1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: color-mix(in srgb, var(--prism-color-surface-tint) 76%, var(--prism-color-white));
 }
 
 .p2-layout-demo,

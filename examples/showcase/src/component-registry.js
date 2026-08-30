@@ -80,6 +80,16 @@ export const componentRegistry = [
     details: ['Label and value pairs', 'Disabled options', 'Required support']
   },
   {
+    key: 'auto-complete',
+    path: '/components/auto-complete',
+    eyebrow: 'Forms',
+    title: 'AutoComplete',
+    mark: '41',
+    description: 'An editable combobox that narrows choices as you type and keeps selection reactive.',
+    highlights: ['Live filtering', 'Keyboard navigation', 'Reactive value'],
+    details: ['Listbox semantics', 'Loading and empty states', 'Custom option rendering']
+  },
+  {
     key: 'check-box',
     path: '/components/check-box',
     eyebrow: 'Forms',
@@ -106,7 +116,7 @@ export const componentRegistry = [
     title: 'DatePicker',
     mark: '39',
     description: 'A themed calendar control with a reactive ISO date value and familiar picker affordances.',
-    highlights: ['Native calendar', 'Reactive value', 'Form ready'],
+    highlights: ['Themed calendar', 'Reactive value', 'Form ready'],
     details: ['ISO date values', 'Min and max bounds', 'Three sizes']
   },
   {

@@ -604,6 +604,47 @@ export interface SelectProps {
   class?: string
 }
 
+export interface AutoCompleteOption extends SelectOption {}
+export type AutoCompleteOptionInput = AutoCompleteOption | string | number
+export type AutoCompleteRenderLocation = 'option'
+
+export interface AutoCompleteRenderContext {
+  location: AutoCompleteRenderLocation
+  selected: boolean
+  active: boolean
+}
+
+export interface AutoCompleteProps {
+  options?: AutoCompleteOptionInput[] | Reactive<AutoCompleteOptionInput[]>
+  value?: string | number | Reactive<string | number>
+  label?: unknown | Reactive<unknown>
+  placeholder?: string | Reactive<string>
+  onInput?: (event: Event) => void
+  onChange?: (event: Event) => void
+  onSelect?: (option: AutoCompleteOption, event: MouseEvent | KeyboardEvent) => void
+  onFocus?: (event: FocusEvent) => void
+  onBlur?: (event: FocusEvent) => void
+  onRender?: (option: AutoCompleteOption, context: AutoCompleteRenderContext) => unknown
+  id?: string
+  name?: string
+  disabled?: boolean | Reactive<boolean>
+  required?: boolean | Reactive<boolean>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  placement?: 'bottom' | 'top' | Reactive<'bottom' | 'top'>
+  openOnFocus?: boolean | Reactive<boolean>
+  loading?: boolean | Reactive<boolean>
+  loadingText?: string | Reactive<string>
+  noOptionsText?: string | Reactive<string>
+  minChars?: number | Reactive<number>
+  ariaLabel?: string | Reactive<string>
+  ariaDescription?: unknown
+  ariaDescribedBy?: string | Reactive<string>
+  ariaInvalid?: boolean | Reactive<boolean>
+  error?: unknown
+  style?: StyleValue
+  class?: string
+}
+
 export type TableDensity = 'compact' | 'comfortable' | 'spacious'
 export type TableSortDirection = 'asc' | 'desc'
 export type TablePageSize = number | 'all' | 'max'
@@ -826,6 +867,7 @@ export function Button(props?: ButtonProps): TemplateResult
 export function FormField(props?: FormFieldProps): TemplateResult
 export function Alert(props?: AlertProps): TemplateResult
 export function Notice(props?: AlertProps): TemplateResult
+export function AutoComplete(props?: AutoCompleteProps): TemplateResult
 export function Toast(props?: ToastInput): TemplateResult
 export function ToastRegion(props?: ToastRegionProps): TemplateResult
 export function createToastController(initial?: ToastItem[]): ToastController
@@ -930,6 +972,7 @@ export function ButtonComponent(props?: ButtonProps): ComponentResult
 export function FormFieldComponent(props?: FormFieldProps): ComponentResult
 export function AlertComponent(props?: AlertProps): ComponentResult
 export function NoticeComponent(props?: AlertProps): ComponentResult
+export function AutoCompleteComponent(props?: AutoCompleteProps): ComponentResult
 export function ToastComponent(props?: ToastInput): ComponentResult
 export function ToastRegionComponent(props?: ToastRegionProps): ComponentResult
 export function MenuComponent(props?: MenuProps): ComponentResult

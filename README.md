@@ -96,7 +96,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 | Group | Components | Use them for |
 | --- | --- | --- |
 | Layout | `Background`, `Box`, `Card`, `Header`, `Layout`, `Navigator`, `Footer`, `Label` | Surfaces, app chrome, page structure, navigation panes, and readable type |
-| Forms | `TextField`, `Select`, `CheckBox`, `ColorPicker`, `DatePicker`, `DateTimePicker` | Basic input, choice, color, and scheduling controls |
+| Forms | `TextField`, `AutoComplete`, `Select`, `CheckBox`, `ColorPicker`, `DatePicker`, `DateTimePicker` | Basic input, suggestions, choice, color, and scheduling controls |
 | Actions | `Button` | Primary, secondary, status, and icon actions |
 | Feedback | `Badge`, `Pulse`, `Alert`, `ToastRegion`, `Progress`, `Spinner`, `Skeleton`, `EmptyState` | Counts, state, health, async work, and empty results |
 | Navigation | `TreeView` | Nested product or workspace navigation |
@@ -261,6 +261,29 @@ const view = TextField({
 ```
 
 Supported sizes are `small`, `medium`, and `large`. Use `onInput` or `onChange` for additional behavior. Standard input props include `type`, `autocomplete`, `inputMode`, `maxLength`, `minLength`, `pattern`, `readOnly`, `disabled`, and `required`. Use `ariaDescription`, `ariaDescribedBy`, `ariaInvalid`, and `error` for validation feedback.
+
+### AutoComplete
+
+`AutoComplete` is an editable combobox that filters options as the user types. Pass strings or `{ value, label, disabled }` option objects. The input value can be a writable Matrix signal, and `onSelect` receives the chosen option.
+
+```js
+import { AutoComplete } from '@mickyballadelli/prism'
+import { signal } from '@mickyballadelli/matrix'
+
+const workspace = signal('atlas')
+
+const view = AutoComplete({
+  label: 'Workspace',
+  placeholder: 'Search workspaces',
+  options: [
+    { value: 'atlas', label: 'Atlas workspace' },
+    { value: 'harbor', label: 'Harbor workspace' }
+  ],
+  value: workspace
+})
+```
+
+Use Arrow Up and Down to move through suggestions, Enter to select, and Escape to close. `minChars`, `loading`, `loadingText`, `noOptionsText`, `placement`, `openOnFocus`, `onRender`, `disabled`, `required`, `class`, and `style` are supported.
 
 ### CheckBox
 

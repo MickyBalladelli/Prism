@@ -675,6 +675,170 @@ export const prismTheme = globalCss(`
     font-size: var(--prism-font-size-copy);
   }
 
+  .prism-auto-complete {
+    position: relative;
+    display: grid;
+    width: 100%;
+  }
+
+  .prism-auto-complete-label {
+    display: block;
+    margin-bottom: .4rem;
+    color: var(--prism-color-text-strong);
+    font-size: var(--prism-font-size-small);
+    font-weight: 750;
+  }
+
+  .prism-auto-complete-control {
+    position: relative;
+  }
+
+  .prism-auto-complete-input {
+    width: 100%;
+    min-height: 2.65rem;
+    padding: .65rem 2.4rem .65rem .8rem;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: var(--prism-radius-control);
+    outline: none;
+    color: var(--prism-color-ink);
+    background: var(--prism-color-white);
+    font: inherit;
+    font-size: var(--prism-font-size-body);
+    line-height: 1.2;
+    appearance: none;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+
+  .prism-auto-complete-input::placeholder {
+    color: var(--prism-color-placeholder);
+  }
+
+  .prism-auto-complete-input:hover:not(:disabled) {
+    border-color: var(--prism-color-border-strong);
+    background: var(--prism-color-surface-tint);
+  }
+
+  .prism-auto-complete-input:focus-visible {
+    border-color: var(--prism-color-focus);
+    box-shadow: 0 0 0 .25rem var(--prism-color-focus-glow);
+  }
+
+  .prism-auto-complete-input:disabled {
+    opacity: var(--prism-button-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  .prism-auto-complete-input-invalid {
+    border-color: var(--prism-color-error);
+  }
+
+  .prism-auto-complete-chevron {
+    position: absolute;
+    top: 50%;
+    right: .9rem;
+    width: .55rem;
+    height: .55rem;
+    border-right: 1.5px solid var(--prism-color-text-muted);
+    border-bottom: 1.5px solid var(--prism-color-text-muted);
+    pointer-events: none;
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform .18s ease, border-color .18s ease;
+  }
+
+  .prism-auto-complete-input[aria-expanded="true"] + .prism-auto-complete-chevron {
+    border-color: var(--prism-color-focus);
+    transform: translateY(-25%) rotate(225deg);
+  }
+
+  .prism-auto-complete-menu {
+    position: absolute;
+    z-index: 20;
+    right: 0;
+    left: 0;
+    display: grid;
+    gap: .2rem;
+    max-height: min(18rem, calc(100vh - 1rem));
+    padding: .35rem;
+    overflow: auto;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: var(--prism-radius-control);
+    background: var(--prism-color-white);
+    box-shadow: 0 .7rem 1.8rem rgb(37 49 78 / 15%), 0 .1rem .3rem rgb(37 49 78 / 8%);
+  }
+
+  .prism-auto-complete-menu[hidden] {
+    display: none;
+  }
+
+  .prism-auto-complete-menu-bottom {
+    top: calc(100% + .35rem);
+  }
+
+  .prism-auto-complete-menu-top {
+    bottom: calc(100% + .35rem);
+  }
+
+  .prism-auto-complete-option {
+    display: block;
+    width: 100%;
+    padding: .62rem .7rem;
+    border: 0;
+    border-radius: calc(var(--prism-radius-control) - .2rem);
+    color: var(--prism-color-text);
+    background: transparent;
+    font: inherit;
+    font-size: var(--prism-font-size-body);
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .prism-auto-complete-option:hover:not(:disabled),
+  .prism-auto-complete-option-active,
+  .prism-auto-complete-option-selected {
+    color: var(--prism-color-ink);
+    background: var(--prism-color-lavender-surface);
+  }
+
+  .prism-auto-complete-option:focus-visible {
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: -2px;
+  }
+
+  .prism-auto-complete-option:disabled {
+    opacity: .48;
+    cursor: not-allowed;
+  }
+
+  .prism-auto-complete-status {
+    padding: .7rem;
+    color: var(--prism-color-text-muted);
+    font-size: var(--prism-font-size-small);
+  }
+
+  .prism-auto-complete-message {
+    display: block;
+    margin-top: .35rem;
+    color: var(--prism-color-text-subtle);
+    font-size: var(--prism-font-size-small);
+  }
+
+  .prism-auto-complete-message-error {
+    color: var(--prism-color-error);
+  }
+
+  .prism-auto-complete-small .prism-auto-complete-input {
+    min-height: 2.25rem;
+    padding: .55rem 2.2rem .55rem .68rem;
+    font-size: var(--prism-font-size-small);
+  }
+
+  .prism-auto-complete-large .prism-auto-complete-input {
+    min-height: 3rem;
+    padding: .82rem 2.55rem .82rem .95rem;
+    font-size: var(--prism-font-size-copy);
+  }
+
   .text-field-message,
   .check-box-message,
   .prism-select-message {
@@ -3286,6 +3450,7 @@ export const prismTheme = globalCss(`
 
   :where(
     .prism-form-field,
+    .prism-auto-complete,
     .prism-color-picker,
     .prism-date-picker,
     .prism-date-time-picker,
@@ -4069,6 +4234,9 @@ export const prismTheme = globalCss(`
     .prism-button,
     .prism-select-trigger,
     .prism-select-option,
+    .prism-auto-complete-input,
+    .prism-auto-complete-option,
+    .prism-auto-complete-menu,
     .prism-popup-close,
     .prism-table button,
     .prism-table select,
@@ -4089,7 +4257,10 @@ export const prismTheme = globalCss(`
     .prism-button:focus-visible,
     .prism-select-option:hover:not(:disabled),
     .prism-select-option[aria-selected="true"],
-    .prism-select-option[data-active="true"] {
+    .prism-select-option[data-active="true"],
+    .prism-auto-complete-option:hover:not(:disabled),
+    .prism-auto-complete-option[aria-selected="true"],
+    .prism-auto-complete-option[data-active="true"] {
       border-color: Highlight;
       color: HighlightText;
       background: Highlight;
@@ -4102,6 +4273,9 @@ export const prismTheme = globalCss(`
 
     .prism-select-trigger,
     .prism-select-option,
+    .prism-auto-complete-input,
+    .prism-auto-complete-option,
+    .prism-auto-complete-menu,
     .prism-popup-close,
     .prism-table select,
     .text-field {
@@ -4113,6 +4287,7 @@ export const prismTheme = globalCss(`
 
     .prism-table,
     .prism-popup-panel,
+    .prism-auto-complete-menu,
     .prism-code,
     .prism-code-highlight,
     .prism-code-input,

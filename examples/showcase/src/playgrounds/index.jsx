@@ -1,4 +1,5 @@
 import { BackgroundPlayground } from './background.jsx'
+import { AutoCompletePlayground } from './auto-complete.jsx'
 import { LabelPlayground } from './label.jsx'
 import { HeaderPlayground } from './header.jsx'
 import { BoxPlayground } from './box.jsx'
@@ -40,6 +41,7 @@ import { NavigatorPlayground } from './navigator.jsx'
 import { FooterPlayground } from './footer.jsx'
 
 export {
+  AutoCompletePlayground,
   BackgroundPlayground,
   LabelPlayground,
   HeaderPlayground,
@@ -83,6 +85,7 @@ export {
 }
 
 export const playgrounds = {
+  'auto-complete': AutoCompletePlayground,
   background: BackgroundPlayground,
   label: LabelPlayground,
   header: HeaderPlayground,

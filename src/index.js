@@ -9,6 +9,8 @@ export {
   FooterComponent,
   Alert,
   AlertComponent,
+  AutoComplete,
+  AutoCompleteComponent,
   Notice,
   NoticeComponent,
   Avatar,
