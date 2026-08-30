@@ -115,6 +115,9 @@ export function AutoComplete(props = {}) {
     const current = String(inputValue.value ?? '')
     return readOptions().find(option => String(option.value) === current)
   })
+  const inputDisplayValue = computed(() => currentOption.value
+    ? String(currentOption.value.label)
+    : String(inputValue.value ?? ''))
   const errorValue = computed(() => readValue(error))
   const descriptionValue = computed(() => errorValue.value ?? readValue(ariaDescription))
   const hasDescription = computed(() => descriptionValue.value !== undefined && descriptionValue.value !== null && descriptionValue.value !== '')
@@ -255,6 +258,32 @@ export function AutoComplete(props = {}) {
     }
   }
 
+  const getEnterSelection = () => {
+    const optionsToShow = filteredOptions.value
+    const activeOption = open.value ? optionsToShow[activeIndex.value] : undefined
+    if (activeOption && !activeOption.disabled) {
+      return { option: activeOption, index: activeIndex.value }
+    }
+
+    const query = String(inputValue.value ?? '').trim().toLocaleLowerCase()
+    const exactIndex = optionsToShow.findIndex(option => !option.disabled && (
+      String(option.label).toLocaleLowerCase() === query
+      || String(option.value).toLocaleLowerCase() === query
+    ))
+    if (exactIndex >= 0) {
+      return { option: optionsToShow[exactIndex], index: exactIndex }
+    }
+
+    if (open.value) {
+      const firstEnabledIndex = optionsToShow.findIndex(option => !option.disabled)
+      if (firstEnabledIndex >= 0) {
+        return { option: optionsToShow[firstEnabledIndex], index: firstEnabledIndex }
+      }
+    }
+
+    return null
+  }
+
   const handleInput = event => {
     inputValue.value = event.currentTarget.value
     invalid.value = false
@@ -289,11 +318,11 @@ export function AutoComplete(props = {}) {
       return
     }
 
-    if (event.key === 'Enter' && open.value) {
-      const option = filteredOptions.value[activeIndex.value]
-      if (option) {
+    if (event.key === 'Enter') {
+      const selection = getEnterSelection()
+      if (selection) {
         event.preventDefault()
-        selectOption(option, event, activeIndex.value)
+        selectOption(selection.option, event, selection.index)
       }
       return
     }
@@ -380,7 +409,7 @@ export function AutoComplete(props = {}) {
         aria-label="${accessibleLabel}"
         aria-describedby="${describedBy}"
         aria-invalid="${computed(() => invalidValue.value ? 'true' : undefined)}"
-        .value=${inputValue}
+        .value=${inputDisplayValue}
         placeholder="${readValue(placeholder, 'Search or choose an option')}"
         ?disabled=${disabled}
         ?required=${required}

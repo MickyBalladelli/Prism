@@ -33,9 +33,32 @@ const iconCategoryDetails = {
 
 const navigatorExpanded = signal({})
 let navigatorScrollTop = 0
+let revealActiveNavigatorOnLoad = true
+
+function sortNavigatorItems(items) {
+  return [...items].sort((left, right) => String(left.label ?? '').localeCompare(String(right.label ?? ''), undefined, { sensitivity: 'base' }))
+}
+
+function findActiveItemPath(items, parentPath = []) {
+  for (const item of items) {
+    const nextPath = item.id === undefined ? parentPath : [...parentPath, String(item.id)]
+    if (item.active) {
+      return nextPath
+    }
+
+    if (Array.isArray(item.children)) {
+      const activePath = findActiveItemPath(item.children, nextPath)
+      if (activePath.length > 0) {
+        return activePath
+      }
+    }
+  }
+
+  return []
+}
 
 function createComponentSidebarGroup(group, link, activeKey) {
-  const components = componentRegistryByGroup(group.label)
+  const components = sortNavigatorItems(componentRegistryByGroup(group.label))
 
   return {
     id: group.key,
@@ -78,21 +101,21 @@ function createSidebarItems(link, activeKey) {
       label: 'Applications',
       meta: String(exampleRegistry.length),
       expanded: true,
-      children: exampleRegistry.map(example => ({
+      children: sortNavigatorItems(exampleRegistry.map(example => ({
         id: `example-${example.key}`,
         label: example.title,
         href: example.path,
         onClick: link(example.path),
         active: activeKey === `example-${example.key}`,
         detail: example.description
-      }))
+      })))
     },
     {
       id: 'components',
       label: 'Components',
       meta: String(componentRegistry.length),
       expanded: true,
-      children: componentGroups.map(group => createComponentSidebarGroup(group, link, activeKey))
+      children: sortNavigatorItems(componentGroups).map(group => createComponentSidebarGroup(group, link, activeKey))
     },
     {
       id: 'icons',
@@ -108,7 +131,7 @@ function createSidebarItems(link, activeKey) {
           active: activeKey === 'icons',
           detail: 'Full icon library'
         },
-        ...iconCategories.map(category => ({
+        ...sortNavigatorItems(iconCategories.map(category => ({
           id: `icons-${category.key}`,
           label: category.label,
           meta: String(category.icons.length),
@@ -116,7 +139,7 @@ function createSidebarItems(link, activeKey) {
           onClick: link(`/icons/${category.key}`),
           active: activeKey === `icons-${category.key}`,
           detail: iconCategoryDetails[category.key] ?? 'Icon set'
-        }))
+        })))
       ]
     }
   ]
@@ -126,6 +149,75 @@ function createSidebarItems(link, activeKey) {
 export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, children }) {
   const mobileNavigationOpen = signal(false)
   const closeNavigation = () => mobileNavigationOpen.value = false
+  const items = createSidebarItems(() => {}, activeKey)
+
+  const expandActivePath = () => {
+    const activePath = findActiveItemPath(items)
+    if (activePath.length < 2) {
+      return
+    }
+
+    const current = navigatorExpanded.value
+    const next = { ...current }
+    let changed = false
+    activePath.slice(0, -1).forEach(key => {
+      if (next[key] !== true) {
+        next[key] = true
+        changed = true
+      }
+    })
+
+    if (changed) {
+      navigatorExpanded.value = next
+    }
+  }
+
+  const revealActiveNavigatorItem = (attempt = 0) => {
+    if (typeof document === 'undefined') {
+      return false
+    }
+
+    expandActivePath()
+    const navigator = document.querySelector('#showcase-navigator')
+    const activeItem = navigator?.querySelector('[aria-current="page"], [aria-current="true"], .prism-tree-link-active, .prism-tree-summary-active')
+    if (!navigator || !activeItem || navigator.clientHeight === 0) {
+      if (attempt < 32 && typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(() => revealActiveNavigatorItem(attempt + 1))
+      }
+      return false
+    }
+
+    const navigatorRect = navigator.getBoundingClientRect()
+    const activeRect = activeItem.getBoundingClientRect()
+    const inset = 12
+    const visibleTop = navigatorRect.top + inset
+    const visibleBottom = navigatorRect.bottom - inset
+    if (activeRect.top < visibleTop || activeRect.bottom > visibleBottom) {
+      const centeredTop = navigator.scrollTop
+        + activeRect.top
+        - navigatorRect.top
+        - (navigator.clientHeight - activeRect.height) / 2
+      const maxScrollTop = Math.max(0, navigator.scrollHeight - navigator.clientHeight)
+      const targetScrollTop = Math.min(maxScrollTop, Math.max(0, centeredTop))
+      const prefersReducedMotion = typeof window !== 'undefined'
+        && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+      navigator.scrollTo?.({
+        top: targetScrollTop,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      })
+      if (typeof navigator.scrollTo !== 'function') {
+        navigator.scrollTop = targetScrollTop
+      }
+    }
+
+    if (attempt < 2 && typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => revealActiveNavigatorItem(attempt + 1))
+      return true
+    }
+
+    revealActiveNavigatorOnLoad = false
+    return true
+  }
   const restoreScrollPosition = (pageLeft, pageTop, treeTop) => {
     const restore = () => {
       window.scrollTo?.({ left: pageLeft, top: pageTop })
@@ -163,7 +255,7 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
     restoreScrollPosition(pageLeft, pageTop, treeTop)
     return result
   }
-  const items = createSidebarItems(navigate, activeKey)
+  const navigationItems = createSidebarItems(navigate, activeKey)
 
   onMount(() => {
     const handleKeyDown = event => {
@@ -178,8 +270,13 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
       navigatorScrollTop = event.currentTarget.scrollTop
     }
 
-    if (navigator) {
+    if (revealActiveNavigatorOnLoad) {
+      revealActiveNavigatorItem()
+    } else if (navigator) {
       navigator.scrollTop = navigatorScrollTop
+    }
+
+    if (navigator) {
       navigator.addEventListener('scroll', handleNavigatorScroll)
     }
 
@@ -222,7 +319,7 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
             id="showcase-navigator"
             class={computed(() => `showcase-navigator ${mobileNavigationOpen.value ? 'is-open' : ''}`)}
             ariaLabel="Prism UI navigation"
-            items={items}
+            items={navigationItems}
             model={showcaseThemeModel}
             expanded={navigatorExpanded}
             onExpandedChange={nextExpanded => navigatorExpanded.value = nextExpanded}
@@ -248,7 +345,12 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
               type="button"
               aria-controls="showcase-navigator"
               aria-expanded={mobileNavigationOpen}
-              onClick={() => mobileNavigationOpen.value = !mobileNavigationOpen.value}
+              onClick={() => {
+                mobileNavigationOpen.value = !mobileNavigationOpen.value
+                if (mobileNavigationOpen.value) {
+                  revealActiveNavigatorItem()
+                }
+              }}
             >
               <span class="showcase-nav-toggle-icon" aria-hidden="true">{mobileNavigationOpen.value ? '×' : '☰'}</span>
               <span>{mobileNavigationOpen.value ? 'Close navigation' : 'Browse navigation'}</span>
