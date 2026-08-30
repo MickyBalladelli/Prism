@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function CodeViewerPlayground() {
@@ -15,6 +16,21 @@ export function CodeViewerPlayground() {
     '',
     'announce("Prism is live")'
   ))
+  const javascript = computed(() => codeLines(
+    'CodeViewer({',
+    '  code: sampleCode,',
+    `  language: "${language.value}",`,
+    '  filename: "status.js",',
+    `  lineNumbers: ${showLineNumbers.value},`,
+    '  copyable: true,',
+    '  syntaxColors: {',
+    '    keyword: "#a8b5ff",',
+    '    string: "#9ee4bf",',
+    '    function: "#8bd9ff"',
+    '  }',
+    '})'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'CodeViewer({',
     '  code: sampleCode,',
@@ -31,8 +47,8 @@ export function CodeViewerPlayground() {
   ), { ...playgroundRuntime, sampleCode, language, showLineNumbers })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

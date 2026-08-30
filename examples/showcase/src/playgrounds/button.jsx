@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function ButtonPlayground() {
@@ -47,6 +48,60 @@ export function ButtonPlayground() {
     download: 'Download',
     settings: 'Settings'
   })[iconName.value] || 'No icon')
+  const buttonIconRecipe = computed(() => iconName.value === 'none'
+    ? 'undefined'
+    : `${iconName.value[0].toUpperCase()}${iconName.value.slice(1)}Icon({ size: "1em" })`)
+  const javascript = computed(() => codeLines(
+    'html`',
+    `  <div class="button-playground" data-prism-palette="${palette.value}">`,
+    '    <section class="button-composer">',
+    '      <div class="button-composer-head">',
+    '        <div>',
+    '          <p class="button-group-label">Live composition</p>',
+    '          <h3>One button, every voice.</h3>',
+    '          <p>Remove the text, move the icon, or turn the action into a loading state.</p>',
+    '        </div>',
+    '        <span class="button-click-count"><strong>${clickCount}</strong> clicks</span>',
+    '      </div>',
+    '      <div class="button-demo-well">',
+    '        ${Button({',
+    '          class: "button-live-example",',
+    `          label: ${JSON.stringify(label.value)},`,
+    `          showLabel: ${showLabel.value},`,
+    `          icon: ${buttonIconRecipe.value},`,
+    `          iconPosition: "${iconPosition.value}",`,
+    `          variant: "${variant.value}",`,
+    `          size: "${size.value}",`,
+    `          shape: "${shape.value}",`,
+    `          fullWidth: ${fullWidth.value},`,
+    `          loading: ${loading.value},`,
+    `          loadingLabel: ${JSON.stringify(loadingLabel.value)},`,
+    `          pressed: ${pressed.value},`,
+    `          disabled: ${disabled.value},`,
+    `          ariaLabel: ${JSON.stringify(ariaLabel.value)},`,
+    '          onClick: () => clickCount.update(value => value + 1)',
+    '        })}',
+    '      </div>',
+    '      <div class="button-composer-meta" aria-label="Current button configuration">',
+    '        <span>${variantName}</span>',
+    '        <span>${size}</span>',
+    '        <span>${shape}</span>',
+    '        <span>${iconNameLabel}</span>',
+    '      </div>',
+    '      <div class="button-recipe-shelf">',
+    '        <p class="button-group-label">Composition recipes</p>',
+    '        <div class="button-recipe-row" role="group" aria-label="Button composition examples">',
+    '          ${Button({ variant: "secondary", size: "small", label: "Text only" })}',
+    '          ${Button({ variant: "tertiary", size: "small", label: "Create", icon: PlusIcon({ size: "1em" }) })}',
+    '          ${Button({ variant: "information", size: "small", label: "Send", icon: SendIcon({ size: "1em" }), iconPosition: "end" })}',
+    '          ${Button({ variant: "secondary", size: "small", shape: "pill", label: "Settings", showLabel: false, icon: SettingsIcon({ size: "1em" }), ariaLabel: "Settings" })}',
+    '        </div>',
+    '      </div>',
+    '    </section>',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
 
   const codePreview = createCodePreview(codeLines(
     'html`',
@@ -119,8 +174,8 @@ export function ButtonPlayground() {
   })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

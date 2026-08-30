@@ -2,11 +2,22 @@ import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { Alert, AlertIcon, Avatar, Button, Card, CheckBox, DropdownMenu, EmptyState, FormField, Grid, IconButton, Menu, Pagination, Popover, Progress, Select, Separator, Skeleton, Spinner, Stack, Tabs, Tag, TextField, ToastRegion, Tooltip, createToastController } from '@mickyballadelli/prism'
 import { BellIcon, CheckIcon, CloseIcon, InfoIcon, MoreHorizontalIcon, PlusIcon, SettingsIcon, SparkIcon } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { selectOptions, SelectForP2, SettingLabel } from './helpers.jsx'
 
 export function AlertPlayground() {
   const tone = signal('success')
   const visible = signal(true)
+  const javascript = computed(() => codeLines(
+    'computed(() => visible.value ? Alert({',
+    `  tone: "${tone.value}",`,
+    '  title: "Deployment complete",',
+    '  children: "Your new workspace is ready.",',
+    '  dismissible: true,',
+    '  onDismiss: () => visible.value = false',
+    '}) : null)'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'computed(() => visible.value ? Alert({',
     '  tone,',
@@ -19,6 +30,8 @@ export function AlertPlayground() {
 
   return {
     ...codePreview,
+    javascript,
+    jsxCode,
     controls: <div class="settings-list">
       <SettingLabel htmlFor="p2-alert-tone">Tone</SettingLabel>
       <SelectForP2 id="p2-alert-tone" value={tone} options={selectOptions(['success', 'info', 'warning', 'error'])} />

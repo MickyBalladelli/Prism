@@ -1,9 +1,22 @@
-import { html, signal } from '@mickyballadelli/matrix'
+import { computed, html, signal } from '@mickyballadelli/matrix'
 import { DateTimePicker } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 
 export function DateTimePickerPlayground() {
   const value = signal('2026-09-15T09:30')
+  const javascript = computed(() => codeLines(
+    'html`',
+    '  <div class="p2-date-time-picker-demo">',
+    '    ${DateTimePicker({',
+    '      label: "Review starts",',
+    `      value: ${JSON.stringify(value.value)}`,
+    '    })}',
+    '    <span class="playground-note">Selected: ${value}</span>',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="p2-date-time-picker-demo">',
@@ -18,6 +31,8 @@ export function DateTimePickerPlayground() {
 
   return {
     ...codePreview,
+    javascript,
+    jsxCode,
     controls: <div class="settings-list">
       <p class="playground-note">Open the live picker to choose a review time. The value stays local and remains in sync with the recipe.</p>
     </div>

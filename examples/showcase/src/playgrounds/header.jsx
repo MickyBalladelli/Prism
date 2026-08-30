@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function HeaderPlayground() {
@@ -13,6 +14,22 @@ export function HeaderPlayground() {
   const trailing = computed(() => showTrailing.value
     ? html`<span class="header-demo-chip">${trailingLabel}</span>`
     : null)
+  const javascript = computed(() => codeLines(
+    'html`',
+    '  <div class="playground-header-frame">',
+    '    ${Header({',
+    `      sticky: ${sticky.value},`,
+    `      stickyTop: "${stickyTop.value}",`,
+    `      trailing: ${showTrailing.value ? 'trailing' : 'undefined'},`,
+    '      children: html`<span class="header-demo-brand"><strong>${title}</strong><small>${eyebrow}</small></span>`',
+    '    })}',
+    '    <article class="header-demo-panel"><strong>Scroll the preview</strong><span>The Header stays pinned to the top of this frame while the rest of the surface moves.</span></article>',
+    '    <article class="header-demo-panel"><strong>Trailing slot</strong><span>Put tools, theme pickers, or actions in trailing. The bar stays readable over motion.</span></article>',
+    '    <article class="header-demo-panel"><strong>App chrome</strong><span>This is the same Header used at the top of the showcase.</span></article>',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="playground-header-frame">',
@@ -30,8 +47,8 @@ export function HeaderPlayground() {
   ), { ...playgroundRuntime, Header, title, eyebrow, sticky, stickyTop, trailing, trailingLabel })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

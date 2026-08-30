@@ -2,12 +2,24 @@ import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { Alert, AlertIcon, Avatar, Button, Card, CheckBox, DropdownMenu, EmptyState, FormField, Grid, IconButton, Menu, Pagination, Popover, Progress, Select, Separator, Skeleton, Spinner, Stack, Tabs, Tag, TextField, ToastRegion, Tooltip, createToastController } from '@mickyballadelli/prism'
 import { BellIcon, CheckIcon, CloseIcon, InfoIcon, MoreHorizontalIcon, PlusIcon, SettingsIcon, SparkIcon } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { selectOptions, SettingLabel } from './helpers.jsx'
 
 export function SkeletonPlayground() {
   const variant = signal('text')
   const firstWidth = computed(() => variant.value === 'circle' ? '3.25rem' : variant.value === 'rect' ? '100%' : '46%')
   const firstHeight = computed(() => variant.value === 'circle' ? '3.25rem' : variant.value === 'rect' ? '4.5rem' : '0.95rem')
+  const javascript = computed(() => codeLines(
+    'Stack({',
+    '  gap: "small",',
+    '  children: [',
+    `    Skeleton({ variant: "${variant.value}", width: "${firstWidth.value}", height: "${firstHeight.value}" }),`,
+    '    Skeleton({ width: "88%" }),',
+    '    Skeleton({ variant: "rect", height: "5rem" })',
+    '  ]',
+    '})'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'Stack({',
     '  gap: "small",',
@@ -21,6 +33,8 @@ export function SkeletonPlayground() {
 
   return {
     ...codePreview,
+    javascript,
+    jsxCode,
     preview: Stack({
       class: 'p2-skeleton-demo',
       gap: 'small',
@@ -37,4 +51,3 @@ export function SkeletonPlayground() {
     </div>
   }
 }
-

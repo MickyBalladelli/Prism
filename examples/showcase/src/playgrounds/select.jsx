@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function SelectPlayground() {
@@ -46,6 +47,26 @@ export function SelectPlayground() {
 
     return html`<span class="select-rendered-option">${Icon({ class: 'select-rendered-icon', size: '1em' })}<span>${option.label}</span></span>`
   }
+  const javascript = computed(() => codeLines(
+    `// Custom option rendering: ${renderMode.value}`,
+    'html`',
+    '  <div class="select-playground">',
+    '    <div class="select-demo-card">',
+    '      <p class="select-demo-label">Movie night</p>',
+    '      ${Select({',
+    '        value,',
+    '        options,',
+    `        size: "${size.value}",`,
+    `        placement: "${placement.value}",`,
+    '        onRender: renderMovieOption',
+    '      })}',
+    '      <p class="playground-note">Selected movie: <strong>${selectedLabel}</strong></p>',
+    '      <p class="playground-note">Option rendering: <strong>${renderModeLabel}</strong></p>',
+    '    </div>',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="select-playground">',
@@ -60,8 +81,8 @@ export function SelectPlayground() {
   ), { ...playgroundRuntime, value, options, size, placement, renderMovieOption, selectedLabel, renderModeLabel })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

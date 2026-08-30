@@ -277,6 +277,16 @@ function convertEmbedded(source) {
 }
 
 function convertHtmlInner(inner) {
+  const indentMultiline = (value, indentation) => value
+    .split('\n')
+    .map((line, index) => index === 0 ? line : indentation + line)
+    .join('\n')
+
+  const currentLineIndent = value => {
+    const line = value.slice(value.lastIndexOf('\n') + 1)
+    return line.match(/^[ \t]*/)?.[0] ?? ''
+  }
+
   let output = ''
   let cursor = 0
 
@@ -323,7 +333,10 @@ function convertHtmlInner(inner) {
       const end = skipBalanced(inner, cursor + 1, '{', '}')
       const expr = inner.slice(cursor + 2, end - 1)
       const converted = convertExpression(expr.trim())
-      output += converted.startsWith('<') ? converted : `{${converted}}`
+      const formatted = converted.startsWith('<')
+        ? indentMultiline(converted, currentLineIndent(output))
+        : `{${converted}}`
+      output += formatted
       cursor = end
       continue
     }

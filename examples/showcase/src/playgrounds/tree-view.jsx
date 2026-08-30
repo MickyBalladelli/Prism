@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function TreeViewPlayground() {
@@ -76,6 +77,24 @@ export function TreeViewPlayground() {
 
     return html`<span class="tree-rendered-rich"><span class="tree-rendered-icon" aria-hidden="true">${icon}</span><span class="tree-rendered-rich-copy"><strong>${item.label}</strong><small>${detail}</small></span></span>`
   }
+  const javascript = computed(() => codeLines(
+    `// Item rendering: ${renderMode.value}; metadata: ${showMeta.value ? 'shown' : 'hidden'}; sections: ${expanded.value ? 'expanded' : 'collapsed'}; selected: ${selectedItem.value}`,
+    'html`',
+    '  <div class="tree-view-playground">',
+    '    ${TreeView({',
+    '      class: "component-tree-preview",',
+    '      ariaLabel: "Tree view playground",',
+    '      items,',
+    '      model: showcaseThemeModel,',
+    `      itemVariant: "${itemVariant.value}",`,
+    `      filter: ${showFilter.value},`,
+    `      expandCollapse: ${showExpandCollapse.value},`,
+    '      onRender: renderTreeItem',
+    '    })}',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="tree-view-playground">',
@@ -94,8 +113,8 @@ export function TreeViewPlayground() {
   ), { ...playgroundRuntime, items, model: showcaseThemeModel, itemVariant, showFilter, showExpandCollapse, renderTreeItem })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

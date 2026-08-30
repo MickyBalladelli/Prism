@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function BackgroundPlayground() {
@@ -12,6 +13,28 @@ export function BackgroundPlayground() {
   const speed = signal(1)
   const intensity = signal(0.85)
   const overlayOpacity = signal(0.22)
+  const javascript = computed(() => codeLines(
+    'Background({',
+    `  palette: "${palette.value}",`,
+    `  animation: "${animation.value}",`,
+    `  animated: ${animated.value},`,
+    `  speed: ${speed.value},`,
+    `  intensity: ${intensity.value},`,
+    `  overlayOpacity: ${overlayOpacity.value},`,
+    '  minHeight: "20rem",',
+    '  children: html`<div class="background-demo-stage">',
+    '    <p class="eyebrow">Ambient layer</p>',
+    '    ${Label({ size: "large", font: "sans", weight: "medium", alwaysVisible: true, children: headline })}',
+    '    ${Label({ class: "background-demo-copy", size: "medium", font: "sans", weight: "regular", alwaysVisible: true, backgroundColor: "#f3eee4", outlineColor: "#0a1020", children: copy })}',
+    '    <div class="background-demo-badges">',
+    '      <span>Palette: ${palette}</span>',
+    '      <span>${animated ? animation : "Solid surface"}</span>',
+    '      <span>Intensity × ${intensity}</span>',
+    '    </div>',
+    '  </div>`',
+    '})'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'Background({',
     '  palette,',
@@ -35,8 +58,8 @@ export function BackgroundPlayground() {
   ), { ...playgroundRuntime, headline, copy, palette, animation, animated, speed, intensity, overlayOpacity })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function PopupPlayground() {
@@ -27,6 +28,29 @@ export function PopupPlayground() {
     ${Button({ variant: 'secondary', onClick: event => close('maybe-later', event), children: 'Maybe later' })}
     ${Button({ onClick: event => close('invite-crew', event), children: 'Invite the crew' })}
   `
+  const javascript = computed(() => codeLines(
+    'html`',
+    '  <div class="popup-playground">',
+    '    ${Button({ onClick: () => popupOpen.value = true, children: "Open Popup" })}',
+    '    <p class="playground-note">Last dismissal: <strong>${lastClose}</strong></p>',
+    '    ${Popup({',
+    '      open: popupOpen,',
+    '      eyebrow: "Ready to launch",',
+    '      title: "A bright new beginning",',
+    '      ariaDescription: "Review this workspace before inviting collaborators.",',
+    `      size: "${popupSize.value}",`,
+    `      placement: "${popupPlacement.value}",`,
+    `      closeOnBackdrop: ${closeOnBackdrop.value},`,
+    `      closeOnEscape: ${closeOnEscape.value},`,
+    `      showClose: ${showClose.value},`,
+    '      children: popupContent,',
+    '      footer: popupFooter,',
+    '      onClose: reason => lastClose.value = reason',
+    '    })}',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="popup-playground">',
@@ -62,8 +86,8 @@ export function PopupPlayground() {
   })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

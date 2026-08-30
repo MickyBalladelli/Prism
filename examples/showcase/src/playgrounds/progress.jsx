@@ -2,6 +2,7 @@ import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { Alert, AlertIcon, Avatar, Button, Card, CheckBox, ColorPicker, DropdownMenu, EmptyState, FormField, Grid, IconButton, Menu, Pagination, Popover, Progress, Select, Separator, Skeleton, Spinner, Stack, Tabs, Tag, TextField, ToastRegion, Tooltip, createToastController } from '@mickyballadelli/prism'
 import { BellIcon, CheckIcon, CloseIcon, InfoIcon, MoreHorizontalIcon, PlusIcon, SettingsIcon, SparkIcon } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { selectOptions, SelectForP2, SettingLabel } from './helpers.jsx'
 
 export function ProgressPlayground() {
@@ -9,6 +10,19 @@ export function ProgressPlayground() {
   const gradient = signal(true)
   const gradientStart = signal('#6958de')
   const gradientEnd = signal('#58c9c2')
+  const javascript = computed(() => codeLines(
+    'Progress({',
+    '  label: "Upload progress",',
+    `  value: ${value.value},`,
+    '  max: 100,',
+    '  showValue: true,',
+    `  gradient: ${gradient.value},`,
+    `  gradientStart: "${gradientStart.value}",`,
+    `  gradientEnd: "${gradientEnd.value}",`,
+    '  tone: "accent"',
+    '})'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'Progress({',
     '  label: "Upload progress",',
@@ -24,6 +38,8 @@ export function ProgressPlayground() {
 
   return {
     ...codePreview,
+    javascript,
+    jsxCode,
     controls: <div class="settings-list">
       <SettingLabel htmlFor="p2-progress-value">Value</SettingLabel>
       <input class="showcase-range" id="p2-progress-value" type="range" min="0" max="100" value={value} onInput={event => value.value = Number(event.target.value)} />

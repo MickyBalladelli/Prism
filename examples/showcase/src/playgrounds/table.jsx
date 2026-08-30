@@ -1,6 +1,7 @@
 import { computed, html, keyed, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function TablePlayground() {
@@ -142,6 +143,26 @@ export function TablePlayground() {
       ariaLabel: 'Serialized table settings JSON'
     })
   })
+  const javascript = computed(() => codeLines(
+    'Table({',
+    '  class: "creator-table",',
+    '  title: "Creator pulse",',
+    '  description: "24 campaigns · live performance",',
+    '  rows: tableRows,',
+    '  columns: tableColumns,',
+    `  density: "${density.value}",`,
+    `  pageSize: ${JSON.stringify(pageSize.value)},`,
+    '  pageSizeOptions: [5, 10, 20, "all"],',
+    `  striped: ${striped.value},`,
+    `  loading: ${loading.value},`,
+    '  selectable: true,',
+    '  exportable: true,',
+    '  storageKey: "prism-creator-table",',
+    '  onSelectionChange: keys => selectedCount.value = keys.length,',
+    '  onSettingsChange: updateSettings',
+    '})'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'Table({',
     '  class: "creator-table",',
@@ -173,8 +194,8 @@ export function TablePlayground() {
   })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

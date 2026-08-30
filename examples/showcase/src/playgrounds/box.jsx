@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function BoxPlayground() {
@@ -19,6 +20,27 @@ export function BoxPlayground() {
     { title: 'Top offset is configurable', copy: 'Use stickyTop when you need breathing room below a header or toolbar.' },
     { title: 'Layout still looks normal', copy: 'This is still just a Box. Sticky is additive, so class and role keep working.' }
   ]
+  const javascript = computed(() => codeLines(
+    'html`',
+    '  <div class="playground-box-frame">',
+    '    <div class="playground-box-stack">',
+    '      ${Box({',
+    `        class: "playground-box ${tone.value} ${density.value}",`,
+    `        role: ${showRole.value ? '"region"' : 'undefined'},`,
+    `        sticky: ${sticky.value},`,
+    `        stickyTop: "${stickyTop.value}",`,
+    '        children: [',
+    '          html`<span class="playground-box-status">${stickyState}</span>`,',
+    `          html\`<strong>${content.value}</strong>\`,` ,
+    '          html`<span>Scroll this preview to test sticky layout inside a bounded parent.</span>`',
+    '        ]',
+    '      })}',
+    '      ${stickySections.map(section => html`<article class="playground-box-block"><strong>${section.title}</strong><span>${section.copy}</span></article>`)}',
+    '    </div>',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="playground-box-frame">',
@@ -41,8 +63,8 @@ export function BoxPlayground() {
   ), { ...playgroundRuntime, boxClass, boxRole, content, sticky, stickyTop, stickySections, stickyState })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

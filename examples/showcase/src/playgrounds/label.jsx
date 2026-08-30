@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function LabelPlayground() {
@@ -12,6 +13,33 @@ export function LabelPlayground() {
   const animation = signal('sanctum')
   const outlineColor = signal('#f3eee4')
   const backgroundColor = signal('#0a1020')
+  const javascript = computed(() => codeLines(
+    'Background({',
+    '  palette: "midnight",',
+    `  animation: "${animation.value}",`,
+    '  minHeight: "22rem",',
+    '  children: html`<div class="label-demo-stage">',
+    '    ${Label({',
+    '      size: "small",',
+    '      alwaysVisible: true,',
+    `      outlineColor: "${outlineColor.value}",`,
+    `      backgroundColor: "${backgroundColor.value}",`,
+    '      children: "Over the motion"',
+    '    })}',
+    '    ${Label({',
+    `      size: "${size.value}",`,
+    `      font: "${font.value}",`,
+    `      weight: "${weight.value}",`,
+    `      alwaysVisible: ${alwaysVisible.value},`,
+    `      outlineColor: "${outlineColor.value}",`,
+    `      backgroundColor: "${backgroundColor.value}",`,
+    '      children: copy',
+    '    })}',
+    '    <p class="label-demo-copy">Tune the glyph fill and the character outline. There is no plate behind the type.</p>',
+    '  </div>`',
+    '})'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'Background({',
     '  palette: "midnight",',
@@ -40,8 +68,8 @@ export function LabelPlayground() {
   ), { ...playgroundRuntime, copy, size, font, weight, alwaysVisible, animation, outlineColor, backgroundColor })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (

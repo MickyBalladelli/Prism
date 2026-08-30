@@ -1,6 +1,7 @@
 import { computed, html, signal } from '@mickyballadelli/matrix'
 import { AlertIcon, Background, Badge, Box, Button, Card, CheckBox, ClockIcon, CodeViewer, DownloadIcon, FileIcon, FolderIcon, Header, ImageIcon, Label, MoreHorizontalIcon, PlusIcon, Popup, Pulse, Select, SendIcon, serializeTableSettings, SettingsIcon, SparkIcon, Table, TextField, TreeView } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
+import { jsRecipeToJsx } from '../recipe-syntax.js'
 import { showcaseThemeModel } from '../theme-picker.jsx'
 
 export function TextFieldPlayground() {
@@ -8,6 +9,21 @@ export function TextFieldPlayground() {
   const required = signal(false)
   const disabled = signal(false)
   const size = signal('medium')
+  const javascript = computed(() => codeLines(
+    'html`',
+    '  <div class="field-playground">',
+    '    ${TextField({',
+    '      value,',
+    '      placeholder: "Type your name",',
+    `      required: ${required.value},`,
+    `      disabled: ${disabled.value},`,
+    `      size: "${size.value}"`,
+    '    })}',
+    '    <p class="playground-note">Current value: <strong>${value}</strong></p>',
+    '  </div>',
+    '`'
+  ))
+  const jsxCode = computed(() => jsRecipeToJsx(javascript.value))
   const codePreview = createCodePreview(codeLines(
     'html`',
     '  <div class="field-playground">',
@@ -18,8 +34,8 @@ export function TextFieldPlayground() {
   ), { ...playgroundRuntime, value, required, disabled, size })
 
   return {
-    javascript: codePreview.javascript,
-    jsxCode: codePreview.jsxCode,
+    javascript,
+    jsxCode,
     recipeLanguage: codePreview.recipeLanguage,
     preview: codePreview.preview,
     controls: (
