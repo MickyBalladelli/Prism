@@ -383,9 +383,12 @@ export interface AvatarProps {
 export interface TagProps {
   children?: unknown
   label?: unknown
+  icon?: unknown | Reactive<unknown>
   tone?: 'neutral' | 'success' | 'warning' | 'error' | Reactive<'neutral' | 'success' | 'warning' | 'error'>
   removable?: boolean | Reactive<boolean>
+  dismissible?: boolean | Reactive<boolean>
   onRemove?: (event: MouseEvent) => void
+  onDismiss?: (event: MouseEvent) => void
   class?: string
 }
 

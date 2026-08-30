@@ -499,7 +499,7 @@ const view = [
 
 `Menu`, `DropdownMenu`, `Tooltip`, `Popover`, and `Tabs` include keyboard behavior and accessible roles. `Progress`, `Spinner`, `Skeleton`, and `EmptyState` cover common loading and no-result states. `Pagination` is usable with local or remote totals.
 
-For compact composition, use `IconButton` with `ariaLabel`, then combine `Avatar`, `Tag`, `Separator`, `Stack`, and `Grid` without adding one-off layout CSS.
+For compact composition, use `IconButton` with `ariaLabel`, then combine `Avatar`, `Tag`, `Separator`, `Stack`, and `Grid` without adding one-off layout CSS. `Tag` supports an optional `icon` and dismiss button with `dismissible` and `onDismiss` (the older `removable` and `onRemove` names remain supported).
 
 `Stack` arranges children in a row or column. Use `gap` (`none`, `small`, `medium`, or `large`) for consistent spacing and `align` (`left`, `center`, or `right`) for horizontal placement. The alignment adapts to the stack direction; `justify` remains available for direct flex-axis control.
 

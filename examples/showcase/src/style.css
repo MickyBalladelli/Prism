@@ -520,6 +520,11 @@ h1 em {
   width: min(100%, 30rem);
 }
 
+.detail-layout-tag .preview-surface > * {
+  width: auto;
+  max-width: 100%;
+}
+
 .detail-layout-background .preview-surface {
   min-height: 28rem;
   padding: 0;

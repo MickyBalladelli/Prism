@@ -4190,6 +4190,7 @@ export const prismTheme = globalCss(`
   .prism-avatar-status-away { background: var(--prism-color-warning); }
   .prism-avatar-status-offline { background: var(--prism-color-text-muted); }
   .prism-tag { display: inline-flex; align-items: center; gap: 0.25rem; max-width: 100%; border: 1px solid var(--prism-color-border); border-radius: 999px; padding: 0.25rem 0.55rem; background: var(--prism-color-surface-hover); color: var(--prism-color-text-strong); font-size: 0.75rem; font-weight: 650; }
+  .prism-tag-icon { display: inline-grid; flex: 0 0 auto; place-items: center; line-height: 1; }
   .prism-tag-success { border-color: color-mix(in srgb, var(--prism-color-success) 45%, var(--prism-color-border)); color: var(--prism-color-success); }
   .prism-tag-warning { border-color: color-mix(in srgb, var(--prism-color-warning) 45%, var(--prism-color-border)); color: var(--prism-color-warning); }
   .prism-tag-error { border-color: color-mix(in srgb, var(--prism-color-danger) 45%, var(--prism-color-border)); color: var(--prism-color-danger); }
