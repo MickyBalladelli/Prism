@@ -2268,13 +2268,14 @@ input[type="text"]:required:invalid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+  align-items: start;
 }
 
 .icon-card {
   display: flex;
   flex-direction: column;
-  min-height: 22rem;
-  padding: 1.2rem;
+  min-height: 0;
+  padding: .8rem;
   border: 1px solid var(--prism-color-border);
   border-radius: var(--prism-radius-card);
   background: linear-gradient(180deg, var(--prism-color-surface-card), var(--prism-color-white-strong));
@@ -2286,13 +2287,13 @@ input[type="text"]:required:invalid {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.35rem;
+  margin-bottom: .75rem;
 }
 
 .icon-preview {
   display: grid;
-  width: 4.4rem;
-  height: 4.4rem;
+  width: 3.4rem;
+  height: 3.4rem;
   place-items: center;
   border: 1px solid var(--prism-color-border);
   border-radius: 1.2rem;
@@ -2371,15 +2372,15 @@ input[type="text"]:required:invalid {
 
 .icon-description {
   max-width: 28rem;
-  margin-bottom: 1.35rem;
+  margin-bottom: .7rem;
   color: var(--prism-color-text-soft);
-  font-size: var(--prism-font-size-body);
-  line-height: 1.55;
+  font-size: .78rem;
+  line-height: 1.45;
 }
 
 .icon-code-block {
   margin-top: auto;
-  padding-top: 1rem;
+  padding-top: .6rem;
   border-top: 1px solid var(--prism-color-border-faint);
 }
 
@@ -2393,9 +2394,42 @@ input[type="text"]:required:invalid {
 }
 
 .icon-code-viewer {
-  --prism-code-min-height: 8rem;
-  --prism-code-max-height: 8rem;
+  --prism-code-line-height: 1.35;
+  --prism-code-min-height: 5.5rem;
+  --prism-code-max-height: 5.5rem;
   font-size: .72rem;
+}
+
+.icon-code-viewer .prism-code-header {
+  min-height: 2.15rem;
+  padding: .3rem .45rem .3rem .6rem;
+}
+
+.icon-code-viewer .prism-code-tab {
+  min-height: 1.35rem;
+  padding: .12rem .45rem;
+}
+
+.icon-code-viewer .prism-code-copy {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.icon-code-viewer .prism-code-body {
+  height: 5.5rem;
+  min-height: 5.5rem;
+  max-height: 5.5rem;
+}
+
+.icon-code-viewer .prism-code-gutter {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+}
+
+.icon-code-viewer .prism-code-highlight,
+.icon-code-viewer .prism-code-input {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
 }
 
 .icon-guidance {
