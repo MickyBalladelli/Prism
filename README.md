@@ -419,6 +419,8 @@ Keyboard support includes Arrow Up and Down, Home and End, letter cycling, Enter
 
 For controlled expansion, pass an `expanded` map keyed by each item's `id` and update it from `onExpandedChange`. Use `hasChildren: true` for lazy or currently empty branches.
 
+Set `filter: true` to add a labeled search field above the tree. Matching branches open automatically, and `filterLabel` plus `filterPlaceholder` customize its copy. Set `expandCollapse: true` to add an Expand all / Collapse all button; customize its labels with `expandAllLabel` and `collapseAllLabel`.
+
 Available visual models are `prism`, `aurora`, `nocturne`, `editorial`, and `terminal`. `itemVariant="minimal"` is useful for dense navigation.
 
 Use `onRender(item, context)` to render richer labels. The context includes `type`, `selected`, `expanded`, and `depth`.

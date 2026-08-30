@@ -783,6 +783,12 @@ export interface TreeViewProps {
   model?: TreeViewModel | Reactive<TreeViewModel>
   itemVariant?: TreeViewItemVariant | Reactive<TreeViewItemVariant>
   expanded?: Readonly<Record<string, boolean>> | Reactive<Readonly<Record<string, boolean>>>
+  filter?: boolean | Reactive<boolean>
+  filterLabel?: string | Reactive<string>
+  filterPlaceholder?: string | Reactive<string>
+  expandCollapse?: boolean | Reactive<boolean>
+  expandAllLabel?: string | Reactive<string>
+  collapseAllLabel?: string | Reactive<string>
   onExpandedChange?: (expanded: Record<string, boolean>, item: TreeViewItem, expandedValue: boolean) => void
   onRender?: (item: TreeViewItem, context: TreeViewRenderContext) => unknown
 }

@@ -344,6 +344,17 @@ input {
   padding-top: .15rem;
 }
 
+.tree-view-playground {
+  display: grid;
+  gap: .9rem;
+  width: min(100%, 28rem);
+  padding: 1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: color-mix(in srgb, var(--prism-color-surface-tint) 74%, var(--prism-color-white));
+  box-shadow: 0 .55rem 1.4rem rgb(37 49 78 / 7%);
+}
+
 .app-shell {
   width: min(100%, 72rem);
   margin: 0;

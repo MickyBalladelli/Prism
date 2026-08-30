@@ -2579,6 +2579,55 @@ export const prismTheme = globalCss(`
     color: var(--prism-color-text);
   }
 
+  .prism-tree-controls {
+    display: grid;
+    gap: .65rem;
+    margin-bottom: .8rem;
+    padding-bottom: .8rem;
+    border-bottom: 1px solid var(--prism-color-border);
+  }
+
+  .prism-tree-filter {
+    display: grid;
+    gap: .4rem;
+  }
+
+  .prism-tree-filter-label {
+    color: var(--prism-color-ink);
+    font-size: .76rem;
+    font-weight: 750;
+  }
+
+  .prism-tree-filter-input {
+    width: 100%;
+  }
+
+  .prism-tree-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .65rem;
+  }
+
+  .prism-tree-count {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--prism-color-text-muted);
+    font-size: .72rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .prism-tree-filter-empty {
+    margin: 0 0 .8rem;
+    padding: .65rem .7rem;
+    border: 1px dashed var(--prism-color-border-strong);
+    border-radius: var(--prism-radius-small);
+    color: var(--prism-color-text-muted);
+    font-size: .78rem;
+  }
+
   .prism-tree-list {
     display: grid;
     gap: .35rem;

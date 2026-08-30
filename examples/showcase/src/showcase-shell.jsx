@@ -1,8 +1,9 @@
 import { computed, html, onMount, signal } from '@mickyballadelli/matrix'
 import { componentGroups, componentRegistry, componentRegistryByGroup } from './component-registry.js'
 import { exampleRegistry } from './example-registry.js'
-import { FileIcon, FolderIcon, Footer, Header, Layout, MatrixIcon, Navigator, PrismIcon, TreeView } from '@mickyballadelli/prism'
+import { FileIcon, FolderIcon, Footer, Header, Layout, MatrixIcon, PrismIcon } from '@mickyballadelli/prism'
 import { iconCategories, iconCount } from './icon-catalog.js'
+import { ShowcaseNavigator } from './showcase-navigator.jsx'
 import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'
 
 function sidebarItemDetail(item, context) {
@@ -217,24 +218,18 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
           </Header>
         )}
         navigator={(
-          <Navigator
+          <ShowcaseNavigator
             id="showcase-navigator"
             class={computed(() => `showcase-navigator ${mobileNavigationOpen.value ? 'is-open' : ''}`)}
             ariaLabel="Prism UI navigation"
+            items={items}
+            model={showcaseThemeModel}
+            expanded={navigatorExpanded}
+            onExpandedChange={nextExpanded => navigatorExpanded.value = nextExpanded}
+            onRender={renderSidebarItem}
             sticky={true}
             stickyTop="5.4rem"
-          >
-            <TreeView
-              class="showcase-tree"
-              ariaLabel="Prism UI navigation"
-              items={items}
-              model={showcaseThemeModel}
-              itemVariant="minimal"
-              expanded={navigatorExpanded}
-              onExpandedChange={nextExpanded => navigatorExpanded.value = nextExpanded}
-              onRender={renderSidebarItem}
-            />
-          </Navigator>
+          />
         )}
         footer={(
           <Footer class="showcase-footer" sticky={true} stickyBottom="0px">

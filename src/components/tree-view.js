@@ -1,5 +1,7 @@
 import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { Badge } from './badge.js'
+import { Button } from './button.js'
+import { TextField } from './text-field.js'
 import { normalizeTreeViewModel } from '../tree-view-models.js'
 import { isReactiveValue, readReactiveValue } from '../reactive.js'
 
@@ -9,6 +11,67 @@ let treeId = 0
 const isReactive = isReactiveValue
 const readValue = readReactiveValue
 const normalizeItemVariant = value => itemVariants.has(value) ? value : 'framed'
+const treeKey = Symbol('prismTreeKey')
+
+function isTreeBranch(item) {
+  return item?.hasChildren === true || Array.isArray(item?.children) || isReactive(item?.children)
+}
+
+function getTreeItemKey(item, index, parentKey = 'root') {
+  return String(item?.[treeKey] ?? item?.id ?? `${parentKey}-${index}`)
+}
+
+function filterTreeItems(items, query, parentKey = 'root') {
+  if (!query) {
+    return items
+  }
+
+  return items.reduce((matches, item, index) => {
+    const key = getTreeItemKey(item, index, parentKey)
+    const children = isTreeBranch(item) ? readValue(item.children, []) : []
+    const filteredChildren = Array.isArray(children)
+      ? filterTreeItems(children, query, key)
+      : []
+    const label = String(readValue(item.label, '') ?? '').toLocaleLowerCase()
+    const matchesLabel = label.includes(query)
+
+    if (!matchesLabel && filteredChildren.length === 0) {
+      return matches
+    }
+
+    const nextItem = { ...item, [treeKey]: key }
+    if (isTreeBranch(item) && Array.isArray(children)) {
+      nextItem.children = matchesLabel ? children : filteredChildren
+      nextItem.expanded = true
+    }
+    matches.push(nextItem)
+    return matches
+  }, [])
+}
+
+function collectTreeBranchKeys(items, parentKey = 'root', keys = []) {
+  items.forEach((item, index) => {
+    const key = getTreeItemKey(item, index, parentKey)
+    if (!isTreeBranch(item)) {
+      return
+    }
+
+    keys.push({ key, item })
+    const children = readValue(item.children, [])
+    if (Array.isArray(children)) {
+      collectTreeBranchKeys(children, key, keys)
+    }
+  })
+
+  return keys
+}
+
+function countTreeItems(items) {
+  return items.reduce((count, item) => {
+    const children = readValue(item.children, [])
+    return count + 1 + countTreeItems(Array.isArray(children) ? children : [])
+  }, 0)
+}
 
 function renderMeta(meta) {
   return meta === undefined || meta === null
@@ -159,6 +222,12 @@ export function TreeView(props = {}) {
     model = 'prism',
     itemVariant = 'framed',
     expanded,
+    filter = false,
+    filterLabel = 'Filter tree',
+    filterPlaceholder = 'Filter items',
+    expandCollapse = false,
+    expandAllLabel = 'Expand all',
+    collapseAllLabel = 'Collapse all',
     onExpandedChange,
     onRender
   } = props
@@ -167,6 +236,7 @@ export function TreeView(props = {}) {
   const isReactiveItems = isReactive(items)
   const expandedState = signal({})
   const focusedKey = signal('')
+  const filterQuery = signal('')
   const isControlledExpansion = expanded !== undefined
   const modelValue = isReactive(model)
     ? computed(() => normalizeTreeViewModel(model.value))
@@ -183,14 +253,30 @@ export function TreeView(props = {}) {
     const children = readValue(item?.children, [])
     return Array.isArray(children) ? children : []
   }
-  const isBranch = item => item?.hasChildren === true || Array.isArray(item?.children) || isReactive(item?.children)
-  const getItemKey = (item, index, parentKey = 'root') => String(item?.id ?? `${parentKey}-${index}`)
+  const filterEnabled = computed(() => Boolean(readValue(filter, false)))
+  const expandCollapseEnabled = computed(() => Boolean(readValue(expandCollapse, false)))
+  const filteredItems = computed(() => {
+    const query = String(filterQuery.value ?? '').trim().toLocaleLowerCase()
+    return filterEnabled.value ? filterTreeItems(readItems(), query) : readItems()
+  })
+  const filterExpanded = computed(() => {
+    const next = {}
+    if (filterEnabled.value && filterQuery.value.trim()) {
+      collectTreeBranchKeys(filteredItems.value).forEach(({ key }) => {
+        next[key] = true
+      })
+    }
+    return next
+  })
+  const readDisplayItems = () => filteredItems.value
+  const isBranch = isTreeBranch
+  const getItemKey = getTreeItemKey
   const getDomId = key => `${instanceId}-item-${key}`
   const readExpansionMap = () => {
     const source = readValue(expanded, {})
     return source && typeof source === 'object' ? source : {}
   }
-  const getExpanded = (key, item) => {
+  const getExpandedFromState = (key, item) => {
     const controlledMap = readExpansionMap()
     if (Object.prototype.hasOwnProperty.call(controlledMap, key)) {
       return Boolean(controlledMap[key])
@@ -201,6 +287,13 @@ export function TreeView(props = {}) {
     }
 
     return Boolean(readValue(item?.expanded, true))
+  }
+  const getExpanded = (key, item) => {
+    if (Object.prototype.hasOwnProperty.call(filterExpanded.value, key)) {
+      return true
+    }
+
+    return getExpandedFromState(key, item)
   }
   const collectRecords = (sourceItems, depth = 0, parentKey = 'root', includeCollapsed = false, records = []) => {
     sourceItems.forEach((item, index) => {
@@ -228,7 +321,7 @@ export function TreeView(props = {}) {
     return records
   }
   const allRecords = computed(() => collectRecords(readItems(), 0, 'root', true))
-  const visibleRecords = computed(() => collectRecords(readItems()))
+  const visibleRecords = computed(() => collectRecords(readDisplayItems()))
   const focusedTarget = computed(() => {
     const visible = visibleRecords.value
     return visible.some(record => record.key === focusedKey.value)
@@ -252,6 +345,73 @@ export function TreeView(props = {}) {
     }
     onExpandedChange?.(nextMap, item, next)
   }
+  const allExpanded = computed(() => {
+    const branches = collectTreeBranchKeys(readItems())
+    const expansionMap = isControlledExpansion ? readExpansionMap() : expandedState.value
+    return branches.length > 0 && branches.every(({ key, item }) => {
+      if (Object.prototype.hasOwnProperty.call(expansionMap, key)) {
+        return Boolean(expansionMap[key])
+      }
+
+      return Boolean(readValue(item?.expanded, true))
+    })
+  })
+  const filterLabelValue = computed(() => String(readValue(filterLabel, 'Filter tree') ?? '').trim() || 'Filter tree')
+  const filterPlaceholderValue = computed(() => String(readValue(filterPlaceholder, 'Filter items') ?? '').trim() || 'Filter items')
+  const expandButtonLabel = computed(() => allExpanded.value
+    ? String(readValue(collapseAllLabel, 'Collapse all') ?? '').trim() || 'Collapse all'
+    : String(readValue(expandAllLabel, 'Expand all') ?? '').trim() || 'Expand all')
+  const treeCountLabel = computed(() => {
+    const count = countTreeItems(filteredItems.value)
+    return filterEnabled.value && filterQuery.value.trim()
+      ? `${count} result${count === 1 ? '' : 's'}`
+      : `${count} item${count === 1 ? '' : 's'}`
+  })
+  const toggleAll = () => {
+    const nextValue = !allExpanded.value
+    const currentMap = isControlledExpansion ? readExpansionMap() : expandedState.value
+    const nextMap = { ...currentMap }
+    collectTreeBranchKeys(readItems()).forEach(({ key }) => {
+      nextMap[key] = nextValue
+    })
+
+    if (!isControlledExpansion) {
+      expandedState.value = nextMap
+    }
+    onExpandedChange?.(nextMap)
+  }
+  const filterInput = TextField({
+    id: `${instanceId}-filter`,
+    class: 'prism-tree-filter-input',
+    value: filterQuery,
+    ariaLabel: filterLabelValue,
+    placeholder: filterPlaceholderValue
+  })
+  const expandButton = Button({
+    class: 'prism-tree-expand-button',
+    size: 'small',
+    variant: 'secondary',
+    onClick: toggleAll,
+    children: expandButtonLabel
+  })
+  const controlsMarkup = computed(() => {
+    const filterMarkup = filterEnabled.value
+      ? html`<div class="prism-tree-filter"><label class="prism-tree-filter-label" for="${instanceId}-filter">${filterLabelValue}</label>${filterInput}</div>`
+      : null
+    const expandMarkup = expandCollapseEnabled.value
+      ? expandButton
+      : null
+
+    if (!filterMarkup && !expandMarkup) {
+      return null
+    }
+
+    const actionMarkup = html`<div class="prism-tree-actions"><span class="prism-tree-count" aria-live="polite">${treeCountLabel}</span>${expandMarkup}</div>`
+    return html`<div class="prism-tree-controls">${filterMarkup}${actionMarkup}</div>`
+  })
+  const emptyFilterMarkup = computed(() => filterEnabled.value && filterQuery.value.trim() && filteredItems.value.length === 0
+    ? html`<p class="prism-tree-filter-empty" role="status">No matching items.</p>`
+    : null)
   const findRecord = key => allRecords.value.find(record => record.key === key)
 
   const getVisibleEntries = root => [...root.querySelectorAll('.prism-tree-summary, .prism-tree-link')]
@@ -384,7 +544,7 @@ export function TreeView(props = {}) {
       getDomId,
       renderItem: (item, childContext) => renderItem(item, childContext)
     }
-    return readItems().map((item, index, sourceItems) => {
+    return readDisplayItems().map((item, index, sourceItems) => {
       const key = getItemKey(item, index)
       return renderItem(item, {
         ...context,
@@ -399,7 +559,7 @@ export function TreeView(props = {}) {
   })
 
   const labelValue = computed(() => String(readValue(ariaLabel, 'Tree view') ?? '').trim() || 'Tree view')
-  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} prism-tree-items-${itemVariantValue} ${classValue}" id="${instanceId}" aria-label="${labelValue}"><ul class="prism-tree-list" role="tree" aria-label="${labelValue}">${itemMarkup}</ul></nav>`
+  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} prism-tree-items-${itemVariantValue} ${classValue}" id="${instanceId}" aria-label="${labelValue}">${controlsMarkup}${emptyFilterMarkup}<ul class="prism-tree-list" role="tree" aria-label="${labelValue}">${itemMarkup}</ul></nav>`
 }
 
 export const TreeViewComponent = props => component(TreeView, props)

@@ -9,10 +9,13 @@ export function TreeViewPlayground() {
   const renderMode = signal('text')
   const itemVariant = signal('minimal')
   const selectedItem = signal('Button')
+  const showFilter = signal(true)
+  const showExpandCollapse = signal(true)
 
   const items = computed(() => {
     const leaf = (label, details = {}) => ({
       ...details,
+      id: details.id ?? label.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-'),
       label,
       active: selectedItem.value === label,
       onClick: () => {
@@ -22,6 +25,7 @@ export function TreeViewPlayground() {
 
     const branch = (label, details = {}) => ({
       ...details,
+      id: details.id ?? label.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-'),
       label,
       active: selectedItem.value === label
     })
@@ -73,15 +77,21 @@ export function TreeViewPlayground() {
     return html`<span class="tree-rendered-rich"><span class="tree-rendered-icon" aria-hidden="true">${icon}</span><span class="tree-rendered-rich-copy"><strong>${item.label}</strong><small>${detail}</small></span></span>`
   }
   const codePreview = createCodePreview(codeLines(
-    'TreeView({',
-    '  class: "component-tree-preview",',
-    '  ariaLabel: "Tree view playground",',
-    '  items,',
-    '  model,',
-    '  itemVariant,',
-    '  onRender: renderTreeItem',
-    '})'
-  ), { ...playgroundRuntime, items, model: showcaseThemeModel, itemVariant, renderTreeItem })
+    'html`',
+    '  <div class="tree-view-playground">',
+    '    ${TreeView({',
+    '      class: "component-tree-preview",',
+    '      ariaLabel: "Tree view playground",',
+    '      items,',
+    '      model,',
+    '      itemVariant,',
+    '      filter: showFilter,',
+    '      expandCollapse: showExpandCollapse,',
+    '      onRender: renderTreeItem',
+    '    })}',
+    '  </div>',
+    '`'
+  ), { ...playgroundRuntime, items, model: showcaseThemeModel, itemVariant, showFilter, showExpandCollapse, renderTreeItem })
 
   return {
     javascript: codePreview.javascript,
@@ -109,8 +119,11 @@ export function TreeViewPlayground() {
             { value: 'rich', label: 'Rich row' }
           ]}
         />
+        <CheckBox checked={showFilter}>Show filter field</CheckBox>
+        <CheckBox checked={showExpandCollapse}>Show expand/collapse button</CheckBox>
         <CheckBox checked={showMeta}>Show metadata chips</CheckBox>
         <CheckBox checked={expanded}>Expand sections</CheckBox>
+        <p class="playground-note">Filter the live tree from the search field above the preview.</p>
         <p class="playground-note">Selected item: <strong>{selectedItem}</strong></p>
         <p class="playground-note">Keyboard: ↑↓ move, type a letter to cycle, ←→ open or close, Enter or Space activates.</p>
       </div>
