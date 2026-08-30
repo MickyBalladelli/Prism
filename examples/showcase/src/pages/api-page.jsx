@@ -11,7 +11,7 @@ const apiGroups = [
       { name: 'Card', props: [['children', 'unknown', '—'], ['actions', 'unknown', '—'], ['class', 'string', '—']], events: '—', a11y: 'Renders an article surface; give it a heading when it is a standalone region.' },
       { name: 'Header', props: [['children', 'unknown', '—'], ['trailing', 'unknown', '—'], ['sticky', 'boolean | Signal<boolean>', 'true']], events: '—', a11y: 'Use ariaLabel when the app bar has no visible name.' },
       { name: 'Layout', props: [['children', 'unknown', '—'], ['header / navigator / footer', 'unknown', '—'], ['contentClass / bodyClass', 'string', '—']], events: '—', a11y: 'Creates predictable page regions; preserve heading and landmark semantics in each slot.' },
-      { name: 'Footer', props: [['children', 'unknown', '—'], ['leading / trailing', 'unknown', '—'], ['ariaLabel', 'string', 'Site footer']], events: '—', a11y: 'Renders a footer landmark; use split slots when content has distinct start and end regions.' },
+      { name: 'Footer', props: [['children', 'unknown', '—'], ['leading / trailing', 'unknown', '—'], ['sticky / stickyBottom', 'boolean / string', 'false / 0px'], ['ariaLabel', 'string', 'Site footer']], events: '—', a11y: 'Renders a footer landmark; use split slots when content has distinct start and end regions.' },
       { name: 'Label', props: [['children', 'unknown', '—'], ['size', 'LabelSize', 'medium'], ['tone', 'LabelTone', 'ink'], ['alwaysVisible', 'boolean', 'false']], events: '—', a11y: 'Use htmlFor for a form label; do not use it as a visual-only heading.' }
     ]
   },

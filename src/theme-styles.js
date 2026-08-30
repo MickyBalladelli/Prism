@@ -1054,6 +1054,12 @@ export const prismTheme = globalCss(`
     min-width: 0;
   }
 
+  .prism-layout-header,
+  .prism-layout-navigator,
+  .prism-layout-footer {
+    display: contents;
+  }
+
   .prism-layout-content {
     min-height: 100%;
   }
@@ -1097,6 +1103,12 @@ export const prismTheme = globalCss(`
     min-width: 0;
     border-top: 1px solid var(--prism-color-border);
     color: var(--prism-color-text-subtle);
+  }
+
+  .prism-footer-sticky {
+    z-index: 40;
+    background: color-mix(in srgb, var(--prism-color-surface-glass, #f7f4ff) 88%, transparent);
+    backdrop-filter: blur(18px) saturate(1.2);
   }
 
   .prism-footer-inner {
@@ -1161,7 +1173,7 @@ export const prismTheme = globalCss(`
     }
 
     .prism-navigator-sticky {
-      position: static;
+      position: static !important;
     }
 
     .prism-footer-inner {

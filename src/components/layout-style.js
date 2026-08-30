@@ -8,12 +8,19 @@ export function createLayoutStyle(props = {}) {
     const baseStyle = readValue(props.style)
     const stickyEnabled = readValue(props.sticky, false)
     const stickyTop = readValue(props.stickyTop)
+    const stickyBottom = readValue(props.stickyBottom)
     const stickyStyle = stickyEnabled
-      ? {
-          position: 'sticky',
-          top: stickyTop ?? '0px',
-          alignSelf: 'start'
-        }
+      ? stickyBottom !== undefined
+        ? {
+            position: 'sticky',
+            bottom: stickyBottom,
+            alignSelf: 'end'
+          }
+        : {
+            position: 'sticky',
+            top: stickyTop ?? '0px',
+            alignSelf: 'start'
+          }
       : null
 
     if (typeof baseStyle === 'string') {

@@ -117,6 +117,8 @@ export interface FooterProps {
   role?: string
   ariaLabel?: string
   style?: StyleValue
+  sticky?: boolean | Signal<boolean>
+  stickyBottom?: string | Signal<string>
 }
 
 export interface CardProps extends BoxProps {

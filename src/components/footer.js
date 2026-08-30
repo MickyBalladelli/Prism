@@ -14,11 +14,17 @@ export function Footer(props = {}) {
     leading,
     role,
     style,
+    sticky = false,
+    stickyBottom = '0px',
     trailing
   } = props
 
-  const classNames = computed(() => [baseClassName, readValue(classValue, '')].filter(Boolean).join(' '))
-  const styleValue = createLayoutStyle({ style })
+  const classNames = computed(() => [
+    baseClassName,
+    readValue(sticky, false) ? `${baseClassName}-sticky` : '',
+    readValue(classValue, '')
+  ].filter(Boolean).join(' '))
+  const styleValue = createLayoutStyle({ style, sticky, stickyBottom })
   const leadingValue = computed(() => {
     const value = readValue(leading)
     return typeof value === 'boolean' ? null : value

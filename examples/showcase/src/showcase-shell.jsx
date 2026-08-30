@@ -157,6 +157,7 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
           <Header
             class="showcase-header"
             ariaLabel="Prism UI"
+            sticky={true}
             trailing={(
               <div class="showcase-header-actions">
                 <span class="showcase-matrix-badge" title="Powered by Matrix">
@@ -181,12 +182,14 @@ export function ShowcaseShell({ activeKey = 'overview', link, navigateTo, childr
             id="showcase-navigator"
             class={computed(() => `showcase-navigator ${mobileNavigationOpen.value ? 'is-open' : ''}`)}
             ariaLabel="Prism UI navigation"
+            sticky={true}
+            stickyTop="5.4rem"
           >
             <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
           </Navigator>
         )}
         footer={(
-          <Footer class="showcase-footer">
+          <Footer class="showcase-footer" sticky={true} stickyBottom="0px">
             <span>Prism UI</span>
             <span class="footer-line" aria-hidden="true"></span>
             <span>Built with Matrix + Vite</span>

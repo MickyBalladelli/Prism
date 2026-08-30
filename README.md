@@ -224,7 +224,7 @@ const view = Layout({
 })
 ```
 
-`Layout` accepts `header`, `navigator`, and `footer` slots and keeps the content region flexible. `Navigator` supports `title`, `description`, `footer`, `sticky`, and `stickyTop`. Use `ariaLabel` to name the navigation and footer landmarks when visible text is not enough.
+`Layout` accepts `header`, `navigator`, and `footer` slots and keeps the content region flexible. `Navigator` supports `title`, `description`, `footer`, `sticky`, and `stickyTop`. `Footer` supports `sticky` and `stickyBottom` for app frames that keep utility context visible. Use `ariaLabel` to name the navigation and footer landmarks when visible text is not enough.
 
 ### Label
 

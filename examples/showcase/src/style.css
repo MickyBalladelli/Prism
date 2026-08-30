@@ -248,14 +248,32 @@ input {
 .showcase-navigator {
   position: sticky;
   top: 5.4rem;
+  align-self: start;
   display: grid;
   gap: 1rem;
+  max-height: calc(100dvh - 7rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--prism-color-border-strong) transparent;
   padding: 1.1rem;
   border: 1px solid var(--prism-color-border);
   border-radius: 1.45rem;
   background: linear-gradient(180deg, var(--prism-color-surface-card), var(--prism-color-surface-glass));
   box-shadow: var(--prism-shadow-card);
   backdrop-filter: blur(18px);
+}
+
+.showcase-navigator::-webkit-scrollbar {
+  width: .45rem;
+}
+
+.showcase-navigator::-webkit-scrollbar-thumb {
+  border: .1rem solid transparent;
+  border-radius: 999px;
+  background: var(--prism-color-border-strong);
+  background-clip: padding-box;
 }
 
 .showcase-footer.prism-footer {
