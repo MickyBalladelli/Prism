@@ -1,6 +1,6 @@
-import { component, html, onMount, signal } from '@mickyballadelli/matrix'
+import { component, computed, html, keyed, onMount, signal } from '@mickyballadelli/matrix'
 import { Alert } from './alert.js'
-import { readReactiveValue } from '../reactive.js'
+import { isWritableSignal, readReactiveValue } from '../reactive.js'
 
 let toastId = 0
 
@@ -80,11 +80,24 @@ export function ToastRegion(props = {}) {
     toasts = []
   } = props
 
-  const items = readReactiveValue(toasts, []) ?? []
-  const visible = items.slice(-Math.max(1, Number(readReactiveValue(maxVisible, 5)) || 5))
-  const dismiss = (id, toast) => onDismiss?.(id, toast)
+  const dismiss = (id, toast) => {
+    if (typeof onDismiss === 'function') {
+      onDismiss(id, toast)
+      return
+    }
 
-  return html`<div class="prism-toast-region prism-toast-region-${position} ${classValue}" role="region" aria-label="${ariaLabel}" aria-live="polite">${visible.map(toast => component(ToastItem, { toast, duration, onDismiss: dismiss }, toast.id))}</div>`
+    if (isWritableSignal(toasts)) {
+      toasts.value = toasts.value.filter(item => item.id !== id)
+    }
+  }
+
+  const visibleToasts = computed(() => {
+    const items = readReactiveValue(toasts, []) ?? []
+    const limit = Math.max(1, Number(readReactiveValue(maxVisible, 5)) || 5)
+    return items.slice(-limit).map(toast => component(ToastItem, { toast, duration, onDismiss: dismiss }, toast.id))
+  })
+
+  return html`<div class="prism-toast-region prism-toast-region-${position} ${classValue}" role="region" aria-label="${ariaLabel}" aria-live="polite">${keyed(visibleToasts, item => item.key ?? item.props.toast.id)}</div>`
 }
 
 export const ToastComponent = props => component(Toast, props)

@@ -1,5 +1,5 @@
 import { component, computed, createForm, html, keyed, signal } from '@mickyballadelli/matrix'
-import { Alert, Avatar, Badge, Button, Card, EmptyState, FormField, PlusIcon, Select, Stack, Tag, TextField, ToastRegion, createToastController } from 'prism-ui'
+import { Alert, Avatar, Badge, Button, Card, EmptyState, FormField, PlusIcon, Stack, Tag, TextField, ToastRegion, createToastController } from 'prism-ui'
 import { ExampleMetric, ExamplePageShell } from '../example-page-shell.jsx'
 
 const products = [
@@ -12,14 +12,7 @@ const money = value => new Intl.NumberFormat('en-US', { style: 'currency', curre
 
 function ProductCard({ product, onAdd }) {
   return (
-    <Card
-      class={`shop-product-card shop-product-${product.tone}`}
-      actions={(
-        <Button icon={<PlusIcon />} iconPosition="end" onClick={() => onAdd(product)}>
-          Add to cart
-        </Button>
-      )}
-    >
+    <Card class={`shop-product-card shop-product-${product.tone}`}>
       <div class="shop-product-art" aria-hidden="true"><span></span><i></i></div>
       <div class="shop-product-copy">
         <div class="shop-product-title-row">
@@ -29,6 +22,14 @@ function ProductCard({ product, onAdd }) {
         <p>{product.description}</p>
         <span class="shop-product-detail">{product.detail}</span>
       </div>
+      <footer class="card-actions">
+        {Button({
+          icon: PlusIcon({}),
+          iconPosition: 'end',
+          onClick: () => onAdd(product),
+          children: 'Add to cart'
+        })}
+      </footer>
     </Card>
   )
 }
@@ -58,11 +59,11 @@ function CartSummary({ total, count, onCheckout }) {
           <p class="eyebrow">Order summary</p>
           <h3>Ready when you are.</h3>
         </div>
-        <Badge value={count} tone="info" ariaLabel={`${count} items in cart`} />
+        <Badge value={count} tone="info" ariaLabel={computed(() => `${count.value} items in cart`)} />
       </div>
-      <div class="shop-summary-total"><span>Total</span><strong>{money(total)}</strong></div>
+      <div class="shop-summary-total"><span>Total</span><strong>{computed(() => money(total.value))}</strong></div>
       <p class="shop-summary-note">Free delivery included. Taxes calculated at checkout.</p>
-      <Button fullWidth onClick={onCheckout} disabled={count === 0}>Continue to checkout</Button>
+      <Button fullWidth onClick={onCheckout} disabled={computed(() => count.value === 0)}>Continue to checkout</Button>
     </Card>
   )
 }
@@ -131,7 +132,7 @@ export function ShoppingCartPage({ example, link }) {
     activeView.value = 'catalog'
   }
 
-  const catalogView = () => (
+  const catalogView = computed(() => (
     <section class="shop-content" aria-labelledby="shop-catalog-title">
       <div class="shop-section-heading">
         <div>
@@ -147,21 +148,21 @@ export function ShoppingCartPage({ example, link }) {
         <Tag tone="success">In stock</Tag>
       </Card>
     </section>
-  )
+  ))
 
-  const cartView = () => (
+  const cartView = computed(() => (
     <section class="shop-content" aria-labelledby="shop-cart-title">
       <div class="shop-section-heading">
         <div><p class="eyebrow">Your selection</p><h2 id="shop-cart-title">A cart with no surprises.</h2></div>
         <p>Adjust quantities here. Your total stays live as you decide.</p>
       </div>
       {cartLines.value.length
-        ? <div class="shop-cart-layout"><Card class="shop-cart-card"><ul class="shop-cart-list">{cartLineViews}</ul></Card><CartSummary total={cartTotal.value} count={cartCount.value} onCheckout={() => openView('checkout')} /></div>
+        ? <div class="shop-cart-layout"><Card class="shop-cart-card"><ul class="shop-cart-list">{cartLineViews}</ul></Card><CartSummary total={cartTotal} count={cartCount} onCheckout={() => openView('checkout')} /></div>
         : <EmptyState title="Your cart is clear" description="Pick something from the catalog and it will appear here." action={<Button onClick={() => openView('catalog')}>Browse catalog</Button>} />}
     </section>
-  )
+  ))
 
-  const checkoutView = () => (
+  const checkoutView = computed(() => (
     <section class="shop-content" aria-labelledby="shop-checkout-title">
       <div class="shop-section-heading">
         <div><p class="eyebrow">Secure handoff</p><h2 id="shop-checkout-title">Finish the signal.</h2></div>
@@ -179,15 +180,15 @@ export function ShoppingCartPage({ example, link }) {
         </Card>
         <Card class="shop-checkout-aside">
           <p class="eyebrow">Today’s order</p>
-          <div class="shop-summary-total"><span>{cartCount.value} items</span><strong>{money(cartTotal.value)}</strong></div>
+          <div class="shop-summary-total"><span>{cartCount} items</span><strong>{computed(() => money(cartTotal.value))}</strong></div>
           <Stack gap="small"><span><strong>Delivery</strong> Free</span><span><strong>Returns</strong> 30 days</span><span><strong>Support</strong> Human, always</span></Stack>
           <Tag tone="success">Encrypted demo flow</Tag>
         </Card>
       </div>
     </section>
-  )
+  ))
 
-  const activeContent = computed(() => activeView.value === 'cart' ? cartView() : activeView.value === 'checkout' ? checkoutView() : catalogView())
+  const activeContent = computed(() => activeView.value === 'cart' ? cartView : activeView.value === 'checkout' ? checkoutView : catalogView)
 
   return (
     <ExamplePageShell example={example} link={link}>
@@ -203,7 +204,7 @@ export function ShoppingCartPage({ example, link }) {
           <Button variant={computed(() => activeView.value === 'checkout' ? 'primary' : 'secondary')} onClick={() => openView('checkout')} disabled={computed(() => cartCount.value === 0)}>Checkout</Button>
         </nav>
         <div class="shop-active-view">{activeContent}</div>
-        <ToastRegion toasts={toastController.toasts} position="bottom-end" ariaLabel="Store notifications" />
+        <ToastRegion toasts={toastController.toasts} onDismiss={toastController.dismiss} position="bottom-end" ariaLabel="Store notifications" />
       </section>
     </ExamplePageShell>
   )

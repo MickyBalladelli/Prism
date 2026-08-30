@@ -108,7 +108,14 @@ export function Button(props = {}) {
       : 'Button'
   })
 
-  return html`<button type="${type}" class="${buttonClass}" id="${id}" name="${name}" value="${value}" title="${title}" data-prism-palette="${paletteValue}" aria-label="${accessibleLabel}" aria-busy="${busyValue}" aria-pressed="${pressedValue}" ?disabled=${disabledValue} @click=${onClick} @focus=${onFocus} @blur=${onBlur}>${buttonContent}</button>`
+  const handleClick = event => {
+    const handler = readValue(onClick)
+    if (typeof handler === 'function') {
+      handler(event)
+    }
+  }
+
+  return html`<button type="${type}" class="${buttonClass}" id="${id}" name="${name}" value="${value}" title="${title}" data-prism-palette="${paletteValue}" aria-label="${accessibleLabel}" aria-busy="${busyValue}" aria-pressed="${pressedValue}" ?disabled=${disabledValue} @click=${handleClick} @focus=${onFocus} @blur=${onBlur}>${buttonContent}</button>`
 }
 
 export const ButtonComponent = props => component(Button, props)

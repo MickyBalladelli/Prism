@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Background, Box, Button, Card, CheckBox, CodeViewer, Header, Label, TextField, TreeView } from '../src/index.js'
+import { Background, Box, Button, Card, CheckBox, CodeViewer, Header, Label, TextField, ToastRegion, TreeView } from '../src/index.js'
 import { signal } from '@mickyballadelli/matrix'
 
 test('components expose Matrix templates', () => {
@@ -175,4 +175,15 @@ test('Label supports typography props and an always-visible lock', () => {
 test('Label can associate with a control', () => {
   const label = Label({ htmlFor: 'name', children: 'Name' })
   assert.equal(label.values.includes('name'), true)
+})
+
+test('ToastRegion interpolates a reactive toast list', () => {
+  const toasts = signal([])
+  const region = ToastRegion({ toasts })
+  const list = region.values.find(value => value?.items?.kind === 'computed')
+
+  assert.equal(Boolean(list), true)
+  toasts.value = [{ id: 'toast-1', title: 'Added to cart' }]
+  assert.equal(list.items.value.length, 1)
+  assert.equal(list.items.value[0].key, 'toast-1')
 })
