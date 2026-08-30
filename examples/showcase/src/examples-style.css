@@ -1098,7 +1098,7 @@
   justify-content: flex-start;
 }
 
-.chat-people-list > div > span:not(.prism-pulse) {
+.chat-people-list > div > .chat-person-copy {
   display: grid;
   flex: 1;
   gap: .15rem;
