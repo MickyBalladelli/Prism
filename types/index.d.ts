@@ -462,6 +462,24 @@ export interface CheckBoxProps {
   style?: StyleValue
 }
 
+export interface ColorPickerProps {
+  value?: string | Reactive<string>
+  label?: unknown | Reactive<unknown>
+  ariaLabel?: string | Reactive<string>
+  showValue?: boolean | Reactive<boolean>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  disabled?: boolean | Reactive<boolean>
+  required?: boolean | Reactive<boolean>
+  id?: string
+  name?: string
+  class?: string
+  style?: StyleValue
+  onInput?: (event: InputEvent) => void
+  onChange?: (event: Event) => void
+  onFocus?: (event: FocusEvent) => void
+  onBlur?: (event: FocusEvent) => void
+}
+
 export type CodeLanguage = 'javascript' | 'jsx' | 'typescript' | 'tsx' | 'json' | 'css' | 'html' | 'xml' | 'bash' | 'text'
 
 export interface CodeViewerTab {
@@ -803,6 +821,7 @@ export function Card(props?: CardProps): TemplateResult
 export function Badge(props?: BadgeProps): TemplateResult
 export function TextField(props?: TextFieldProps): TemplateResult
 export function CheckBox(props?: CheckBoxProps): TemplateResult
+export function ColorPicker(props?: ColorPickerProps): TemplateResult
 export function CodeViewer(props?: CodeViewerProps): TemplateResult
 export function Popup(props?: PopupProps): TemplateResult
 export function Select(props?: SelectProps): TemplateResult
@@ -903,6 +922,7 @@ export function CardComponent(props?: CardProps): ComponentResult
 export function BadgeComponent(props?: BadgeProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult
 export function CheckBoxComponent(props?: CheckBoxProps): ComponentResult
+export function ColorPickerComponent(props?: ColorPickerProps): ComponentResult
 export function CodeViewerComponent(props?: CodeViewerProps): ComponentResult
 export function PopupComponent(props?: PopupProps): ComponentResult
 export function SelectComponent(props?: SelectProps): ComponentResult

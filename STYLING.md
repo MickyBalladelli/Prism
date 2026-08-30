@@ -45,6 +45,8 @@ Use `FormField` when a control needs a visible label, hint, or error. Its `contr
 
 If a control is intentionally unlabeled, provide `ariaLabel`. Keep validation meaning in text as well as color, and preserve the focus ring from `prismTheme`.
 
+`ColorPicker` uses a native color input, accepts six-digit hex values, and can bind a writable Matrix signal through `value`. Keep `showValue` enabled when users need to copy or compare the exact color.
+
 ## Motion and system colors
 
 Prism responds to live `prefers-reduced-motion` changes. Avoid adding an app animation that makes a reduced-motion preference ineffective. The theme also maps focus, borders, surfaces, and selection to system colors in forced-colors mode.

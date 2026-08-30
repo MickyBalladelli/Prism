@@ -96,7 +96,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 | Group | Components | Use them for |
 | --- | --- | --- |
 | Layout | `Background`, `Box`, `Card`, `Header`, `Layout`, `Navigator`, `Footer`, `Label` | Surfaces, app chrome, page structure, navigation panes, and readable type |
-| Forms | `TextField`, `Select`, `CheckBox` | Basic input and choice controls |
+| Forms | `TextField`, `Select`, `CheckBox`, `ColorPicker` | Basic input, choice, and color controls |
 | Actions | `Button` | Primary, secondary, status, and icon actions |
 | Feedback | `Badge`, `Pulse`, `Alert`, `ToastRegion`, `Progress`, `Spinner`, `Skeleton`, `EmptyState` | Counts, state, health, async work, and empty results |
 | Navigation | `TreeView` | Nested product or workspace navigation |
@@ -110,7 +110,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 
 ### Signals
 
-Pass writable Matrix signals to controls when state must stay in sync. `TextField` writes to a `value` signal and `CheckBox` writes to a `checked` signal. `Select`, `Popup`, `Table`, and most visual props also accept reactive values.
+Pass writable Matrix signals to controls when state must stay in sync. `TextField` writes to a `value` signal, `CheckBox` writes to a `checked` signal, and `ColorPicker` writes a hex color to a `value` signal. `Select`, `Popup`, `Table`, and most visual props also accept reactive values.
 
 ```js
 import { CheckBox, Select, TextField } from '@mickyballadelli/prism'
@@ -279,6 +279,27 @@ const view = CheckBox({
 ```
 
 The label wraps the input, so visible children provide the accessible name. `class`, `style`, `disabled`, `required`, `ariaDescription`, `ariaDescribedBy`, `ariaInvalid`, and `error` are supported for form state and validation feedback.
+
+### ColorPicker
+
+`ColorPicker` wraps a native color input and binds its six-digit hex value to a Matrix signal. It can show the current value beside the swatch, which makes it useful for theme settings and `Progress` gradients.
+
+```js
+import { ColorPicker } from '@mickyballadelli/prism'
+import { signal } from '@mickyballadelli/matrix'
+
+const accent = signal('#6958de')
+
+const view = ColorPicker({
+  id: 'accent-color',
+  label: 'Accent color',
+  value: accent,
+  showValue: true,
+  size: 'medium'
+})
+```
+
+Use `small`, `medium`, or `large` for the control size. `showValue`, `disabled`, `required`, `class`, and `style` are also supported. When no visible label is provided, set `ariaLabel`.
 
 ### Select
 

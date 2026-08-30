@@ -5,6 +5,7 @@ import { BoxPlayground } from './box.jsx'
 import { TextFieldPlayground } from './text-field.jsx'
 import { SelectPlayground } from './select.jsx'
 import { CheckBoxPlayground } from './check-box.jsx'
+import { ColorPickerPlayground } from './color-picker.jsx'
 import { CardPlayground } from './card.jsx'
 import { ButtonPlayground } from './button.jsx'
 import { BadgePlayground } from './badge.jsx'
@@ -44,6 +45,7 @@ export {
   TextFieldPlayground,
   SelectPlayground,
   CheckBoxPlayground,
+  ColorPickerPlayground,
   CardPlayground,
   ButtonPlayground,
   BadgePlayground,
@@ -84,6 +86,7 @@ export const playgrounds = {
   'text-field': TextFieldPlayground,
   select: SelectPlayground,
   'check-box': CheckBoxPlayground,
+  'color-picker': ColorPickerPlayground,
   card: CardPlayground,
   button: ButtonPlayground,
   badge: BadgePlayground,

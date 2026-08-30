@@ -25,6 +25,8 @@ export {
   CardComponent,
   CheckBox,
   CheckBoxComponent,
+  ColorPicker,
+  ColorPickerComponent,
   CodeViewer,
   CodeViewerComponent,
   EmptyState,

@@ -3237,6 +3237,7 @@ export const prismTheme = globalCss(`
 
   :where(
     .prism-form-field,
+    .prism-color-picker,
     .prism-alert,
     .prism-toast-region,
     .prism-dropdown,
@@ -3296,6 +3297,67 @@ export const prismTheme = globalCss(`
 
   .prism-form-field-error {
     font-weight: 600;
+  }
+
+  .prism-color-picker {
+    display: grid;
+    gap: 0.45rem;
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .prism-color-picker-label {
+    color: var(--prism-color-text-strong);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .prism-color-picker-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .prism-color-picker-input {
+    display: block;
+    width: 3.15rem;
+    height: 2.35rem;
+    padding: 0.2rem;
+    border: 1px solid var(--prism-color-border-strong);
+    border-radius: var(--prism-radius-medium);
+    background: var(--prism-color-surface-raised);
+    cursor: pointer;
+  }
+
+  .prism-color-picker-input:hover {
+    border-color: var(--prism-color-accent);
+  }
+
+  .prism-color-picker-input:focus-visible {
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: 2px;
+  }
+
+  .prism-color-picker-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .prism-color-picker-small .prism-color-picker-input {
+    width: 2.65rem;
+    height: 1.95rem;
+  }
+
+  .prism-color-picker-large .prism-color-picker-input {
+    width: 3.65rem;
+    height: 2.75rem;
+  }
+
+  .prism-color-picker-value {
+    color: var(--prism-color-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
   }
 
   .prism-alert {

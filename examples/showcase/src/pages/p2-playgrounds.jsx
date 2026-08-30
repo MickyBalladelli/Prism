@@ -1,6 +1,7 @@
 export {
   AlertPlayground,
   AvatarPlayground,
+  ColorPickerPlayground,
   DropdownMenuPlayground,
   EmptyStatePlayground,
   FormFieldPlayground,

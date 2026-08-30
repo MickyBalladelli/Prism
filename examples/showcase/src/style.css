@@ -2477,7 +2477,8 @@ input[type="text"]:required:invalid {
 .p2-pagination-demo,
 .p2-avatar-demo,
 .p2-icon-button-demo,
-.p2-spinner-demo {
+.p2-spinner-demo,
+.p2-color-picker-demo {
   display: grid;
   gap: 1rem;
   justify-items: start;
@@ -2675,6 +2676,15 @@ input[type="text"]:required:invalid {
   min-height: 8rem;
 }
 
+.p2-color-picker-demo {
+  min-height: 8rem;
+  align-content: center;
+  padding: 1.1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: color-mix(in srgb, var(--prism-color-surface-tint) 76%, var(--prism-color-white));
+}
+
 .p2-avatar-demo {
   gap: .8rem;
   min-height: 8rem;
@@ -2755,16 +2765,6 @@ input[type="text"]:required:invalid {
 .showcase-range {
   width: 100%;
   accent-color: var(--prism-color-action);
-}
-
-.showcase-color-input {
-  width: 100%;
-  height: 2.35rem;
-  padding: .2rem;
-  border: 1px solid var(--prism-color-border-strong);
-  border-radius: .65rem;
-  background: var(--prism-color-surface);
-  cursor: pointer;
 }
 
 .api-page {

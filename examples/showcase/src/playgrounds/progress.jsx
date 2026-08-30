@@ -1,5 +1,5 @@
 import { component, computed, html, signal } from '@mickyballadelli/matrix'
-import { Alert, AlertIcon, Avatar, Button, Card, CheckBox, DropdownMenu, EmptyState, FormField, Grid, IconButton, Menu, Pagination, Popover, Progress, Select, Separator, Skeleton, Spinner, Stack, Tabs, Tag, TextField, ToastRegion, Tooltip, createToastController } from '@mickyballadelli/prism'
+import { Alert, AlertIcon, Avatar, Button, Card, CheckBox, ColorPicker, DropdownMenu, EmptyState, FormField, Grid, IconButton, Menu, Pagination, Popover, Progress, Select, Separator, Skeleton, Spinner, Stack, Tabs, Tag, TextField, ToastRegion, Tooltip, createToastController } from '@mickyballadelli/prism'
 import { BellIcon, CheckIcon, CloseIcon, InfoIcon, MoreHorizontalIcon, PlusIcon, SettingsIcon, SparkIcon } from '@mickyballadelli/prism'
 import { codeLines, createCodePreview, playgroundRuntime } from '../playground-runtime.js'
 import { selectOptions, SelectForP2, SettingLabel } from './helpers.jsx'
@@ -28,10 +28,8 @@ export function ProgressPlayground() {
       <SettingLabel htmlFor="p2-progress-value">Value</SettingLabel>
       <input class="showcase-range" id="p2-progress-value" type="range" min="0" max="100" value={value} onInput={event => value.value = Number(event.target.value)} />
       <CheckBox checked={gradient}>Use gradient</CheckBox>
-      <SettingLabel htmlFor="p2-progress-gradient-start">Gradient start</SettingLabel>
-      <input class="showcase-color-input" id="p2-progress-gradient-start" type="color" value={gradientStart} aria-label="Gradient start" onInput={event => gradientStart.value = event.target.value} />
-      <SettingLabel htmlFor="p2-progress-gradient-end">Gradient end</SettingLabel>
-      <input class="showcase-color-input" id="p2-progress-gradient-end" type="color" value={gradientEnd} aria-label="Gradient end" onInput={event => gradientEnd.value = event.target.value} />
+      <ColorPicker id="p2-progress-gradient-start" label="Gradient start" value={gradientStart} />
+      <ColorPicker id="p2-progress-gradient-end" label="Gradient end" value={gradientEnd} />
       <p class="playground-note"><strong>{value}%</strong> complete. Gradient uses the two color props above.</p>
     </div>
   }

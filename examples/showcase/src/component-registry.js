@@ -90,6 +90,16 @@ export const componentRegistry = [
     details: ['Reactive checked value', 'Accessible label flow', 'Disabled support']
   },
   {
+    key: 'color-picker',
+    path: '/components/color-picker',
+    eyebrow: 'Forms',
+    title: 'ColorPicker',
+    mark: '38',
+    description: 'A native color control with a signal-friendly value and an optional readable hex value.',
+    highlights: ['Native color input', 'Reactive value', 'Gradient ready'],
+    details: ['Hex value display', 'Three sizes', 'Accessible labeling']
+  },
+  {
     key: 'card',
     path: '/components/card',
     eyebrow: 'Layout',
