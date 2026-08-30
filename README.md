@@ -88,9 +88,10 @@ const view = (
 | Layout | `Background`, `Box`, `Card`, `Header`, `Label` | Surfaces, app chrome, layout, and readable type |
 | Forms | `TextField`, `Select`, `CheckBox` | Basic input and choice controls |
 | Actions | `Button` | Primary, secondary, status, and icon actions |
-| Feedback | `Badge`, `Pulse` | Counts, state, health, and live signals |
+| Feedback | `Badge`, `Pulse`, `Alert`, `ToastRegion`, `Progress`, `Spinner`, `Skeleton`, `EmptyState` | Counts, state, health, async work, and empty results |
 | Navigation | `TreeView` | Nested product or workspace navigation |
-| Overlay | `Popup` | Dialogs and focused workflows |
+| Overlay | `Popup`, `Menu`, `DropdownMenu`, `Tooltip`, `Popover`, `Tabs` | Dialogs, actions, hints, contextual content, and panels |
+| Composition | `FormField`, `IconButton`, `Pagination`, `Avatar`, `Tag`, `Separator`, `Stack`, `Grid` | Accessible control wrappers and common layout primitives |
 | Data | `Table` | Searchable, sortable, paginated data |
 | Code | `CodeViewer` | Editable or read-only source code |
 | Icons | 46 SVG icon components | Lightweight product and interface marks |
@@ -364,6 +365,40 @@ For controlled expansion, pass an `expanded` map keyed by each item's `id` and u
 Available visual models are `prism`, `aurora`, `nocturne`, `editorial`, and `terminal`. `itemVariant="minimal"` is useful for dense navigation.
 
 Use `onRender(item, context)` to render richer labels. The context includes `type`, `selected`, `expanded`, and `depth`.
+
+## Feedback, menus, and composition
+
+`FormField` keeps a label, hint, error, and control wiring together. Its `control` callback receives the generated `id`, `ariaDescribedBy`, `ariaInvalid`, and `required` values:
+
+```js
+import { FormField, TextField } from 'prism-ui'
+
+const view = FormField({
+  label: 'Project name',
+  hint: 'Use a short name.',
+  error: nameError,
+  required: true,
+  control: props => TextField({ ...props, value: name })
+})
+```
+
+`Alert` and `Notice` provide inline feedback. Use `ToastRegion` with `createToastController()` for transient messages; its timers pause while a toast is hovered or focused.
+
+```js
+import { Alert, ToastRegion, createToastController } from 'prism-ui'
+
+const notices = createToastController()
+notices.push({ tone: 'success', title: 'Saved', children: 'Project is up to date.' })
+
+const view = [
+  Alert({ tone: 'warning', title: 'Offline', children: 'Changes will sync later.' }),
+  ToastRegion({ toasts: notices.toasts, onDismiss: notices.dismiss })
+]
+```
+
+`Menu`, `DropdownMenu`, `Tooltip`, `Popover`, and `Tabs` include keyboard behavior and accessible roles. `Progress`, `Spinner`, `Skeleton`, and `EmptyState` cover common loading and no-result states. `Pagination` is usable with local or remote totals.
+
+For compact composition, use `IconButton` with `ariaLabel`, then combine `Avatar`, `Tag`, `Separator`, `Stack`, and `Grid` without adding one-off layout CSS.
 
 ## Overlay
 

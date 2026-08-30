@@ -119,6 +119,252 @@ export interface ButtonProps {
   onBlur?: (event: FocusEvent) => void
 }
 
+export interface FormFieldControlContext {
+  id: string
+  ariaDescribedBy?: string
+  ariaInvalid: boolean
+  required: boolean
+}
+
+export interface FormFieldProps {
+  children?: unknown
+  control?: (context: FormFieldControlContext) => unknown
+  label?: unknown
+  hint?: unknown | Reactive<unknown>
+  error?: unknown | Reactive<unknown>
+  required?: boolean | Reactive<boolean>
+  id?: string
+  class?: string
+  labelClass?: string
+  hintClass?: string
+  errorClass?: string
+  style?: string | Record<string, string>
+}
+
+export type AlertTone = 'success' | 'info' | 'warning' | 'error'
+
+export interface AlertProps {
+  children?: unknown
+  description?: unknown
+  title?: unknown | Reactive<unknown>
+  tone?: AlertTone | Reactive<AlertTone>
+  dismissible?: boolean
+  onDismiss?: (event: MouseEvent) => void
+  role?: 'alert' | 'status'
+  ariaLabel?: string
+  id?: string
+  class?: string
+}
+
+export interface ToastItem {
+  id: string
+  title?: unknown
+  description?: unknown
+  children?: unknown
+  tone?: AlertTone
+  duration?: number
+  dismissible?: boolean
+}
+
+export type ToastInput = Omit<ToastItem, 'id'> & { id?: string }
+
+export interface ToastController {
+  toasts: Signal<ToastItem[]>
+  push: (toast?: ToastInput) => string
+  dismiss: (id: string) => void
+  clear: () => void
+}
+
+export interface ToastRegionProps {
+  toasts?: ToastItem[] | Reactive<ToastItem[]>
+  position?: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
+  duration?: number | Reactive<number>
+  maxVisible?: number | Reactive<number>
+  onDismiss?: (id: string, toast: ToastItem) => void
+  ariaLabel?: string
+  class?: string
+}
+
+export interface MenuItemInput {
+  id?: string | number
+  type?: 'item' | 'separator' | 'group'
+  label?: unknown
+  children?: unknown
+  icon?: unknown
+  shortcut?: string
+  href?: string
+  disabled?: boolean
+  items?: MenuItemInput[]
+  onSelect?: (item: MenuItemInput, event: Event) => void
+}
+
+export interface MenuProps {
+  items?: MenuItemInput[] | Reactive<MenuItemInput[]>
+  ariaLabel?: string
+  id?: string
+  class?: string
+  onSelect?: (item: MenuItemInput, event: Event) => void
+  onActiveChange?: (index: number) => void
+}
+
+export interface DropdownMenuProps extends MenuProps {
+  label?: unknown
+  trigger?: (context: { open: boolean, toggle: () => void, close: () => void }) => unknown
+  placement?: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
+  onOpenChange?: (open: boolean) => void
+}
+
+export type FloatingPlacement = 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'right'
+
+export interface TooltipProps {
+  children?: unknown
+  content?: unknown | (() => unknown)
+  placement?: FloatingPlacement
+  delay?: number
+  showDelay?: number
+  disabled?: boolean | Reactive<boolean>
+  id?: string
+  class?: string
+}
+
+export interface PopoverProps {
+  children?: unknown
+  content?: unknown | ((context: { close: () => void, open: boolean }) => unknown)
+  trigger?: (context: { open: boolean, toggle: () => void, close: () => void }) => unknown
+  open?: boolean | Signal<boolean>
+  placement?: FloatingPlacement
+  closeOnEscape?: boolean
+  closeOnOutside?: boolean
+  onOpenChange?: (open: boolean) => void
+  ariaLabel?: string
+  id?: string
+  class?: string
+}
+
+export interface TabsItem {
+  id: string | number
+  label: unknown
+  content?: unknown | ((item: TabsItem) => unknown)
+  icon?: unknown
+  disabled?: boolean
+}
+
+export interface TabsProps {
+  items?: TabsItem[] | Reactive<TabsItem[]>
+  activeTab?: string | number | Signal<string | number>
+  activation?: 'automatic' | 'manual'
+  orientation?: 'horizontal' | 'vertical'
+  ariaLabel?: string
+  onTabChange?: (id: string | number) => void
+  class?: string
+}
+
+export interface ProgressProps {
+  value?: number | Reactive<number | null | undefined>
+  max?: number | Reactive<number>
+  indeterminate?: boolean | Reactive<boolean>
+  label?: unknown | Reactive<unknown>
+  ariaLabel?: string
+  showValue?: boolean
+  tone?: 'accent' | 'success' | 'warning' | 'error'
+  size?: 'small' | 'medium' | 'large'
+  class?: string
+  style?: string | Record<string, string>
+}
+
+export interface SpinnerProps {
+  ariaLabel?: string
+  size?: 'small' | 'medium' | 'large'
+  tone?: 'accent' | 'success' | 'warning' | 'error'
+  class?: string
+}
+
+export interface SkeletonProps {
+  width?: string
+  height?: string
+  variant?: 'text' | 'circle' | 'rect'
+  radius?: 'small' | 'medium' | 'pill'
+  ariaLabel?: string
+  class?: string
+}
+
+export interface EmptyStateProps {
+  title?: unknown
+  description?: unknown
+  children?: unknown
+  icon?: unknown
+  action?: unknown | (() => unknown)
+  onRetry?: (event: MouseEvent) => void
+  retryLabel?: string
+  status?: 'empty' | 'filtered' | 'error'
+  class?: string
+}
+
+export interface IconButtonProps extends ButtonProps {
+  label?: unknown
+  icon?: unknown
+}
+
+export interface PaginationProps {
+  page?: number | Signal<number>
+  pageCount?: number | Reactive<number>
+  totalItems?: number | Reactive<number>
+  pageSize?: number | Signal<number>
+  pageSizeOptions?: number[]
+  siblingCount?: number
+  showPageSize?: boolean
+  ariaLabel?: string
+  onPageChange?: (page: number) => void
+  onPageSizeChange?: (pageSize: number) => void
+  class?: string
+}
+
+export interface AvatarProps {
+  name?: string | Reactive<string>
+  src?: string | Reactive<string>
+  alt?: string
+  size?: 'small' | 'medium' | 'large'
+  variant?: 'circle' | 'square'
+  status?: 'online' | 'away' | 'offline' | string
+  class?: string
+}
+
+export interface TagProps {
+  children?: unknown
+  label?: unknown
+  tone?: 'neutral' | 'success' | 'warning' | 'error'
+  removable?: boolean
+  onRemove?: (event: MouseEvent) => void
+  class?: string
+}
+
+export interface SeparatorProps {
+  orientation?: 'horizontal' | 'vertical'
+  decorative?: boolean
+  label?: unknown
+  class?: string
+}
+
+export interface StackProps {
+  children?: unknown
+  direction?: 'row' | 'column'
+  gap?: 'none' | 'small' | 'medium' | 'large'
+  align?: string
+  justify?: string
+  wrap?: boolean
+  class?: string
+  style?: string | Record<string, string>
+}
+
+export interface GridProps {
+  children?: unknown
+  columns?: string | number
+  minColumnWidth?: string
+  gap?: 'none' | 'small' | 'medium' | 'large'
+  class?: string
+  style?: string | Record<string, string>
+}
+
 export interface TextFieldProps {
   value?: string | Reactive<string>
   onInput?: (event: Event) => void
@@ -477,6 +723,28 @@ export function Background(props?: BackgroundProps): unknown
 export function Header(props?: HeaderProps): unknown
 export function Box(props?: BoxProps): unknown
 export function Button(props?: ButtonProps): unknown
+export function FormField(props?: FormFieldProps): unknown
+export function Alert(props?: AlertProps): unknown
+export function Notice(props?: AlertProps): unknown
+export function Toast(props?: ToastInput): unknown
+export function ToastRegion(props?: ToastRegionProps): unknown
+export function createToastController(initial?: ToastItem[]): ToastController
+export function Menu(props?: MenuProps): unknown
+export function DropdownMenu(props?: DropdownMenuProps): unknown
+export function Tooltip(props?: TooltipProps): unknown
+export function Popover(props?: PopoverProps): unknown
+export function Tabs(props?: TabsProps): unknown
+export function Progress(props?: ProgressProps): unknown
+export function Spinner(props?: SpinnerProps): unknown
+export function Skeleton(props?: SkeletonProps): unknown
+export function EmptyState(props?: EmptyStateProps): unknown
+export function IconButton(props?: IconButtonProps): unknown
+export function Pagination(props?: PaginationProps): unknown
+export function Avatar(props?: AvatarProps): unknown
+export function Tag(props?: TagProps): unknown
+export function Separator(props?: SeparatorProps): unknown
+export function Stack(props?: StackProps): unknown
+export function Grid(props?: GridProps): unknown
 export function Card(props?: CardProps): unknown
 export function Badge(props?: BadgeProps): unknown
 export function TextField(props?: TextFieldProps): unknown
@@ -546,6 +814,27 @@ export function BackgroundComponent(props?: BackgroundProps): ComponentResult
 export function HeaderComponent(props?: HeaderProps): ComponentResult
 export function BoxComponent(props?: BoxProps): ComponentResult
 export function ButtonComponent(props?: ButtonProps): ComponentResult
+export function FormFieldComponent(props?: FormFieldProps): ComponentResult
+export function AlertComponent(props?: AlertProps): ComponentResult
+export function NoticeComponent(props?: AlertProps): ComponentResult
+export function ToastComponent(props?: ToastInput): ComponentResult
+export function ToastRegionComponent(props?: ToastRegionProps): ComponentResult
+export function MenuComponent(props?: MenuProps): ComponentResult
+export function DropdownMenuComponent(props?: DropdownMenuProps): ComponentResult
+export function TooltipComponent(props?: TooltipProps): ComponentResult
+export function PopoverComponent(props?: PopoverProps): ComponentResult
+export function TabsComponent(props?: TabsProps): ComponentResult
+export function ProgressComponent(props?: ProgressProps): ComponentResult
+export function SpinnerComponent(props?: SpinnerProps): ComponentResult
+export function SkeletonComponent(props?: SkeletonProps): ComponentResult
+export function EmptyStateComponent(props?: EmptyStateProps): ComponentResult
+export function IconButtonComponent(props?: IconButtonProps): ComponentResult
+export function PaginationComponent(props?: PaginationProps): ComponentResult
+export function AvatarComponent(props?: AvatarProps): ComponentResult
+export function TagComponent(props?: TagProps): ComponentResult
+export function SeparatorComponent(props?: SeparatorProps): ComponentResult
+export function StackComponent(props?: StackProps): ComponentResult
+export function GridComponent(props?: GridProps): ComponentResult
 export function CardComponent(props?: CardProps): ComponentResult
 export function BadgeComponent(props?: BadgeProps): ComponentResult
 export function TextFieldComponent(props?: TextFieldProps): ComponentResult

@@ -1,5 +1,6 @@
 import { component, computed, html, onMount, signal } from '@mickyballadelli/matrix'
 import { isReactiveValue, isWritableSignal, readReactiveValue } from '../reactive.js'
+import { normalizePlacement as normalizeFloatingPlacement } from './overlay-utils.js'
 
 const baseClassName = 'prism-select'
 const placementValues = new Set(['bottom', 'top', 'left', 'right'])
@@ -7,7 +8,7 @@ const sizeValues = new Set(['small', 'medium', 'large'])
 let selectId = 0
 
 function normalizePlacement(value) {
-  return placementValues.has(value) ? value : 'bottom'
+  return placementValues.has(value) ? normalizeFloatingPlacement(value, 'bottom') : 'bottom'
 }
 
 function normalizeOption(option) {

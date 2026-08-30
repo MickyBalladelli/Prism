@@ -42,17 +42,17 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P2 — New components worth adding
 
-- [ ] **FormField.** Label, hint, required mark, error text, `aria-describedby`, `aria-invalid`, and control ID wiring. This makes TextField, Select, and CheckBox compose cleanly.
-- [ ] **Alert / Notice.** Inline success, info, warning, and error feedback with icon, title, description, dismiss action, and `role="status"` / `role="alert"` modes.
-- [ ] **Toast / ToastRegion.** Transient feedback with queueing, timeout pause on hover/focus, dismissal, and reduced-motion behavior.
-- [ ] **Menu / DropdownMenu.** Reusable action menu with roving focus, grouped items, separators, submenus, disabled items, and placement logic shared with Select.
-- [ ] **Tooltip / Popover.** Shared anchor positioning, delay, Escape/outside dismissal, collision handling, and touch behavior. Reuse it for icon-only buttons and Table controls.
-- [ ] **Tabs.** Generalize CodeViewer’s tabs into an accessible component, then use it in CodeViewer and the showcase.
-- [ ] **Progress / Spinner / Skeleton.** Common loading primitives for async forms, tables, uploads, and page transitions. Respect reduced motion and expose determinate values.
-- [ ] **EmptyState.** Shared empty, filtered-empty, error, and retry layouts so Table and the showcase use the same language.
-- [ ] **IconButton.** A strict icon-only Button wrapper that requires an accessible label and optionally composes Tooltip.
-- [ ] **Pagination.** Extract Table pagination so it can serve search results and remote data views too.
-- [ ] **Avatar, Tag, Separator, Stack, and Grid.** Small composition primitives useful in Matrix apps without forcing custom CSS for common layouts.
+- [x] **FormField.** Label, hint, required mark, error text, `aria-describedby`, `aria-invalid`, and control ID wiring. Use the `control` callback to pass the generated control props into TextField, Select, or CheckBox.
+- [x] **Alert / Notice.** Inline success, info, warning, and error feedback with icon, title, description, dismiss action, and `role="status"` / `role="alert"` modes.
+- [x] **Toast / ToastRegion.** Transient feedback with a `createToastController()` queue, timeout pause on hover/focus, dismissal, and reduced-motion behavior.
+- [x] **Menu / DropdownMenu.** Reusable action menu with roving focus, grouped items, separators, nested submenus, disabled items, and placement-aware dropdown styling.
+- [x] **Tooltip / Popover.** Shared anchor positioning helper, delay, Escape/outside dismissal, collision clamping, and touch behavior.
+- [x] **Tabs.** General accessible tabs with linked tabpanels, roving focus, automatic/manual activation, and horizontal/vertical orientation.
+- [x] **Progress / Spinner / Skeleton.** Common loading primitives for async forms, tables, uploads, and page transitions. Respect reduced motion and expose determinate values.
+- [x] **EmptyState.** Shared empty, filtered-empty, error, and retry layouts.
+- [x] **IconButton.** Icon-only Button wrapper with an accessible label fallback and Button behavior.
+- [x] **Pagination.** Standalone pagination with page windows, ellipses, remote totals, and optional page-size selection.
+- [x] **Avatar, Tag, Separator, Stack, and Grid.** Small composition primitives for common identity, metadata, divider, flex, and responsive grid layouts.
 
 ## P2 — API, docs, and packaging
 
