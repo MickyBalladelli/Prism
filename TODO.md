@@ -66,10 +66,17 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P2 — Showcase maintainability
 
-- [ ] **Create one component registry.** Home cards, sidebar items, and component page metadata repeat the same names, groups, paths, and descriptions in three places (`examples/showcase/src/pages/home-page.jsx:5`, `examples/showcase/src/showcase-shell.jsx:31`, `examples/showcase/src/pages/component-page.jsx:8`). Build all navigation and page headers from one registry.
-- [ ] **Move playgrounds into separate files.** `component-page.jsx` is a 1,659-line switchboard. Put each playground in its own file and keep the page shell focused on layout.
-- [ ] **Test the recipe parser.** `examples/showcase/src/recipe-syntax.js` contains a custom parser/compiler with no direct tests. Cover strings, templates, nested expressions, arrays, JSX, malformed input, and error messages.
-- [ ] **Audit keyed rendering.** Add stable keys to every mapped card, icon, tree item, table preview row, and tab where Matrix needs identity preservation.
-- [ ] **Improve mobile navigation.** The sidebar becomes a long static block below 980px (`examples/showcase/src/style.css:2316-2329`). Add a compact navigation disclosure or drawer.
-- [ ] **Add showcase error and loading states.** Route failures, preview compile errors, clipboard failures, and storage failures should have visible, keyboard-accessible, screen-reader-friendly feedback.
-- [ ] **Add visual regression coverage.** Capture each theme, responsive breakpoint, component state, and reduced-motion mode. The visual system is a major product feature and needs a guard against CSS drift.
+- [x] **Create one component registry.** Home cards, sidebar items, and component page metadata now come from `examples/showcase/src/component-registry.js`.
+- [x] **Move playgrounds into separate files.** Every showcase playground now lives in `examples/showcase/src/playgrounds/`, with a small index map and a focused component page shell.
+- [x] **Test the recipe parser.** Added direct Node coverage for strings, templates, nested expressions, arrays, JSX, malformed input, and useful closing-tag errors in `test/recipe-syntax.test.js`.
+- [x] **Audit keyed rendering.** Added stable keys to mapped cards, icons, API rows, navigation items, and Matrix-keyed preview lists.
+- [x] **Improve mobile navigation.** Added a keyboard-dismissible mobile disclosure, fixed drawer, backdrop, focus-visible trigger, and automatic close on navigation.
+- [x] **Add showcase error and loading states.** Preview construction errors, missing routes, storage failures, and pending preview surfaces now expose visible status or alert feedback with accessible actions.
+- [x] **Add visual regression coverage.** Added a Playwright matrix for every route, five themes, three responsive projects, reduced motion, and snapshot seed/update guidance in `examples/showcase/visual/README.md`.
+
+## Example applications from Matrix, enhance them using Prism.
+- [ ] Create "Shopping Cart" example (routing, forms, API calls, state)
+- [ ] Create "Notes App" example (complex forms, search, local storage)
+- [ ] Create "Dashboard" example (many components, performance considerations)
+- [ ] Create "Real-time Chat" example (WebSocket, message handling)
+- [ ] Each example should include tests and performance notes

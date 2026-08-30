@@ -529,6 +529,10 @@ function parseJsxChildren(source, index, stopTag) {
   }
 
   flushText()
+  if (stopTag !== null) {
+    throw new SyntaxError(`Expected </${stopTag}>`)
+  }
+
   return { children, index: cursor }
 }
 

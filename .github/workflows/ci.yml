@@ -48,4 +48,4 @@ jobs:
         run: npm run check:accessibility
 
       - name: Showcase build
-        run: npm run showcase:build
+        run: npm ci --prefix examples/showcase && npm run showcase:build

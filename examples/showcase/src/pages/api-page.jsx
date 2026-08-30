@@ -93,7 +93,7 @@ function PropTable({ component }) {
         </thead>
         <tbody>
           {component.props.map(([name, type, defaultValue]) => (
-            <tr><th scope="row"><code>{name}</code></th><td><code>{type}</code></td><td><code>{defaultValue}</code></td></tr>
+            <tr key={name}><th scope="row"><code>{name}</code></th><td><code>{type}</code></td><td><code>{defaultValue}</code></td></tr>
           ))}
         </tbody>
       </table>
@@ -144,7 +144,7 @@ export function ApiPage({ link }) {
 
         <div class="api-groups">
           {apiGroups.map(group => (
-            <section class="api-group" aria-labelledby={apiGroupId(group)}>
+            <section class="api-group" key={group.label} aria-labelledby={apiGroupId(group)}>
               <div class="api-section-heading">
                 <div>
                   <p class="eyebrow">API group</p>
@@ -153,7 +153,7 @@ export function ApiPage({ link }) {
                 <p>{group.description}</p>
               </div>
               <div class="api-component-grid">
-                {group.components.map(component => <ApiComponent component={component} />)}
+                {group.components.map(component => <ApiComponent key={component.name} component={component} />)}
               </div>
             </section>
           ))}

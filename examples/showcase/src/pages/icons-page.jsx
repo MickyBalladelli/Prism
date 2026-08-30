@@ -98,7 +98,7 @@ export function IconsPage({ category, link }) {
 
         <div class="icon-catalog">
           {categories.map(categoryItem => (
-            <section class="icon-category-section" aria-labelledby={`icon-category-${categoryItem.key}`}>
+            <section class="icon-category-section" key={categoryItem.key} aria-labelledby={`icon-category-${categoryItem.key}`}>
               <div class="icon-category-heading">
                 <div>
                   <p class="eyebrow">Icon category</p>
@@ -113,7 +113,7 @@ export function IconsPage({ category, link }) {
               </div>
               <div class="icon-grid" aria-label={`${categoryItem.label} icons`}>
                 {categoryItem.icons.map(icon => (
-                  <IconCard icon={icon} category={categoryItem} />
+                  <IconCard key={icon.name} icon={icon} category={categoryItem} />
                 ))}
               </div>
             </section>

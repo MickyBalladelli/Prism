@@ -31,6 +31,7 @@ export const showcaseBackgroundAnimation = signal(initialAnimation)
 export const showcaseBackgroundAnimated = signal(initialAnimated)
 
 const settingsOpen = signal(false)
+const storageWarning = signal(false)
 
 const themeOptions = Object.entries(treeViewModels).map(([value, definition]) => ({
   value,
@@ -80,11 +81,12 @@ export const showcaseBackgroundAccentColor = computed(() => showcaseBackground.v
 export const showcaseBackgroundGlowColor = computed(() => showcaseBackground.value.glowColor)
 
 effect(() => {
-  writeStorageValue(storageKey, JSON.stringify({
+  const saved = writeStorageValue(storageKey, JSON.stringify({
     theme: showcaseThemeModel.value,
     animation: showcaseBackgroundAnimation.value,
     animated: showcaseBackgroundAnimated.value
   }))
+  storageWarning.value = !saved
 })
 
 const settingsExpanded = computed(() => String(settingsOpen.value))
@@ -134,6 +136,7 @@ export function SettingsPopup() {
           ariaLabel="Background animation"
         />
         <CheckBox checked={showcaseBackgroundAnimated}>Animate background</CheckBox>
+        {storageWarning.value && <p class="showcase-storage-warning" role="status" aria-live="polite">Settings could not be saved in this browser. Your current choices still work.</p>}
       </div>
     </Popup>
   )

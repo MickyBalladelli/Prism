@@ -5,13 +5,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:visual": "playwright test --config=visual-regression.config.js",
+    "test:visual:update": "playwright test --config=visual-regression.config.js --update-snapshots"
   },
   "dependencies": {
     "@mickyballadelli/matrix": "^0.1.0-alpha.1",
     "prism-ui": "file:../.."
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "vite": "^8.2.2"
   },
   "allowScripts": {

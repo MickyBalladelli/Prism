@@ -1,4 +1,5 @@
-import { html } from '@mickyballadelli/matrix'
+import { computed, html, onMount, signal } from '@mickyballadelli/matrix'
+import { componentGroups, componentRegistry, componentRegistryByGroup } from './component-registry.js'
 import { FileIcon, FolderIcon, Header, MatrixIcon, PrismIcon, TreeView } from 'prism-ui'
 import { iconCategories, iconCount } from './icon-catalog.js'
 import { ThemePicker, SettingsPopup, showcaseThemeModel } from './theme-picker.jsx'
@@ -28,9 +29,29 @@ const iconCategoryDetails = {
   data: 'Lists, code, grids'
 }
 
+function createComponentSidebarGroup(group, link, activeKey) {
+  const components = componentRegistryByGroup(group.label)
+
+  return {
+    id: group.key,
+    label: group.label,
+    meta: String(components.length),
+    expanded: true,
+    children: components.map(component => ({
+      id: component.key,
+      label: component.title,
+      href: component.path,
+      onClick: link(component.path),
+      active: activeKey === component.key,
+      detail: component.description
+    }))
+  }
+}
+
 function createSidebarItems(link, activeKey) {
   return [
     {
+      id: 'overview',
       label: 'Overview',
       href: '/',
       onClick: link('/'),
@@ -39,6 +60,7 @@ function createSidebarItems(link, activeKey) {
       detail: 'Start of the explorer'
     },
     {
+      id: 'api',
       label: 'API reference',
       href: '/api',
       onClick: link('/api'),
@@ -47,305 +69,20 @@ function createSidebarItems(link, activeKey) {
       detail: 'Props and contracts'
     },
     {
+      id: 'components',
       label: 'Components',
-      meta: '34',
+      meta: String(componentRegistry.length),
       expanded: true,
-      children: [
-        {
-          label: 'Layout',
-          meta: '5',
-          expanded: true,
-          children: [
-            {
-              label: 'Background',
-              href: '/components/background',
-              onClick: link('/components/background'),
-              active: activeKey === 'background',
-              detail: 'Animated backdrop'
-            },
-            {
-              label: 'Label',
-              href: '/components/label',
-              onClick: link('/components/label'),
-              active: activeKey === 'label',
-              detail: 'Readable over motion'
-            },
-            {
-              label: 'Header',
-              href: '/components/header',
-              onClick: link('/components/header'),
-              active: activeKey === 'header',
-              detail: 'Sticky app bar'
-            },
-            {
-              label: 'Box',
-              href: '/components/box',
-              onClick: link('/components/box'),
-              active: activeKey === 'box',
-              detail: 'Layout wrapper'
-            },
-            {
-              label: 'Card',
-              href: '/components/card',
-              onClick: link('/components/card'),
-              active: activeKey === 'card',
-              detail: 'Standalone content'
-            }
-          ]
-        },
-        {
-          label: 'Forms',
-          meta: '5',
-          expanded: true,
-          children: [
-            {
-              label: 'TextField',
-              href: '/components/text-field',
-              onClick: link('/components/text-field'),
-              active: activeKey === 'text-field',
-              detail: 'Reactive text input'
-            },
-            {
-              label: 'Select',
-              href: '/components/select',
-              onClick: link('/components/select'),
-              active: activeKey === 'select',
-              detail: 'Option picker'
-            },
-            {
-              label: 'CheckBox',
-              href: '/components/check-box',
-              onClick: link('/components/check-box'),
-              active: activeKey === 'check-box',
-              detail: 'On or off toggle'
-            },
-            {
-              label: 'Button',
-              href: '/components/button',
-              onClick: link('/components/button'),
-              active: activeKey === 'button',
-              detail: 'Actions and palettes'
-            },
-            {
-              label: 'FormField',
-              href: '/components/form-field',
-              onClick: link('/components/form-field'),
-              active: activeKey === 'form-field',
-              detail: 'Label and validation'
-            }
-          ]
-        },
-        {
-          label: 'Navigation',
-          meta: '3',
-          expanded: true,
-          children: [
-            {
-              label: 'TreeView',
-              href: '/components/tree-view',
-              onClick: link('/components/tree-view'),
-              active: activeKey === 'tree-view',
-              detail: 'Nested navigation'
-            },
-            {
-              label: 'Tabs',
-              href: '/components/tabs',
-              onClick: link('/components/tabs'),
-              active: activeKey === 'tabs',
-              detail: 'Related panels'
-            },
-            {
-              label: 'Pagination',
-              href: '/components/pagination',
-              onClick: link('/components/pagination'),
-              active: activeKey === 'pagination',
-              detail: 'Result navigation'
-            }
-          ]
-        },
-        {
-          label: 'Status',
-          meta: '8',
-          expanded: true,
-          children: [
-            {
-              label: 'Badge',
-              href: '/components/badge',
-              onClick: link('/components/badge'),
-              active: activeKey === 'badge',
-              detail: 'Compact count'
-            },
-            {
-              label: 'Pulse',
-              href: '/components/pulse',
-              onClick: link('/components/pulse'),
-              active: activeKey === 'pulse',
-              detail: 'Live status beat'
-            },
-            {
-              label: 'Alert',
-              href: '/components/alert',
-              onClick: link('/components/alert'),
-              active: activeKey === 'alert',
-              detail: 'Inline feedback'
-            },
-            {
-              label: 'ToastRegion',
-              href: '/components/toast',
-              onClick: link('/components/toast'),
-              active: activeKey === 'toast',
-              detail: 'Transient feedback'
-            },
-            {
-              label: 'Progress',
-              href: '/components/progress',
-              onClick: link('/components/progress'),
-              active: activeKey === 'progress',
-              detail: 'Work completion'
-            },
-            {
-              label: 'Spinner',
-              href: '/components/spinner',
-              onClick: link('/components/spinner'),
-              active: activeKey === 'spinner',
-              detail: 'Short wait'
-            },
-            {
-              label: 'Skeleton',
-              href: '/components/skeleton',
-              onClick: link('/components/skeleton'),
-              active: activeKey === 'skeleton',
-              detail: 'Loading shape'
-            },
-            {
-              label: 'EmptyState',
-              href: '/components/empty-state',
-              onClick: link('/components/empty-state'),
-              active: activeKey === 'empty-state',
-              detail: 'No-result guidance'
-            }
-          ]
-        },
-        {
-          label: 'Overlay',
-          meta: '5',
-          expanded: true,
-          children: [
-            {
-              label: 'Popup',
-              href: '/components/popup',
-              onClick: link('/components/popup'),
-              active: activeKey === 'popup',
-              detail: 'Focused dialog'
-            },
-            {
-              label: 'Menu',
-              href: '/components/menu',
-              onClick: link('/components/menu'),
-              active: activeKey === 'menu',
-              detail: 'Keyboard actions'
-            },
-            {
-              label: 'DropdownMenu',
-              href: '/components/dropdown-menu',
-              onClick: link('/components/dropdown-menu'),
-              active: activeKey === 'dropdown-menu',
-              detail: 'Anchored actions'
-            },
-            {
-              label: 'Tooltip',
-              href: '/components/tooltip',
-              onClick: link('/components/tooltip'),
-              active: activeKey === 'tooltip',
-              detail: 'Brief context'
-            },
-            {
-              label: 'Popover',
-              href: '/components/popover',
-              onClick: link('/components/popover'),
-              active: activeKey === 'popover',
-              detail: 'Rich context'
-            }
-          ]
-        },
-        {
-          label: 'Composition',
-          meta: '6',
-          expanded: true,
-          children: [
-            {
-              label: 'IconButton',
-              href: '/components/icon-button',
-              onClick: link('/components/icon-button'),
-              active: activeKey === 'icon-button',
-              detail: 'Compact action'
-            },
-            {
-              label: 'Avatar',
-              href: '/components/avatar',
-              onClick: link('/components/avatar'),
-              active: activeKey === 'avatar',
-              detail: 'Identity marker'
-            },
-            {
-              label: 'Tag',
-              href: '/components/tag',
-              onClick: link('/components/tag'),
-              active: activeKey === 'tag',
-              detail: 'Metadata chip'
-            },
-            {
-              label: 'Separator',
-              href: '/components/separator',
-              onClick: link('/components/separator'),
-              active: activeKey === 'separator',
-              detail: 'Content divider'
-            },
-            {
-              label: 'Stack',
-              href: '/components/stack',
-              onClick: link('/components/stack'),
-              active: activeKey === 'stack',
-              detail: 'Flex spacing'
-            },
-            {
-              label: 'Grid',
-              href: '/components/grid',
-              onClick: link('/components/grid'),
-              active: activeKey === 'grid',
-              detail: 'Responsive layout'
-            }
-          ]
-        },
-        {
-          label: 'Data & Code',
-          meta: '2',
-          expanded: true,
-          children: [
-            {
-              label: 'CodeViewer',
-              href: '/components/code-viewer',
-              onClick: link('/components/code-viewer'),
-              active: activeKey === 'code-viewer',
-              detail: 'Editable syntax view'
-            },
-            {
-              label: 'Table',
-              href: '/components/table',
-              onClick: link('/components/table'),
-              active: activeKey === 'table',
-              detail: 'Searchable data grid'
-            }
-          ]
-        }
-      ]
+      children: componentGroups.map(group => createComponentSidebarGroup(group, link, activeKey))
     },
     {
+      id: 'icons',
       label: 'Icons',
       meta: String(iconCount),
       expanded: true,
       children: [
         {
+          id: 'all-icons',
           label: 'All icons',
           href: '/icons',
           onClick: link('/icons'),
@@ -353,6 +90,7 @@ function createSidebarItems(link, activeKey) {
           detail: 'Full icon library'
         },
         ...iconCategories.map(category => ({
+          id: `icons-${category.key}`,
           label: category.label,
           meta: String(category.icons.length),
           href: `/icons/${category.key}`,
@@ -365,8 +103,26 @@ function createSidebarItems(link, activeKey) {
   ]
 }
 
+
 export function ShowcaseShell({ activeKey = 'overview', link, children }) {
-  const items = createSidebarItems(link, activeKey)
+  const mobileNavigationOpen = signal(false)
+  const closeNavigation = () => mobileNavigationOpen.value = false
+  const navigate = path => event => {
+    closeNavigation()
+    return link(path)(event)
+  }
+  const items = createSidebarItems(navigate, activeKey)
+
+  onMount(() => {
+    const handleKeyDown = event => {
+      if (event.key === 'Escape') {
+        closeNavigation()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  })
 
   return (
     <div class="showcase-shell">
@@ -383,7 +139,7 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
           </div>
         )}
       >
-        <a class="showcase-header-brand" href="/" onClick={link('/')}>
+        <a class="showcase-header-brand" href="/" onClick={navigate('/')}>
           <span class="showcase-prism-mark" aria-hidden="true">{PrismIcon({ size: '1.8rem' })}</span>
           <span class="showcase-header-brand-copy">
             <strong>prism ui</strong>
@@ -393,7 +149,21 @@ export function ShowcaseShell({ activeKey = 'overview', link, children }) {
       </Header>
       <SettingsPopup />
       <div class="showcase-frame">
-        <aside class="showcase-sidebar">
+        <div class="showcase-mobile-nav-bar">
+          <span class="showcase-mobile-nav-label">Explore Prism</span>
+          <button
+            class="showcase-nav-toggle"
+            type="button"
+            aria-controls="showcase-sidebar"
+            aria-expanded={mobileNavigationOpen}
+            onClick={() => mobileNavigationOpen.value = !mobileNavigationOpen.value}
+          >
+            <span class="showcase-nav-toggle-icon" aria-hidden="true">{mobileNavigationOpen.value ? '×' : '☰'}</span>
+            <span>{mobileNavigationOpen.value ? 'Close navigation' : 'Browse navigation'}</span>
+          </button>
+        </div>
+        {mobileNavigationOpen.value && <button class="showcase-nav-backdrop" type="button" aria-label="Close navigation" onClick={closeNavigation}></button>}
+        <aside id="showcase-sidebar" class={computed(() => `showcase-sidebar ${mobileNavigationOpen.value ? 'is-open' : ''}`)}>
           <TreeView class="showcase-tree" ariaLabel="Prism UI navigation" items={items} model={showcaseThemeModel} itemVariant="minimal" onRender={renderSidebarItem} />
         </aside>
         <div class="showcase-main">{children}</div>
