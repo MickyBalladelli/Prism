@@ -10,6 +10,8 @@ Prism is a small UI kit for [Matrix](https://github.com/MickyBalladelli/Matrix).
 
 Prism is alpha software. The API is small and useful today, but can change before the first stable release.
 
+See it live in action at the [Prism showcase](https://prism-gamma-wine.vercel.app/).
+
 ## Install
 
 ```bash
