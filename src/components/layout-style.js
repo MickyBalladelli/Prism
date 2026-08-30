@@ -1,12 +1,7 @@
 import { computed } from '@mickyballadelli/matrix'
+import { readReactiveValue } from '../reactive.js'
 
-const reactiveKinds = new Set(['signal', 'computed'])
-
-const isReactive = value => reactiveKinds.has(value?.kind)
-
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
+const readValue = readReactiveValue
 
 export function createLayoutStyle(props = {}) {
   return computed(() => {

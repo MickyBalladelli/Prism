@@ -1,17 +1,13 @@
 import { component, computed, html } from '@mickyballadelli/matrix'
+import { readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-label'
-const reactiveKinds = new Set(['signal', 'computed'])
 const sizes = Object.freeze(['small', 'medium', 'large', 'display'])
 const fonts = Object.freeze(['sans', 'serif', 'mono'])
 const weights = Object.freeze(['regular', 'medium', 'semibold', 'bold'])
 const tones = Object.freeze(['ink', 'muted', 'accent', 'inverse'])
 
-const isReactive = value => reactiveKinds.has(value?.kind)
-
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
+const readValue = readReactiveValue
 
 const normalizeChoice = (value, options, fallback) => options.includes(value)
   ? value

@@ -9,23 +9,17 @@ import {
 } from './icons.js'
 import { copyText } from './clipboard.js'
 import { readStorageValue, removeStorageValue, writeStorageValue } from '../storage.js'
+import { createWritableSignal, isReactiveValue, isWritableSignal, readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-table'
-const reactiveKinds = new Set(['signal', 'computed'])
 const directions = new Set(['asc', 'desc'])
 const alignments = new Set(['start', 'center', 'end'])
 const densities = new Set(['compact', 'comfortable', 'spacious'])
 const pinnedSides = new Set(['left', 'right', 'none'])
 
-const isReactive = value => reactiveKinds.has(value?.kind)
-
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
-
-const createWritable = (value, fallback) => value?.kind === 'signal'
-  ? value
-  : signal(readValue(value, fallback))
+const isReactive = isReactiveValue
+const readValue = readReactiveValue
+const createWritable = createWritableSignal
 
 function clamp(value, minimum, maximum) {
   return Math.min(Math.max(value, minimum), maximum)
@@ -251,7 +245,7 @@ export function Table(props = {}) {
   const defaultDensity = densities.has(readValue(density)) ? readValue(density) : 'comfortable'
   const queryValue = createWritable(filter, '')
   const pageValue = createWritable(page, 1)
-  const pageSizeValue = pageSize?.kind === 'signal'
+  const pageSizeValue = isWritableSignal(pageSize)
     ? pageSize
     : signal(initialSettings.pageSize ?? normalizePageSize(readValue(pageSize), 10))
   const selectedValue = createWritable(selectedKeys, [])
@@ -260,7 +254,7 @@ export function Table(props = {}) {
   const widthsValue = signal({ ...defaultWidths, ...(initialSettings.columnWidths ?? {}) })
   const hiddenValue = signal(initialSettings.hiddenColumns ?? defaultHidden)
   const pinnedValue = signal({ ...defaultPinned, ...(initialSettings.pinnedColumns ?? {}) })
-  const densityValue = density?.kind === 'signal'
+  const densityValue = isWritableSignal(density)
     ? density
     : signal(initialSettings.density ?? defaultDensity)
   const settingsOpen = signal(false)
@@ -389,6 +383,17 @@ export function Table(props = {}) {
   const rangeEnd = computed(() => rowsPerPage.value === 'all'
     ? sortedRows.value.length
     : Math.min(sortedRows.value.length, activePage.value * rowsPerPage.value))
+  const hasActiveFilters = computed(() => {
+    const query = String(queryValue.value ?? '').trim()
+    const filters = readValue(columnFilters, {}) ?? {}
+    return Boolean(query || Object.values(filters).some(value => value !== '' && value !== undefined && value !== null))
+  })
+  const emptyMessageValue = computed(() => readValue(emptyMessage, 'No rows found'))
+  const emptyDescription = computed(() => hasActiveFilters.value
+    ? 'Try another search or clear your filters.'
+    : 'There are no rows to show yet.')
+  const loadingStatus = computed(() => readValue(loading, false) ? 'Loading rows' : '')
+  const tableLabel = computed(() => String(readValue(ariaLabel, 'Data table') ?? '').trim() || 'Data table')
 
   const selectedSet = () => new Set(Array.isArray(selectedValue.value)
     ? selectedValue.value.map(String)
@@ -756,7 +761,7 @@ export function Table(props = {}) {
                   <span class="${baseClassName}-header-label">${label}</span>
                   <span class="${baseClassName}-sort-mark" data-direction="${activeSort}" aria-hidden="true"></span>
                 </button>
-                ${canResize ? html`<span class="${baseClassName}-resizer" role="separator" aria-label="Resize ${column.header} column" aria-orientation="vertical" tabindex="0" @pointerdown=${event => handleResizeStart(column, event)} @keydown=${event => handleResizeKey(column, event)}></span>` : null}
+                ${canResize ? html`<span class="${baseClassName}-resizer" role="separator" aria-label="Resize ${column.header} column. Use Left and Right Arrow keys." aria-orientation="vertical" aria-valuemin="${column.minWidth}" aria-valuemax="${column.maxWidth}" aria-valuenow="${computed(() => clamp(numericWidth(widthsValue.value[column.key] ?? column.width), column.minWidth, column.maxWidth))}" aria-valuetext="${computed(() => `${clamp(numericWidth(widthsValue.value[column.key] ?? column.width), column.minWidth, column.maxWidth)} pixels`)}" tabindex="0" @pointerdown=${event => handleResizeStart(column, event)} @keydown=${event => handleResizeKey(column, event)}></span>` : null}
               </th>
             `
           })}
@@ -775,7 +780,7 @@ export function Table(props = {}) {
     }
 
     if (pageRows.value.length === 0) {
-      return html`<tbody class="${baseClassName}-body"><tr><td class="${baseClassName}-empty" colspan="${colspan}"><span class="${baseClassName}-empty-mark" aria-hidden="true">✦</span><strong>${emptyMessage}</strong><span>Try another search or clear your filters.</span></td></tr></tbody>`
+      return html`<tbody class="${baseClassName}-body"><tr><td class="${baseClassName}-empty" colspan="${colspan}"><span class="${baseClassName}-empty-mark" aria-hidden="true">✦</span><strong>${emptyMessageValue}</strong><span>${emptyDescription}</span></td></tr></tbody>`
     }
 
     return html`
@@ -853,7 +858,8 @@ export function Table(props = {}) {
   ].filter(Boolean).join(' '))
 
   return html`
-    <section class="${rootClass}" id="${id}" aria-label="${ariaLabel}">
+    <section class="${rootClass}" id="${id}" aria-label="${tableLabel}">
+      <span class="${baseClassName}-status" role="status" aria-live="polite" aria-atomic="true">${loadingStatus}</span>
       <div class="${baseClassName}-toolbar">
         <div class="${baseClassName}-identity">
           ${title ? html`<strong>${title}</strong>` : null}
@@ -868,7 +874,7 @@ export function Table(props = {}) {
       </div>
 
       <div class="${baseClassName}-viewport">
-        <table>
+        <table aria-busy="${computed(() => readValue(loading, false) ? 'true' : undefined)}">
           ${headerMarkup}
           ${bodyMarkup}
         </table>

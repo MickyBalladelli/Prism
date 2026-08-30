@@ -223,7 +223,7 @@ const view = TextField({
 })
 ```
 
-Supported sizes are `small`, `medium`, and `large`. Use `onInput` or `onChange` for additional behavior.
+Supported sizes are `small`, `medium`, and `large`. Use `onInput` or `onChange` for additional behavior. Standard input props include `type`, `autocomplete`, `inputMode`, `maxLength`, `minLength`, `pattern`, `readOnly`, `disabled`, and `required`. Use `ariaDescription`, `ariaDescribedBy`, `ariaInvalid`, and `error` for validation feedback.
 
 ### CheckBox
 
@@ -241,7 +241,7 @@ const view = CheckBox({
 })
 ```
 
-The label wraps the input, so visible children provide the accessible name.
+The label wraps the input, so visible children provide the accessible name. `class`, `style`, `disabled`, `required`, `ariaDescription`, `ariaDescribedBy`, `ariaInvalid`, and `error` are supported for form state and validation feedback.
 
 ### Select
 
@@ -334,7 +334,7 @@ const view = <Pulse status="success">Service healthy</Pulse>
 
 ### TreeView
 
-`TreeView` renders nested branches and leaves. Leaves can use `href` or `onClick`. Branches use `children` and can start open with `expanded`.
+`TreeView` renders nested branches and leaves with tree roles, stable item IDs, roving focus, and keyboard navigation. Leaves can use `href` or `onClick`. Branches use `children` and can start open with `expanded`.
 
 ```js
 import { TreeView } from 'prism-ui'
@@ -358,6 +358,8 @@ const view = TreeView({
 ```
 
 Keyboard support includes Arrow Up and Down, Home and End, letter cycling, Enter or Space activation, Arrow Left and Right branch control, and Escape to close a branch.
+
+For controlled expansion, pass an `expanded` map keyed by each item's `id` and update it from `onExpandedChange`. Use `hasChildren: true` for lazy or currently empty branches.
 
 Available visual models are `prism`, `aurora`, `nocturne`, `editorial`, and `terminal`. `itemVariant="minimal"` is useful for dense navigation.
 
@@ -436,13 +438,13 @@ Column features include:
 - `sortable`, `searchable`, `resizable`, `reorderable`, `pinnable`, `hideable`, `exportable`
 - `pinned`: `left` or `right`
 
-Use `onSelectionChange`, `onSortChange`, `onPageChange`, `onPageSizeChange`, `onColumnOrderChange`, `onColumnResize`, and `onSettingsChange` to connect the table to app state. `serializeTableSettings` and `parseTableSettings` are exported for URLs or user preferences.
+Use `onSelectionChange`, `onSortChange`, `onPageChange`, `onPageSizeChange`, `onColumnOrderChange`, `onColumnResize`, and `onSettingsChange` to connect the table to app state. Resizer handles support Left and Right Arrow keys and expose their current width to assistive technology. `loading` announces progress and marks the table busy. `serializeTableSettings` and `parseTableSettings` are exported for URLs or user preferences.
 
 The current Table operates on client-side arrays. For very large or remote data sets, add server-side query handling around the table and keep page size bounded.
 
 ### CodeViewer
 
-`CodeViewer` renders a lightweight syntax-colored editor with optional line numbers, tabs, copying, and Matrix signal binding:
+`CodeViewer` renders a lightweight syntax-colored editor with optional line numbers, accessible tabs, copying, and Matrix signal binding:
 
 ```js
 import { CodeViewer } from 'prism-ui'
@@ -462,7 +464,7 @@ const view = CodeViewer({
 
 Supported languages are `javascript`, `jsx`, `typescript`, `tsx`, `json`, `css`, `html`, `xml`, `bash`, and `text`. Common aliases such as `js`, `ts`, `sh`, and `txt` are normalized.
 
-Use `tabs` for multiple sources. `activeTab` can be a signal, and `onTabChange`, `onChange`, and `onCopy` report user actions. Syntax colors can override `keyword`, `string`, `number`, `comment`, `function`, `tag`, `attribute`, `property`, `boolean`, `operator`, and `punctuation`.
+Use `tabs` for multiple sources. `activeTab` can be a signal or computed value, and `onTabChange`, `onChange`, and `onCopy` report user actions. Tab buttons support Arrow Left/Right, Home, and End. Syntax colors can override `keyword`, `string`, `number`, `comment`, `function`, `tag`, `attribute`, `property`, `boolean`, `operator`, and `punctuation`.
 
 ## Icons
 

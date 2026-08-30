@@ -1,4 +1,5 @@
 import { component, html } from '@mickyballadelli/matrix'
+import { isReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-pulse'
 
@@ -12,15 +13,15 @@ export function Pulse(props = {}) {
     children = []
   } = props
 
-  const statusValue = status?.kind === 'signal' || status?.kind === 'computed'
+  const statusValue = isReactiveValue(status)
     ? status
     : status || 'info'
 
-  const sizeValue = size?.kind === 'signal' || size?.kind === 'computed'
+  const sizeValue = isReactiveValue(size)
     ? size
     : size || 'medium'
 
-  const animationValue = animation?.kind === 'signal' || animation?.kind === 'computed'
+  const animationValue = isReactiveValue(animation)
     ? animation
     : animation || 'continuous'
 

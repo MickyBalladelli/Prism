@@ -1,18 +1,15 @@
 import { component, computed, effect, html, onMount, signal } from '@mickyballadelli/matrix'
 import { CloseIcon } from './icons.js'
+import { isWritableSignal, readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-popup'
-const reactiveKinds = new Set(['signal', 'computed'])
 const sizes = new Set(['small', 'medium', 'large', 'full'])
 const placements = new Set(['center', 'top', 'bottom'])
 let popupId = 0
 let bodyScrollLockCount = 0
 let previousBodyOverflow = ''
 
-const isReactive = value => reactiveKinds.has(value?.kind)
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
+const readValue = readReactiveValue
 
 function lockBodyScroll() {
   if (typeof document === 'undefined' || !document.body) {
@@ -167,7 +164,7 @@ export function Popup(props = {}) {
     onClose
   } = props
 
-  const openValue = open?.kind === 'signal' ? open : signal(Boolean(readValue(open, false)))
+  const openValue = isWritableSignal(open) ? open : signal(Boolean(readValue(open, false)))
   const instanceId = id ?? `prism-popup-${popupId += 1}`
   const titleId = `${instanceId}-title`
   const descriptionId = `${instanceId}-description`

@@ -1,16 +1,12 @@
 import { component, computed, html } from '@mickyballadelli/matrix'
+import { readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-button'
 const variants = new Set(['primary', 'secondary', 'tertiary', 'error', 'warning', 'information', 'success'])
 const sizes = new Set(['small', 'medium', 'large'])
 const shapes = new Set(['rounded', 'pill', 'square'])
 const iconPositions = new Set(['start', 'end'])
-const reactiveKinds = new Set(['signal', 'computed'])
-
-const isReactive = value => reactiveKinds.has(value?.kind)
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
+const readValue = readReactiveValue
 
 export function Button(props = {}) {
   const {
@@ -96,10 +92,13 @@ export function Button(props = {}) {
       const labelContent = readValue(label === undefined ? children : label)
       return typeof labelContent === 'string' || typeof labelContent === 'number'
         ? String(labelContent)
-        : undefined
+        : 'Button'
     }
 
-    return undefined
+    const labelContent = readValue(label === undefined ? children : label)
+    return typeof labelContent === 'string' || typeof labelContent === 'number'
+      ? undefined
+      : 'Button'
   })
 
   return html`<button type="${type}" class="${buttonClass}" id="${id}" name="${name}" value="${value}" title="${title}" aria-label="${accessibleLabel}" aria-busy="${busyValue}" aria-pressed="${pressedValue}" ?disabled=${disabledValue} @click=${onClick} @focus=${onFocus} @blur=${onBlur}>${buttonContent}</button>`

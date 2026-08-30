@@ -1,14 +1,9 @@
 import { component, computed, html } from '@mickyballadelli/matrix'
 import { createLayoutStyle } from './layout-style.js'
+import { readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-header'
-const reactiveKinds = new Set(['signal', 'computed'])
-
-const isReactive = value => reactiveKinds.has(value?.kind)
-
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
+const readValue = readReactiveValue
 
 export function Header(props = {}) {
   const {

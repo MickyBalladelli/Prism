@@ -1102,6 +1102,33 @@ export const prismTheme = globalCss(`
     font-size: var(--prism-font-size-copy);
   }
 
+  .text-field-message,
+  .check-box-message,
+  .prism-select-message {
+    display: block;
+    margin-top: .35rem;
+    color: var(--prism-color-text-subtle);
+    font-size: var(--prism-font-size-small);
+  }
+
+  .text-field-message-error,
+  .check-box-message-error,
+  .prism-select-message-error {
+    color: var(--prism-color-error);
+  }
+
+  .text-field-invalid {
+    border-color: var(--prism-color-error);
+  }
+
+  .check-box-invalid {
+    color: var(--prism-color-error);
+  }
+
+  .prism-select-trigger[aria-invalid="true"] {
+    border-color: var(--prism-color-error);
+  }
+
   .prism-code-viewer {
     --prism-code-background: #111a32;
     --prism-code-background-raised: #172344;
@@ -1241,6 +1268,18 @@ export const prismTheme = globalCss(`
     background: transparent;
     cursor: pointer;
     transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease;
+  }
+
+  .prism-code-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .prism-code-copy:hover {
@@ -1856,6 +1895,18 @@ export const prismTheme = globalCss(`
       color-mix(in srgb, var(--prism-color-surface) 95%, transparent);
     box-shadow: var(--prism-shadow-card);
     isolation: isolate;
+  }
+
+  .prism-table-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .prism-table-compact {

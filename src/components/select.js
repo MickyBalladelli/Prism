@@ -1,10 +1,10 @@
 import { component, computed, html, onMount, signal } from '@mickyballadelli/matrix'
+import { isReactiveValue, isWritableSignal, readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-select'
 const placementValues = new Set(['bottom', 'top', 'left', 'right'])
+const sizeValues = new Set(['small', 'medium', 'large'])
 let selectId = 0
-
-const isReactiveValue = value => value?.kind === 'signal' || value?.kind === 'computed'
 
 function normalizePlacement(value) {
   return placementValues.has(value) ? value : 'bottom'
@@ -38,8 +38,8 @@ function SelectFormLifecycle({ triggerId, required, disabled, formValue, invalid
       return
     }
 
-    const isRequired = () => Boolean(isReactiveValue(required) ? required.value : required)
-    const isDisabled = () => Boolean(isReactiveValue(disabled) ? disabled.value : disabled)
+    const isRequired = () => Boolean(readReactiveValue(required))
+    const isDisabled = () => Boolean(readReactiveValue(disabled))
     const handleSubmit = event => {
       if (!isRequired() || isDisabled() || formValue.value !== '') {
         invalid.value = false
@@ -72,17 +72,27 @@ export function Select(props = {}) {
     size = 'medium',
     placement = 'bottom',
     ariaLabel,
-    class: classValue = ''
+    ariaDescription,
+    ariaDescribedBy,
+    ariaInvalid,
+    error,
+    class: classValue = '',
+    style,
+    onFocus,
+    onBlur
   } = props
 
   const open = signal(false)
   const invalid = signal(false)
-  const selectedValue = value?.kind === 'signal'
+  const selectedValue = isWritableSignal(value)
     ? value
-    : signal(isReactiveValue(value) ? value.value : value)
+    : signal(readReactiveValue(value))
   const currentPlacement = signal('bottom')
   const activeIndex = signal(-1)
-  const sizeValue = isReactiveValue(size) ? size : size || 'medium'
+  const sizeValue = computed(() => {
+    const next = readReactiveValue(size, 'medium')
+    return sizeValues.has(next) ? next : 'medium'
+  })
   const optionList = isReactiveValue(options)
     ? computed(() => (options.value ?? []).map(normalizeOption))
     : (options ?? []).map(normalizeOption)
@@ -100,8 +110,12 @@ export function Select(props = {}) {
     return option ? renderOption(option, { location: 'trigger', selected: true }) : placeholder
   })
   const formValue = computed(() => String(selectedValue.value ?? ''))
-  const isRequired = () => Boolean(isReactiveValue(required) ? required.value : required)
-  const isDisabled = () => Boolean(isReactiveValue(disabled) ? disabled.value : disabled)
+  const isRequired = () => Boolean(readReactiveValue(required))
+  const isDisabled = () => Boolean(readReactiveValue(disabled))
+  const errorValue = computed(() => readReactiveValue(error))
+  const hasError = computed(() => errorValue.value !== undefined && errorValue.value !== null && errorValue.value !== '')
+  const descriptionValue = computed(() => hasError.value ? errorValue.value : readReactiveValue(ariaDescription))
+  const hasDescription = computed(() => descriptionValue.value !== undefined && descriptionValue.value !== null && descriptionValue.value !== '')
 
   let activeTrigger
   let removeOpenListeners = () => {}
@@ -110,6 +124,17 @@ export function Select(props = {}) {
   const triggerId = id ?? `${instanceId}-trigger`
   const listboxId = `${triggerId}-listbox`
   const optionId = index => `${triggerId}-option-${index}`
+  const messageId = `${triggerId}-message`
+  const describedBy = computed(() => [
+    readReactiveValue(ariaDescribedBy),
+    hasDescription.value ? messageId : undefined
+  ].filter(Boolean).join(' ') || undefined)
+  const accessibleLabel = computed(() => String(readReactiveValue(ariaLabel, 'Select an option') ?? '').trim() || 'Select an option')
+  const invalidValue = computed(() => {
+    const explicit = readReactiveValue(ariaInvalid)
+    return invalid.value || hasError.value || Boolean(explicit)
+  })
+  const styleValue = computed(() => readReactiveValue(style))
 
   const getSelectedIndex = () => {
     const selected = String(selectedValue.value ?? '')
@@ -142,7 +167,7 @@ export function Select(props = {}) {
   }
 
   const openMenu = index => {
-    currentPlacement.value = normalizePlacement(isReactiveValue(placement) ? placement.value : placement)
+    currentPlacement.value = normalizePlacement(readReactiveValue(placement))
     activeIndex.value = index >= 0 ? index : getInitialActiveIndex()
     open.value = true
     addOpenListeners()
@@ -178,6 +203,8 @@ export function Select(props = {}) {
 
     const triggerRect = activeTrigger.getBoundingClientRect()
     const gutter = 8
+    const viewportWidth = Math.max(8, window.innerWidth - gutter * 2)
+    const wrapperRect = wrapper.getBoundingClientRect()
     const available = {
       bottom: window.innerHeight - triggerRect.bottom - gutter,
       top: triggerRect.top - gutter,
@@ -190,7 +217,7 @@ export function Select(props = {}) {
       right: menuWidth <= available.right,
       left: menuWidth <= available.left
     }
-    const preferred = normalizePlacement(isReactiveValue(placement) ? placement.value : placement)
+    const preferred = normalizePlacement(readReactiveValue(placement))
     const opposite = {
       bottom: 'top',
       top: 'bottom',
@@ -203,6 +230,18 @@ export function Select(props = {}) {
       : fits[fallback]
         ? fallback
         : available[fallback] > available[preferred] ? fallback : preferred
+
+    menu.style.maxWidth = `${viewportWidth}px`
+    if (nextPlacement === 'bottom' || nextPlacement === 'top') {
+      menu.style.left = `${Math.max(gutter - wrapperRect.left, 0)}px`
+      menu.style.right = `${Math.max(wrapperRect.right - (window.innerWidth - gutter), 0)}px`
+    } else if (nextPlacement === 'right' && triggerRect.right + menuWidth + gutter > window.innerWidth) {
+      menu.style.left = 'auto'
+      menu.style.right = '0'
+    } else if (nextPlacement === 'left' && triggerRect.left - menuWidth - gutter < 0) {
+      menu.style.right = 'auto'
+      menu.style.left = '0'
+    }
 
     const availableHeight = nextPlacement === 'top'
       ? available.top
@@ -376,11 +415,14 @@ export function Select(props = {}) {
   })
 
   const activeOptionId = computed(() => activeIndex.value >= 0 ? optionId(activeIndex.value) : undefined)
-  const menu = html`<div class="${baseClassName}-menu ${baseClassName}-menu-${currentPlacement}" id="${listboxId}" role="listbox" aria-label="${ariaLabel ?? 'Options'}" ?hidden=${computed(() => !open.value)}>${optionMarkup}</div>`
+  const menu = html`<div class="${baseClassName}-menu ${baseClassName}-menu-${currentPlacement}" id="${listboxId}" role="listbox" aria-label="${computed(() => `${accessibleLabel.value} options`)}" ?hidden=${computed(() => !open.value)}>${optionMarkup}</div>`
+  const message = computed(() => hasDescription.value
+    ? html`<span id="${messageId}" class="${baseClassName}-message ${hasError.value ? `${baseClassName}-message-error` : ''}" role="${hasError.value ? 'alert' : undefined}">${descriptionValue}</span>`
+    : null)
 
   const formLifecycle = component(SelectFormLifecycle, { triggerId, required, disabled, formValue, invalid })
 
-  return html`<div class="${baseClassName} ${baseClassName}-${sizeValue} ${classValue}"><button type="button" class="${baseClassName}-trigger" id="${triggerId}" role="combobox" aria-haspopup="listbox" aria-expanded="${open}" aria-controls="${listboxId}" aria-activedescendant="${activeOptionId}" aria-label="${ariaLabel}" aria-required="${isRequired()}" aria-invalid="${computed(() => invalid.value ? 'true' : undefined)}" ?disabled=${disabled} @click=${toggleMenu} @keydown=${handleKeyDown}><span class="${baseClassName}-value">${selectedLabel}</span><span class="${baseClassName}-chevron" aria-hidden="true"></span></button>${name === undefined ? null : html`<input type="hidden" name="${name}" .value=${formValue} ?disabled=${disabled}>`}${formLifecycle}${menu}</div>`
+  return html`<div class="${baseClassName} ${baseClassName}-${sizeValue} ${classValue}" style="${styleValue}"><button type="button" class="${baseClassName}-trigger" id="${triggerId}" role="combobox" aria-haspopup="listbox" aria-expanded="${open}" aria-controls="${listboxId}" aria-activedescendant="${activeOptionId}" aria-label="${accessibleLabel}" aria-describedby="${describedBy}" aria-required="${computed(() => isRequired() ? 'true' : undefined)}" aria-invalid="${computed(() => invalidValue.value ? 'true' : undefined)}" ?disabled=${disabled} @click=${toggleMenu} @keydown=${handleKeyDown} @focus=${onFocus} @blur=${onBlur}><span class="${baseClassName}-value">${selectedLabel}</span><span class="${baseClassName}-chevron" aria-hidden="true"></span></button>${name === undefined ? null : html`<input type="hidden" name="${name}" .value=${formValue} ?disabled=${disabled}>`}${message}${formLifecycle}${menu}</div>`
 }
 
 export const SelectComponent = props => component(Select, props)

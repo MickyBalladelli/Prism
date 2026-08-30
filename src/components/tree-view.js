@@ -1,9 +1,13 @@
-import { component, computed, html } from '@mickyballadelli/matrix'
+import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { Badge } from './badge.js'
 import { normalizeTreeViewModel } from '../theme.js'
+import { isReactiveValue, readReactiveValue } from '../reactive.js'
 
 const itemVariants = new Set(['framed', 'minimal'])
+let treeId = 0
 
+const isReactive = isReactiveValue
+const readValue = readReactiveValue
 const normalizeItemVariant = value => itemVariants.has(value) ? value : 'framed'
 
 function renderMeta(meta) {
@@ -18,7 +22,18 @@ function renderLabel(item, label, onRender, context) {
     : label
 }
 
-function renderLeaf(item = {}, onKeyDown, onRender, depth = 0) {
+function renderLeaf(item = {}, context) {
+  const {
+    key,
+    domId,
+    depth,
+    position,
+    setSize,
+    onRender,
+    onKeyDown,
+    setFocus,
+    getTabIndex
+  } = context
   const {
     label = 'Untitled',
     href,
@@ -26,7 +41,6 @@ function renderLeaf(item = {}, onKeyDown, onRender, depth = 0) {
     active = false,
     meta
   } = item
-
   const content = html`
     <span class="prism-tree-entry-copy">
       <span class="prism-tree-dot" aria-hidden="true"></span>
@@ -34,27 +48,41 @@ function renderLeaf(item = {}, onKeyDown, onRender, depth = 0) {
     </span>
     ${renderMeta(meta)}
   `
-
   const classValue = active
     ? 'prism-tree-link prism-tree-link-active'
     : 'prism-tree-link'
-
+  const handleClick = event => {
+    setFocus(key)
+    onClick?.(event)
+  }
   if (href !== undefined) {
-    return html`<li class="prism-tree-leaf"><a class="${classValue}" href="${href}" role="treeitem" @click=${onClick} @keydown=${onKeyDown}>${content}</a></li>`
+    return html`<li class="prism-tree-leaf"><a class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${active ? 'page' : undefined}" tabindex="${getTabIndex(key)}" data-tree-key="${key}" @click=${handleClick} @focus=${() => setFocus(key)} @keydown=${onKeyDown}>${content}</a></li>`
   }
 
   if (onClick) {
-    return html`<li class="prism-tree-leaf"><button type="button" class="${classValue}" role="treeitem" @click=${onClick} @keydown=${onKeyDown}>${content}</button></li>`
+    return html`<li class="prism-tree-leaf"><button type="button" class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${undefined}" tabindex="${getTabIndex(key)}" data-tree-key="${key}" @click=${handleClick} @focus=${() => setFocus(key)} @keydown=${onKeyDown}>${content}</button></li>`
   }
 
-  return html`<li class="prism-tree-leaf"><div class="${classValue}" role="treeitem" tabindex="0" @keydown=${onKeyDown}>${content}</div></li>`
+  return html`<li class="prism-tree-leaf"><div class="${classValue}" id="${domId}" role="treeitem" aria-level="${depth + 1}" aria-posinset="${position}" aria-setsize="${setSize}" aria-current="${undefined}" tabindex="${getTabIndex(key)}" data-tree-key="${key}" @focus=${() => setFocus(key)} @keydown=${onKeyDown}>${content}</div></li>`
 }
 
-function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
+function renderBranch(item = {}, context) {
+  const {
+    key,
+    domId,
+    depth,
+    position,
+    setSize,
+    expanded,
+    children,
+    onRender,
+    onKeyDown,
+    setFocus,
+    getTabIndex,
+    setExpanded
+  } = context
   const {
     label = 'Section',
-    children = [],
-    expanded = true,
     active = false,
     onClick,
     meta
@@ -62,12 +90,12 @@ function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
   const summaryClass = active
     ? 'prism-tree-summary prism-tree-summary-active'
     : 'prism-tree-summary'
+  const groupId = `${domId}-group`
 
   const handleSummaryClick = event => {
-    // Always cancel the UA summary toggle. If onClick rebuilds the tree while this
-    // click is still dispatching, the browser would otherwise toggle the replacement
-    // <details> and close a branch that was mounted with open=true.
     event.preventDefault()
+    setFocus(key)
+    setExpanded(key, !expanded, item)
     onClick?.(event)
 
     if (!event.currentTarget.isConnected) {
@@ -76,14 +104,29 @@ function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
 
     const details = event.currentTarget.parentElement
     if (details?.tagName === 'DETAILS') {
-      details.open = !details.open
+      details.open = !expanded
     }
   }
 
+  const childItems = Array.isArray(children) ? children : []
   return html`
     <li class="prism-tree-branch">
-      <details class="prism-tree-details" .open=${expanded} @toggle=${onToggle}>
-        <summary class="${summaryClass}" role="treeitem" aria-expanded="${expanded}" @click=${handleSummaryClick} @keydown=${onKeyDown}>
+      <details class="prism-tree-details" .open=${expanded}>
+        <summary
+          class="${summaryClass}"
+          id="${domId}"
+          role="treeitem"
+          aria-level="${depth + 1}"
+          aria-posinset="${position}"
+          aria-setsize="${setSize}"
+          aria-expanded="${expanded}"
+          aria-owns="${groupId}"
+          tabindex="${getTabIndex(key)}"
+          data-tree-key="${key}"
+          @click=${handleSummaryClick}
+          @focus=${() => setFocus(key)}
+          @keydown=${onKeyDown}
+        >
           <span class="prism-tree-entry-copy">
             <span class="prism-tree-toggle" aria-hidden="true">
               <span class="prism-tree-toggle-bar prism-tree-toggle-bar-horizontal"></span>
@@ -94,18 +137,34 @@ function renderBranch(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
           </span>
           ${renderMeta(meta)}
         </summary>
-        <ul class="prism-tree-list prism-tree-list-nested" role="group">
-          ${children.map(child => renderItem(child, onKeyDown, onToggle, onRender, depth + 1))}
+        <ul class="prism-tree-list prism-tree-list-nested" id="${groupId}" role="group">
+          ${childItems.map((child, index) => context.renderItem(child, {
+            ...context,
+            key: context.getItemKey(child, index, key),
+            domId: context.getDomId(context.getItemKey(child, index, key)),
+            depth: depth + 1,
+            position: index + 1,
+            setSize: childItems.length,
+            parentKey: key
+          }))}
         </ul>
       </details>
     </li>
   `
 }
 
-function renderItem(item = {}, onKeyDown, onToggle, onRender, depth = 0) {
-  return Array.isArray(item.children) && item.children.length > 0
-    ? renderBranch(item, onKeyDown, onToggle, onRender, depth)
-    : renderLeaf(item, onKeyDown, onRender, depth)
+function renderItem(item = {}, context) {
+  const children = readValue(item.children, undefined)
+  const isBranch = item.hasChildren === true || Array.isArray(children) || isReactive(item.children)
+  if (!isBranch) {
+    return renderLeaf(item, context)
+  }
+
+  return renderBranch(item, {
+    ...context,
+    children: children ?? [],
+    expanded: context.getExpanded(context.key, item)
+  })
 }
 
 export function TreeView(props = {}) {
@@ -116,16 +175,98 @@ export function TreeView(props = {}) {
     ariaLabel = 'Tree view',
     model = 'prism',
     itemVariant = 'framed',
+    expanded,
+    onExpandedChange,
     onRender
   } = props
 
-  const isReactiveItems = items?.kind === 'signal' || items?.kind === 'computed'
-  const modelValue = model?.kind === 'signal' || model?.kind === 'computed'
+  const instanceId = id ?? `prism-tree-${treeId += 1}`
+  const isReactiveItems = isReactive(items)
+  const expandedState = signal({})
+  const focusedKey = signal('')
+  const isControlledExpansion = expanded !== undefined
+  const modelValue = isReactive(model)
     ? computed(() => normalizeTreeViewModel(model.value))
     : normalizeTreeViewModel(model)
-  const itemVariantValue = itemVariant?.kind === 'signal' || itemVariant?.kind === 'computed'
+  const itemVariantValue = isReactive(itemVariant)
     ? computed(() => normalizeItemVariant(itemVariant.value))
     : normalizeItemVariant(itemVariant)
+
+  const readItems = () => {
+    const source = isReactiveItems ? items.value : items
+    return Array.isArray(source) ? source : []
+  }
+  const getChildren = item => {
+    const children = readValue(item?.children, [])
+    return Array.isArray(children) ? children : []
+  }
+  const isBranch = item => item?.hasChildren === true || Array.isArray(item?.children) || isReactive(item?.children)
+  const getItemKey = (item, index, parentKey = 'root') => String(item?.id ?? `${parentKey}-${index}`)
+  const getDomId = key => `${instanceId}-item-${key}`
+  const readExpansionMap = () => {
+    const source = readValue(expanded, {})
+    return source && typeof source === 'object' ? source : {}
+  }
+  const getExpanded = (key, item) => {
+    const controlledMap = readExpansionMap()
+    if (Object.prototype.hasOwnProperty.call(controlledMap, key)) {
+      return Boolean(controlledMap[key])
+    }
+
+    if (Object.prototype.hasOwnProperty.call(expandedState.value, key)) {
+      return Boolean(expandedState.value[key])
+    }
+
+    return Boolean(readValue(item?.expanded, true))
+  }
+  const collectRecords = (sourceItems, depth = 0, parentKey = 'root', includeCollapsed = false, records = []) => {
+    sourceItems.forEach((item, index) => {
+      const key = getItemKey(item, index, parentKey)
+      const children = getChildren(item)
+      const branch = isBranch(item)
+      const expandedValue = branch ? getExpanded(key, item) : false
+      records.push({
+        item,
+        key,
+        domId: getDomId(key),
+        parentKey,
+        depth,
+        position: index + 1,
+        setSize: sourceItems.length,
+        isBranch: branch,
+        expanded: expandedValue
+      })
+
+      if (branch && (includeCollapsed || expandedValue)) {
+        collectRecords(children, depth + 1, key, includeCollapsed, records)
+      }
+    })
+
+    return records
+  }
+  const allRecords = computed(() => collectRecords(readItems(), 0, 'root', true))
+  const visibleRecords = computed(() => collectRecords(readItems()))
+  const focusedTarget = computed(() => {
+    const visible = visibleRecords.value
+    return visible.some(record => record.key === focusedKey.value)
+      ? focusedKey.value
+      : visible[0]?.key ?? ''
+  })
+  const getTabIndex = key => focusedTarget.value === key ? 0 : -1
+
+  const setFocus = key => {
+    focusedKey.value = key
+  }
+  const setExpanded = (key, nextValue, item) => {
+    const next = Boolean(nextValue)
+    const currentMap = isControlledExpansion ? readExpansionMap() : expandedState.value
+    const nextMap = { ...currentMap, [key]: next }
+    if (!isControlledExpansion) {
+      expandedState.value = nextMap
+    }
+    onExpandedChange?.(nextMap, item, next)
+  }
+  const findRecord = key => allRecords.value.find(record => record.key === key)
 
   const getVisibleEntries = root => [...root.querySelectorAll('.prism-tree-summary, .prism-tree-link')]
     .filter(entry => {
@@ -149,21 +290,14 @@ export function TreeView(props = {}) {
     return details?.querySelector(':scope > .prism-tree-summary')
   }
 
-  const syncBranchState = summary => {
-    if (!summary) {
-      return null
+  const focusEntry = (entry, event) => {
+    if (!entry) {
+      return
     }
 
-    const details = summary.closest('details')
-    if (details) {
-      summary.setAttribute('aria-expanded', String(details.open))
-    }
-    return details
-  }
-
-  const handleToggle = event => {
-    const summary = event.currentTarget.querySelector(':scope > .prism-tree-summary')
-    syncBranchState(summary)
+    setFocus(entry.dataset.treeKey ?? '')
+    event.preventDefault()
+    entry.focus()
   }
 
   const handleKeyDown = event => {
@@ -175,23 +309,18 @@ export function TreeView(props = {}) {
 
     const entries = getVisibleEntries(root)
     const currentIndex = entries.indexOf(entry)
-    const focusEntry = index => {
-      const nextEntry = entries[index]
-      if (nextEntry) {
-        event.preventDefault()
-        nextEntry.focus()
-      }
-    }
+    const moveTo = index => focusEntry(entries[index], event)
+    const record = findRecord(entry.dataset.treeKey)
 
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       const direction = event.key === 'ArrowDown' ? 1 : -1
-      const nextIndex = (currentIndex + direction + entries.length) % entries.length
-      focusEntry(nextIndex)
+      const nextIndex = (Math.max(currentIndex, 0) + direction + entries.length) % entries.length
+      moveTo(nextIndex)
       return
     }
 
     if (event.key === 'Home' || event.key === 'End') {
-      focusEntry(event.key === 'Home' ? 0 : entries.length - 1)
+      moveTo(event.key === 'Home' ? 0 : entries.length - 1)
       return
     }
 
@@ -201,55 +330,56 @@ export function TreeView(props = {}) {
       return
     }
 
-    if (event.key === 'ArrowRight') {
-      const details = entry.matches('.prism-tree-summary') ? entry.closest('details') : null
-      if (details && !details.open) {
-        details.open = true
-        syncBranchState(entry)
+    if (event.key === 'ArrowRight' && record?.isBranch) {
+      if (!record.expanded) {
+        setExpanded(record.key, true, record.item)
         event.preventDefault()
+        return
+      }
+
+      const firstChild = visibleRecords.value.find(candidate => candidate.parentKey === record.key)
+      if (firstChild) {
+        focusEntry(entries.find(candidate => candidate.dataset.treeKey === firstChild.key), event)
       }
       return
     }
 
     if (event.key === 'ArrowLeft') {
-      const details = entry.matches('.prism-tree-summary') ? entry.closest('details') : null
-      if (details?.open) {
-        details.open = false
-        syncBranchState(entry)
+      if (record?.isBranch && record.expanded) {
+        setExpanded(record.key, false, record.item)
         event.preventDefault()
         return
       }
 
       const parentSummary = getParentSummary(entry)
       if (parentSummary && parentSummary !== entry) {
-        event.preventDefault()
-        parentSummary.focus()
+        focusEntry(parentSummary, event)
       }
       return
     }
 
     if (event.key === 'Escape') {
       const details = entry.closest('details')
-      if (details?.open) {
-        const summary = details.querySelector(':scope > .prism-tree-summary')
-        details.open = false
-        syncBranchState(summary)
+      const summary = details?.querySelector(':scope > .prism-tree-summary')
+      const summaryRecord = findRecord(summary?.dataset.treeKey)
+      if (details?.open && summaryRecord) {
+        setExpanded(summaryRecord.key, false, summaryRecord.item)
         event.preventDefault()
-        summary?.focus()
+        focusEntry(summary, event)
       }
       return
     }
 
     if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey && entries.length > 0) {
       event.preventDefault()
-      const key = event.key.toLocaleLowerCase()
+      const searchKey = event.key.toLocaleLowerCase()
       const start = currentIndex >= 0 ? currentIndex : 0
 
       for (let offset = 1; offset <= entries.length; offset += 1) {
         const index = (start + offset) % entries.length
         const label = entries[index].querySelector('.prism-tree-label')?.textContent?.trim().toLocaleLowerCase() ?? ''
-        if (label.startsWith(key)) {
-          entries[index].focus()
+        if (label.startsWith(searchKey)) {
+          focusEntry(entries[index], event)
           return
         }
       }
@@ -257,15 +387,33 @@ export function TreeView(props = {}) {
   }
 
   const itemMarkup = computed(() => {
-    const sourceItems = isReactiveItems ? items.value : items
-    return (sourceItems ?? []).map(item => renderItem(item, handleKeyDown, handleToggle, onRender))
+    const context = {
+      onRender,
+      onKeyDown: handleKeyDown,
+      setFocus,
+      getTabIndex,
+      getExpanded,
+      setExpanded,
+      getItemKey,
+      getDomId,
+      renderItem: (item, childContext) => renderItem(item, childContext)
+    }
+    return readItems().map((item, index, sourceItems) => {
+      const key = getItemKey(item, index)
+      return renderItem(item, {
+        ...context,
+        key,
+        domId: getDomId(key),
+        depth: 0,
+        position: index + 1,
+        setSize: sourceItems.length,
+        parentKey: 'root'
+      })
+    })
   })
 
-  if (id === undefined) {
-    return html`<nav class="prism-tree-view prism-tree-model-${modelValue} prism-tree-items-${itemVariantValue} ${classValue}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
-  }
-
-  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} prism-tree-items-${itemVariantValue} ${classValue}" id="${id}" aria-label="${ariaLabel}"><ul class="prism-tree-list" role="tree">${itemMarkup}</ul></nav>`
+  const labelValue = computed(() => String(readValue(ariaLabel, 'Tree view') ?? '').trim() || 'Tree view')
+  return html`<nav class="prism-tree-view prism-tree-model-${modelValue} prism-tree-items-${itemVariantValue} ${classValue}" id="${instanceId}" aria-label="${labelValue}"><ul class="prism-tree-list" role="tree" aria-label="${labelValue}">${itemMarkup}</ul></nav>`
 }
 
 export const TreeViewComponent = props => component(TreeView, props)

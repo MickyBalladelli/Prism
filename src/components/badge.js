@@ -1,8 +1,7 @@
 import { component, computed, html } from '@mickyballadelli/matrix'
+import { isReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-badge'
-
-const isReactiveValue = value => value?.kind === 'signal' || value?.kind === 'computed'
 
 export function Badge(props = {}) {
   const {

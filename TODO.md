@@ -12,17 +12,17 @@ Review of the full repo: `src/`, `types/`, `test/`, `examples/showcase/`, packag
 
 ## P1 — Accessibility and behavior
 
-- [ ] **Complete CodeViewer tabs semantics.** The tablist has tabs but no `aria-controls`, tabpanel, roving focus, or Arrow-key navigation (`src/components/code-viewer.js:404-414`). Add a real tabpanel and announce copy success/failure in a live region.
-- [ ] **Complete TreeView semantics.** Add `aria-level`, `aria-posinset`, `aria-setsize`, `aria-current` for active links, and roving `tabindex` (`src/components/tree-view.js:43-97`). Test the tree with a screen reader and keyboard-only navigation.
-- [ ] **Add controlled expansion to TreeView.** `expanded` is read once while rendering branches (`src/components/tree-view.js:53-86`) and there is no `onExpandedChange`. Add a controlled/uncontrolled API, stable item IDs, and support empty or lazy branches.
+- [x] **Complete CodeViewer tabs semantics.** Tabs now have linked `aria-controls` and tabpanel semantics, roving focus, Arrow/Home/End navigation, and copy success/failure announcements.
+- [x] **Complete TreeView semantics.** Tree items now expose hierarchy metadata, active-link state, stable IDs, and roving keyboard focus with branch navigation.
+- [x] **Add controlled expansion to TreeView.** TreeView now supports controlled or uncontrolled expansion through `expanded` and `onExpandedChange`, stable item IDs, and empty or lazy branches.
 - [x] **Fix Table keyboard event bubbling.** Row checkboxes now stop both click and keydown propagation, so Space does not activate the row.
-- [ ] **Expose Table resize state to assistive tech.** The resize handle is a separator (`src/components/table.js:717`) but has no `aria-valuenow`, `aria-valuemin`, or `aria-valuemax`. Add those values and a clear keyboard help label.
-- [ ] **Add Table loading state semantics.** Add `aria-busy`, a status announcement, and a useful empty state distinction. Current empty copy always says “Try another search” even when the data set is simply empty (`src/components/table.js:737`).
+- [x] **Expose Table resize state to assistive tech.** Resize handles now expose min, max, current width, pixel text, and keyboard help.
+- [x] **Add Table loading state semantics.** Loading now sets `aria-busy`, announces progress, and distinguishes an empty data set from an empty filtered result.
 - [x] **Fix Select active descendant on first render.** Select omits `aria-activedescendant` until an active option exists.
-- [ ] **Handle Select viewport overflow.** Placement logic measures width but never clamps the menu to the viewport (`src/components/select.js:113-172`). Add horizontal bounds and a max width for left/right placement.
-- [ ] **Make reactive props consistent.** TextField and CheckBox bind only writable signals (`src/components/text-field.js:20`, `src/components/check-box.js:14`); Select, Popup, Table, and CodeViewer also copy some computed values into new signals. Define one Matrix reactive-value contract and use it everywhere, or narrow the TypeScript types to writable signals.
-- [ ] **Improve standard form props.** TextField and CheckBox lack class/style, accessible description, autocomplete, input type, input mode, maxlength, and error/invalid support. Add these before the library grows more form components.
-- [ ] **Add accessible names to icon-only and unlabeled surfaces.** Popup now defaults to the accessible name `Dialog`, but runtime development warnings and clearer required types would still help form controls and icon-only surfaces.
+- [x] **Handle Select viewport overflow.** Select now clamps menu width and horizontal placement to the viewport while preserving the best available placement.
+- [x] **Make reactive props consistent.** Shared Matrix reactive helpers now distinguish readable reactive values from writable signals across components and declarations.
+- [x] **Improve standard form props.** TextField and CheckBox now support standard input attributes, class/style, focus events, descriptions, invalid state, and error feedback.
+- [x] **Add accessible names to icon-only and unlabeled surfaces.** Popup, Select, Table, CodeViewer, Button, and unlabeled CheckBox instances now have safe fallback names; visible form labels remain supported.
 
 ## P1 — Visual and runtime quality
 

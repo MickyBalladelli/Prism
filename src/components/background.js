@@ -1,7 +1,7 @@
 import { component, computed, html, onMount } from '@mickyballadelli/matrix'
+import { readReactiveValue } from '../reactive.js'
 
 const baseClassName = 'prism-background'
-const reactiveKinds = new Set(['signal', 'computed'])
 const palettes = Object.freeze({
   midnight: Object.freeze({
     base: '#071427',
@@ -217,11 +217,7 @@ void main() {
 }
 `
 
-const isReactive = value => reactiveKinds.has(value?.kind)
-
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
+const readValue = readReactiveValue
 
 const normalizePalette = value => Object.prototype.hasOwnProperty.call(palettes, value)
   ? value

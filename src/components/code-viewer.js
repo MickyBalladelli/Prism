@@ -1,10 +1,10 @@
 import { component, computed, html, signal } from '@mickyballadelli/matrix'
 import { CopyIcon } from './icons.js'
 import { copyText } from './clipboard.js'
+import { isReactiveValue, isWritableSignal, readReactiveValue } from '../reactive.js'
 
 const rootClassName = 'prism-code-viewer'
 const baseClassName = 'prism-code'
-const reactiveKinds = new Set(['signal', 'computed'])
 const supportedLanguages = new Set(['javascript', 'jsx', 'typescript', 'tsx', 'json', 'css', 'html', 'xml', 'bash', 'text'])
 const languageAliases = new Map([
   ['js', 'javascript'],
@@ -30,12 +30,9 @@ const javascriptKeywords = new Set([
 const typeKeywords = new Set(['boolean', 'interface', 'keyof', 'never', 'number', 'string', 'type', 'unknown', 'void'])
 const booleanKeywords = new Set(['false', 'null', 'true', 'undefined'])
 const markupLanguages = new Set(['html', 'xml', 'jsx', 'tsx'])
+let viewerId = 0
 
-const isReactive = value => reactiveKinds.has(value?.kind)
-
-const readValue = (value, fallback) => isReactive(value)
-  ? value.value
-  : value === undefined || value === null ? fallback : value
+const readValue = readReactiveValue
 
 function normalizeLanguage(value) {
   const language = String(value ?? 'javascript').toLocaleLowerCase()
@@ -239,7 +236,7 @@ function createCodeStyle(props) {
 }
 
 function toCodeSignal(value, fallback = '') {
-  return value?.kind === 'signal' ? value : signal(String(readValue(value, fallback)))
+  return isReactiveValue(value) ? value : signal(String(readValue(value, fallback)))
 }
 
 function tabLabel(tab) {
@@ -294,6 +291,7 @@ export function CodeViewer(props = {}) {
     maxHeight,
     style,
     class: classValue = '',
+    id,
     ariaLabel = 'Code viewer',
     onChange,
     onCopy,
@@ -302,10 +300,13 @@ export function CodeViewer(props = {}) {
 
   const tabs = createTabs(props)
   const showTabs = tabs.length > 1
+  const instanceId = id ?? `${rootClassName}-${viewerId += 1}`
+  const panelId = `${instanceId}-panel`
+  const tabButtonId = index => `${instanceId}-tab-${index}`
   const defaultTabId = tabs.some(tab => tab.id === 'jsx')
     ? 'jsx'
     : tabs[0].id
-  const activeTabId = props.activeTab?.kind === 'signal'
+  const activeTabId = isReactiveValue(props.activeTab)
     ? props.activeTab
     : signal(String(readValue(props.activeTab, readValue(props.defaultTab, defaultTabId))))
   const activeTab = computed(() => tabs.find(tab => tab.id === activeTabId.value) ?? tabs[0])
@@ -322,14 +323,45 @@ export function CodeViewer(props = {}) {
     : `${baseClassName}-gutter ${baseClassName}-gutter-hidden`)
   const styleValue = createCodeStyle({ syntaxColors, fontFamily, fontSize, lineHeight, tabSize, minHeight, maxHeight, style })
   const copyState = signal('ready')
+  const accessibleLabel = computed(() => String(readValue(ariaLabel, 'Code viewer') ?? '').trim() || 'Code viewer')
 
   const selectTab = id => {
-    activeTabId.value = id
+    if (isWritableSignal(activeTabId)) {
+      activeTabId.value = id
+    }
     onTabChange?.(id)
   }
 
+  const moveTab = (index, event) => {
+    if (!showTabs) {
+      return
+    }
+
+    const nextIndex = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? tabs.length - 1
+        : (index + (event.key === 'ArrowLeft' ? -1 : 1) + tabs.length) % tabs.length
+    const nextTab = tabs[nextIndex]
+    if (!nextTab) {
+      return
+    }
+
+    event.preventDefault()
+    selectTab(nextTab.id)
+    event.currentTarget.parentElement?.children[nextIndex]?.focus()
+  }
+
+  const activeTabIndex = computed(() => Math.max(0, tabs.findIndex(tab => tab.id === activeTab.value.id)))
+  const copyStatus = computed(() => copyState.value === 'copied'
+    ? 'Code copied to clipboard'
+    : copyState.value === 'error' ? 'Copy failed' : '')
+
   const handleInput = event => {
     const tab = tabs.find(item => item.id === activeTabId.value) ?? tabs[0]
+    if (!isWritableSignal(tab.code)) {
+      return
+    }
     tab.code.value = event.currentTarget.value
     onChange?.(event)
   }
@@ -378,7 +410,7 @@ export function CodeViewer(props = {}) {
   })
 
   return html`
-    <section class="${rootClassName} ${rootClassName}-language-${languageValue} ${showTabs ? `${rootClassName}-has-tabs` : ''} ${classValue}" style="${styleValue}" aria-label="${ariaLabel}" data-copy-state="${copyState}">
+    <section class="${rootClassName} ${rootClassName}-language-${languageValue} ${showTabs ? `${rootClassName}-has-tabs` : ''} ${classValue}" id="${id}" style="${styleValue}" aria-label="${accessibleLabel}" data-copy-state="${copyState}">
       <header class="${baseClassName}-header">
         <div class="${baseClassName}-file">
           <span class="${baseClassName}-file-dot" aria-hidden="true"></span>
@@ -387,24 +419,33 @@ export function CodeViewer(props = {}) {
         </div>
         ${showTabs ? html`
           <div class="${baseClassName}-tabs" role="tablist" aria-label="Source language">
-            ${tabs.map(tab => html`
+            ${tabs.map((tab, index) => html`
               <button
                 type="button"
                 role="tab"
                 class="${baseClassName}-tab"
-                aria-selected="${computed(() => activeTabId.value === tab.id ? 'true' : 'false')}"
+                id="${tabButtonId(index)}"
+                aria-controls="${panelId}"
+                aria-selected="${computed(() => activeTab.value.id === tab.id ? 'true' : 'false')}"
+                tabindex="${computed(() => activeTab.value.id === tab.id ? '0' : '-1')}"
                 @click=${() => selectTab(tab.id)}
+                @keydown=${event => {
+                  if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+                    moveTab(index, event)
+                  }
+                }}
               >${tab.label}</button>
             `)}
           </div>
         ` : null}
         <button type="button" class="${baseClassName}-copy" aria-label="${copyLabel}" title="${copyLabel}" ?hidden=${computed(() => !readValue(copyable, true))} @click=${handleCopy}>${CopyIcon({ size: '1em' })}</button>
+        <span class="${baseClassName}-status" role="status" aria-live="polite" aria-atomic="true">${copyStatus}</span>
       </header>
-      <div class="${baseClassName}-body">
+      <div class="${baseClassName}-body" role="${showTabs ? 'tabpanel' : undefined}" id="${showTabs ? panelId : undefined}" aria-labelledby="${showTabs ? computed(() => tabButtonId(activeTabIndex.value)) : undefined}" tabindex="${showTabs ? 0 : undefined}">
         <div class="${gutterClass}" aria-hidden="true"><span class="${baseClassName}-gutter-lines">${lineNumberMarkup}</span></div>
         <div class="${baseClassName}-scroll">
           <pre class="${baseClassName}-highlight" aria-hidden="true"><code>${highlightedCode}</code></pre>
-          <textarea class="${baseClassName}-input" spellcheck="false" wrap="off" aria-label="${ariaLabel} source" .value=${codeValue} ?readonly=${computed(() => !readValue(editable, true))} @input=${handleInput} @scroll=${syncScroll}></textarea>
+          <textarea class="${baseClassName}-input" spellcheck="false" wrap="off" aria-label="${computed(() => `${accessibleLabel.value} source`)}" .value=${codeValue} ?readonly=${computed(() => !readValue(editable, true) || !isWritableSignal(activeTab.value.code))} @input=${handleInput} @scroll=${syncScroll}></textarea>
         </div>
       </div>
     </section>

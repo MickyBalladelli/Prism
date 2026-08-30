@@ -1,4 +1,4 @@
-import type { ComponentResult, Signal, StyleDefinition } from '@mickyballadelli/matrix'
+import type { ComponentResult, Reactive, Signal, StyleDefinition } from '@mickyballadelli/matrix'
 
 export interface BoxProps {
   children?: unknown
@@ -60,7 +60,7 @@ export interface BackgroundProps {
   baseColor?: string | Signal<string>
   accentColor?: string | Signal<string>
   glowColor?: string | Signal<string>
-  ariaLabel?: string
+  ariaLabel?: string | Reactive<string>
 }
 
 export interface HeaderProps {
@@ -118,25 +118,51 @@ export interface ButtonProps {
 }
 
 export interface TextFieldProps {
-  value?: string | Signal<string>
+  value?: string | Reactive<string>
   onInput?: (event: Event) => void
   onChange?: (event: Event) => void
+  onFocus?: (event: FocusEvent) => void
+  onBlur?: (event: FocusEvent) => void
   id?: string
   name?: string
   placeholder?: string
-  disabled?: boolean
-  required?: boolean
-  size?: 'small' | 'medium' | 'large' | Signal<'small' | 'medium' | 'large'>
+  disabled?: boolean | Reactive<boolean>
+  required?: boolean | Reactive<boolean>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  type?: string | Reactive<string>
+  autocomplete?: string | Reactive<string>
+  inputMode?: string | Reactive<string>
+  maxLength?: number | Reactive<number>
+  minLength?: number | Reactive<number>
+  pattern?: string | Reactive<string>
+  readOnly?: boolean | Reactive<boolean>
+  ariaLabel?: string | Reactive<string>
+  ariaDescription?: unknown
+  ariaDescribedBy?: string | Reactive<string>
+  ariaInvalid?: boolean | Reactive<boolean>
+  error?: unknown
+  class?: string
+  style?: string | Record<string, string>
 }
 
 export interface CheckBoxProps {
-  checked?: boolean | Signal<boolean>
+  checked?: boolean | Reactive<boolean>
   children?: unknown
   onChange?: (event: Event) => void
+  onFocus?: (event: FocusEvent) => void
+  onBlur?: (event: FocusEvent) => void
   id?: string
   name?: string
-  value?: string
-  disabled?: boolean
+  value?: string | number | Reactive<string | number>
+  disabled?: boolean | Reactive<boolean>
+  required?: boolean | Reactive<boolean>
+  ariaLabel?: string | Reactive<string>
+  ariaDescription?: unknown
+  ariaDescribedBy?: string | Reactive<string>
+  ariaInvalid?: boolean | Reactive<boolean>
+  error?: unknown
+  class?: string
+  style?: string | Record<string, string>
 }
 
 export type CodeLanguage = 'javascript' | 'jsx' | 'typescript' | 'tsx' | 'json' | 'css' | 'html' | 'xml' | 'bash' | 'text'
@@ -144,31 +170,32 @@ export type CodeLanguage = 'javascript' | 'jsx' | 'typescript' | 'tsx' | 'json' 
 export interface CodeViewerTab {
   id?: string
   label?: string
-  language?: CodeLanguage
-  filename?: string
-  code?: string | Signal<string>
+  language?: CodeLanguage | Reactive<CodeLanguage>
+  filename?: string | Reactive<string>
+  code?: string | Reactive<string>
 }
 
 export interface CodeViewerProps {
-  code?: string | Signal<string>
-  language?: CodeLanguage | Signal<CodeLanguage>
-  filename?: string | Signal<string>
-  tabs?: ReadonlyArray<CodeViewerTab>
-  activeTab?: string | Signal<string>
+  code?: string | Reactive<string>
+  language?: CodeLanguage | Reactive<CodeLanguage>
+  filename?: string | Reactive<string>
+  tabs?: ReadonlyArray<CodeViewerTab> | Reactive<ReadonlyArray<CodeViewerTab>>
+  activeTab?: string | Reactive<string>
   defaultTab?: string
-  lineNumbers?: boolean | Signal<boolean>
-  editable?: boolean | Signal<boolean>
-  copyable?: boolean | Signal<boolean>
-  syntaxColors?: Readonly<Record<string, string>> | Signal<Readonly<Record<string, string>>>
-  fontFamily?: string | Signal<string>
-  fontSize?: string | Signal<string>
-  lineHeight?: string | Signal<string>
-  tabSize?: number | Signal<number>
-  minHeight?: string | Signal<string>
-  maxHeight?: string | Signal<string>
+  lineNumbers?: boolean | Reactive<boolean>
+  editable?: boolean | Reactive<boolean>
+  copyable?: boolean | Reactive<boolean>
+  syntaxColors?: Readonly<Record<string, string>> | Reactive<Readonly<Record<string, string>>>
+  fontFamily?: string | Reactive<string>
+  fontSize?: string | Reactive<string>
+  lineHeight?: string | Reactive<string>
+  tabSize?: number | Reactive<number>
+  minHeight?: string | Reactive<string>
+  maxHeight?: string | Reactive<string>
   style?: string | Record<string, string>
   class?: string
-  ariaLabel?: string
+  id?: string
+  ariaLabel?: string | Reactive<string>
   onChange?: (event: Event) => void
   onCopy?: (code: string, event: MouseEvent) => void
   onTabChange?: (tabId: string) => void
@@ -218,18 +245,23 @@ export interface SelectRenderContext {
 }
 
 export interface SelectProps {
-  options?: SelectOptionInput[] | Signal<SelectOptionInput[]>
-  value?: string | number | Signal<string | number>
+  options?: SelectOptionInput[] | Reactive<SelectOptionInput[]>
+  value?: string | number | Reactive<string | number>
   onChange?: (event: Event) => void
   onRender?: (option: SelectOption, context: SelectRenderContext) => unknown
   id?: string
   name?: string
   placeholder?: string
-  disabled?: boolean
-  required?: boolean
-  size?: 'small' | 'medium' | 'large' | Signal<'small' | 'medium' | 'large'>
-  placement?: SelectPlacement | Signal<SelectPlacement>
-  ariaLabel?: string
+  disabled?: boolean | Reactive<boolean>
+  required?: boolean | Reactive<boolean>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  placement?: SelectPlacement | Reactive<SelectPlacement>
+  ariaLabel?: string | Reactive<string>
+  ariaDescription?: unknown
+  ariaDescribedBy?: string | Reactive<string>
+  ariaInvalid?: boolean | Reactive<boolean>
+  error?: unknown
+  style?: string | Record<string, string>
   class?: string
 }
 
@@ -320,7 +352,7 @@ export interface TableProps<Row = Record<string, unknown>> {
   emptyMessage?: unknown
   class?: string
   id?: string
-  ariaLabel?: string
+  ariaLabel?: string | Reactive<string>
   onRowClick?: (row: Row, context: { key: string, rowIndex: number, event: MouseEvent | KeyboardEvent }) => void
   onSelectionChange?: (keys: string[], rows: Row[]) => void
   onSortChange?: (sort: TableSort | null) => void
@@ -365,12 +397,14 @@ export interface PulseProps {
 
 export interface TreeViewItem {
   label: string
+  id?: string
   href?: string
   onClick?: (event: MouseEvent) => void
   active?: boolean
-  expanded?: boolean
-  meta?: string | number | Signal<string | number>
-  children?: TreeViewItem[]
+  expanded?: boolean | Reactive<boolean>
+  hasChildren?: boolean
+  meta?: string | number | Reactive<string | number>
+  children?: TreeViewItem[] | Reactive<TreeViewItem[]>
 }
 
 export type TreeViewRenderLocation = 'item'
@@ -404,12 +438,14 @@ export interface TreeViewModelDefinition {
 export const treeViewModels: Readonly<Record<TreeViewModel, TreeViewModelDefinition>>
 
 export interface TreeViewProps {
-  items?: TreeViewItem[] | Signal<TreeViewItem[]>
+  items?: TreeViewItem[] | Reactive<TreeViewItem[]>
   class?: string
   id?: string
   ariaLabel?: string
-  model?: TreeViewModel | Signal<TreeViewModel>
-  itemVariant?: TreeViewItemVariant | Signal<TreeViewItemVariant>
+  model?: TreeViewModel | Reactive<TreeViewModel>
+  itemVariant?: TreeViewItemVariant | Reactive<TreeViewItemVariant>
+  expanded?: Readonly<Record<string, boolean>> | Reactive<Readonly<Record<string, boolean>>>
+  onExpandedChange?: (expanded: Record<string, boolean>, item: TreeViewItem, expandedValue: boolean) => void
   onRender?: (item: TreeViewItem, context: TreeViewRenderContext) => unknown
 }
 
