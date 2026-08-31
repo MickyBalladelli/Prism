@@ -402,7 +402,7 @@ function createStyleValue(props, colors) {
       '--prism-background-glow': colors.value.glow,
       '--prism-background-overlay-opacity': String(normalizeNumber(props.overlayOpacity, 0.22, 0, 0.72)),
       '--prism-background-padding': readValue(props.padding, '1.5rem'),
-      '--prism-background-radius': readValue(props.radius, '1.4rem'),
+      '--prism-background-radius': readValue(props.radius, '0'),
       '--prism-background-min-height': readValue(props.minHeight, '18rem'),
       '--prism-background-height': readValue(props.height)
     }
@@ -767,7 +767,7 @@ export function Background(props = {}) {
     minHeight = '18rem',
     height,
     padding = '1.5rem',
-    radius = '1.4rem',
+    radius = '0',
     baseColor,
     accentColor,
     glowColor,

@@ -5,6 +5,8 @@ export const prismThemeValues = Object.freeze({
     surfaceGlass: 'rgb(255 255 255 / 84%)',
     surfaceCard: 'rgb(255 255 255 / 82%)',
     surfaceTint: '#f8faff',
+    surfaceRaised: '#ffffff',
+    surfaceHover: '#f8faff',
     white: '#ffffff',
     whiteStrong: 'rgb(255 255 255 / 90%)',
     whiteSoft: 'rgb(255 255 255 / 24%)',
@@ -208,6 +210,8 @@ export const cssTokens = Object.freeze({
   '--prism-color-surface-glass': prismThemeValues.colors.surfaceGlass,
   '--prism-color-surface-card': prismThemeValues.colors.surfaceCard,
   '--prism-color-surface-tint': prismThemeValues.colors.surfaceTint,
+  '--prism-color-surface-raised': prismThemeValues.colors.surfaceRaised,
+  '--prism-color-surface-hover': prismThemeValues.colors.surfaceHover,
   '--prism-color-white': prismThemeValues.colors.white,
   '--prism-color-white-strong': prismThemeValues.colors.whiteStrong,
   '--prism-color-white-soft': prismThemeValues.colors.whiteSoft,
@@ -300,4 +304,3 @@ export const cssTokens = Object.freeze({
   '--prism-shadow-action-hover': prismThemeValues.shadows.actionHover,
   '--prism-shadow-action-active': prismThemeValues.shadows.actionActive
 })
-

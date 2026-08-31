@@ -18,7 +18,7 @@ const view = <main use:style={prismTheme}>{children}</main>
 
 The public token groups are:
 
-- `colors`: page, surface, panel, text, muted text, border, accent, action, focus, selection, and status colors
+- `colors`: page, surface, raised surface, hover surface, panel, text, muted text, border, accent, action, focus, selection, and status colors
 - `fontSizes`: display, heading, body, label, and caption sizes
 - `radii`: surface, control, pill, and circle radii
 - `shadows`: surface, floating, focus, and inset shadows

@@ -25,6 +25,8 @@ const themeModelRules = `
     --prism-color-surface-glass: rgb(255 255 255 / 78%);
     --prism-color-surface-card: rgb(255 255 255 / 86%);
     --prism-color-surface-tint: #fbf8ff;
+    --prism-color-surface-raised: #ffffff;
+    --prism-color-surface-hover: #fbf8ff;
     --prism-color-white: #ffffff;
     --prism-color-white-strong: rgb(255 255 255 / 92%);
     --prism-color-white-tint: rgb(255 255 255 / 30%);
@@ -93,10 +95,12 @@ const themeModelRules = `
     --prism-color-surface-glass: rgb(18 27 53 / 91%);
     --prism-color-surface-card: rgb(17 26 53 / 94%);
     --prism-color-surface-tint: #141f3d;
+    --prism-color-surface-raised: #111a35;
+    --prism-color-surface-hover: #18264a;
     --prism-color-white: #172342;
     --prism-color-white-strong: rgb(35 49 86 / 92%);
     --prism-color-white-tint: rgb(126 154 226 / 16%);
-    --prism-color-ink: #eef4ff;
+    --prism-color-ink: #ffffff;
     --prism-color-text: #b5c6e8;
     --prism-color-text-muted: #9aadd4;
     --prism-color-text-soft: #8fa5d0;
@@ -163,6 +167,8 @@ const themeModelRules = `
     --prism-color-surface-glass: rgb(255 253 249 / 88%);
     --prism-color-surface-card: rgb(255 253 249 / 94%);
     --prism-color-surface-tint: #f3eee7;
+    --prism-color-surface-raised: #fffdf9;
+    --prism-color-surface-hover: #f3eee7;
     --prism-color-white: #fffdf9;
     --prism-color-white-strong: rgb(255 253 249 / 94%);
     --prism-color-white-tint: rgb(255 253 249 / 32%);
@@ -232,6 +238,8 @@ const themeModelRules = `
     --prism-color-surface-glass: rgb(13 24 21 / 93%);
     --prism-color-surface-card: rgb(13 24 21 / 96%);
     --prism-color-surface-tint: #10221c;
+    --prism-color-surface-raised: #0d1815;
+    --prism-color-surface-hover: #10221c;
     --prism-color-white: #12251d;
     --prism-color-white-strong: rgb(28 59 45 / 94%);
     --prism-color-white-tint: rgb(91 224 148 / 15%);
@@ -552,7 +560,7 @@ export const prismTheme = globalCss(`
     border-radius: var(--prism-radius-control);
     outline: none;
     color: var(--prism-color-ink);
-    background: var(--prism-color-white);
+    background: var(--prism-color-surface-raised);
     font: inherit;
     font-size: var(--prism-font-size-body);
     line-height: 1.2;
@@ -603,7 +611,7 @@ export const prismTheme = globalCss(`
     overflow: auto;
     border: 1px solid var(--prism-color-border-input);
     border-radius: var(--prism-radius-control);
-    background: var(--prism-color-white);
+    background: var(--prism-color-surface-raised);
     box-shadow: 0 .7rem 1.8rem rgb(37 49 78 / 15%), 0 .1rem .3rem rgb(37 49 78 / 8%);
   }
 
@@ -701,7 +709,7 @@ export const prismTheme = globalCss(`
     border-radius: var(--prism-radius-control);
     outline: none;
     color: var(--prism-color-ink);
-    background: var(--prism-color-white);
+    background: var(--prism-color-surface-raised);
     font: inherit;
     font-size: var(--prism-font-size-body);
     line-height: 1.2;
@@ -762,7 +770,7 @@ export const prismTheme = globalCss(`
     overflow: auto;
     border: 1px solid var(--prism-color-border-input);
     border-radius: var(--prism-radius-control);
-    background: var(--prism-color-white);
+    background: var(--prism-color-surface-raised);
     box-shadow: 0 .7rem 1.8rem rgb(37 49 78 / 15%), 0 .1rem .3rem rgb(37 49 78 / 8%);
   }
 
@@ -848,6 +856,89 @@ export const prismTheme = globalCss(`
     font-size: var(--prism-font-size-small);
   }
 
+  .text-field {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 2.65rem;
+    padding: .65rem .8rem;
+    border: 1px solid var(--prism-color-border-input);
+    border-radius: var(--prism-radius-control);
+    outline: none;
+    color: var(--prism-color-ink);
+    background: var(--prism-color-surface-raised);
+    font: inherit;
+    font-size: var(--prism-font-size-body);
+    line-height: 1.2;
+    appearance: none;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+
+  .text-field::placeholder {
+    color: var(--prism-color-placeholder);
+  }
+
+  .text-field:hover:not(:disabled) {
+    border-color: var(--prism-color-border-strong);
+    background: var(--prism-color-surface-hover);
+  }
+
+  .text-field:focus-visible {
+    border-color: var(--prism-color-focus);
+    box-shadow: 0 0 0 .25rem var(--prism-color-focus-glow);
+  }
+
+  .text-field:disabled {
+    opacity: var(--prism-button-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  .text-field-small {
+    min-height: 2.25rem;
+    padding: .55rem .68rem;
+    font-size: var(--prism-font-size-small);
+  }
+
+  .text-field-large {
+    min-height: 3rem;
+    padding: .82rem .95rem;
+    font-size: var(--prism-font-size-copy);
+  }
+
+  .check-box {
+    display: inline-grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: .55rem;
+    color: var(--prism-color-text);
+    cursor: pointer;
+  }
+
+  .check-box-input {
+    width: 1.05rem;
+    height: 1.05rem;
+    margin: .08rem 0 0;
+    accent-color: var(--prism-color-action);
+  }
+
+  .check-box-input:focus-visible {
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: 2px;
+  }
+
+  .check-box-invalid {
+    color: var(--prism-color-error);
+  }
+
+  .check-box-invalid .check-box-input {
+    accent-color: var(--prism-color-error);
+  }
+
+  .check-box:has(.check-box-input:disabled) {
+    opacity: var(--prism-button-disabled-opacity);
+    cursor: not-allowed;
+  }
+
   .text-field-message-error,
   .check-box-message-error,
   .prism-select-message-error {
@@ -856,10 +947,6 @@ export const prismTheme = globalCss(`
 
   .text-field-invalid {
     border-color: var(--prism-color-error);
-  }
-
-  .check-box-invalid {
-    color: var(--prism-color-error);
   }
 
   .prism-select-trigger[aria-invalid="true"] {
@@ -1352,7 +1439,7 @@ export const prismTheme = globalCss(`
     --prism-background-glow: #7ac7ff;
     --prism-background-overlay-opacity: .22;
     --prism-background-padding: 1.5rem;
-    --prism-background-radius: 1.4rem;
+    --prism-background-radius: 0;
     --prism-background-min-height: 18rem;
     --prism-background-height: auto;
     position: relative;
@@ -2484,7 +2571,7 @@ export const prismTheme = globalCss(`
 
   .prism-table-page-number[data-active="true"] {
     border-color: transparent;
-    color: white;
+    color: var(--prism-color-white);
     background: var(--prism-color-focus);
     box-shadow: 0 .4rem .9rem var(--prism-color-focus-glow);
   }
@@ -2531,7 +2618,7 @@ export const prismTheme = globalCss(`
     border: 1px solid var(--prism-color-border-input);
     border-radius: 999px;
     color: var(--prism-color-text-soft);
-    background: var(--prism-color-white);
+    background: var(--prism-color-surface-raised);
     font-size: var(--prism-font-size-micro);
     font-weight: 760;
     letter-spacing: .04em;
@@ -2541,7 +2628,7 @@ export const prismTheme = globalCss(`
 
   .prism-badge-neutral {
     color: var(--prism-color-text-soft);
-    background: var(--prism-color-white);
+    background: var(--prism-color-surface-raised);
   }
 
   .prism-badge-success {
