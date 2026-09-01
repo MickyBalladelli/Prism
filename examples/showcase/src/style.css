@@ -2500,6 +2500,7 @@ input[type="text"]:required:invalid {
 .p2-icon-button-demo,
 .p2-spinner-demo,
 .p2-color-picker-demo,
+.p2-file-picker-demo,
 .p2-date-picker-demo,
 .p2-date-time-picker-demo {
   display: grid;
@@ -2715,6 +2716,23 @@ input[type="text"]:required:invalid {
   border: 1px solid var(--prism-color-border);
   border-radius: var(--prism-radius-surface);
   background: color-mix(in srgb, var(--prism-color-surface-tint) 76%, var(--prism-color-white));
+}
+
+.p2-file-picker-demo {
+  min-height: 9rem;
+  align-content: center;
+  padding: 1.1rem;
+  border: 1px solid var(--prism-color-border);
+  border-radius: var(--prism-radius-surface);
+  background: color-mix(in srgb, var(--prism-color-surface-tint) 76%, var(--prism-color-white));
+}
+
+.p2-file-picker-demo .prism-file-picker {
+  width: min(100%, 34rem);
+}
+
+.p2-file-picker-demo .playground-note {
+  max-width: 34rem;
 }
 
 .p2-date-picker-demo,

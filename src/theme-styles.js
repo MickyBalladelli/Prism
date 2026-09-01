@@ -3539,6 +3539,7 @@ export const prismTheme = globalCss(`
     .prism-form-field,
     .prism-auto-complete,
     .prism-color-picker,
+    .prism-file-picker,
     .prism-date-picker,
     .prism-date-time-picker,
     .prism-alert,
@@ -3661,6 +3662,133 @@ export const prismTheme = globalCss(`
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.78rem;
     letter-spacing: 0.03em;
+  }
+
+  .prism-file-picker {
+    display: grid;
+    gap: 0.45rem;
+    width: min(100%, 28rem);
+  }
+
+  .prism-file-picker-label {
+    color: var(--prism-color-text-strong);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .prism-file-picker-control {
+    position: relative;
+  }
+
+  .prism-file-picker-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .prism-file-picker-trigger {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 2.8rem;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--prism-color-border-strong);
+    border-radius: var(--prism-radius-medium);
+    background: var(--prism-color-surface-raised);
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .prism-file-picker-trigger:hover {
+    border-color: var(--prism-color-accent);
+    background: var(--prism-color-surface-hover);
+  }
+
+  .prism-file-picker-input:focus-visible + .prism-file-picker-trigger {
+    border-color: var(--prism-color-focus);
+    outline: 2px solid var(--prism-color-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.25rem var(--prism-color-focus-glow);
+  }
+
+  .prism-file-picker-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 1.95rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--prism-radius-small);
+    color: var(--prism-color-white);
+    background: linear-gradient(135deg, var(--prism-color-action), var(--prism-color-action-active));
+    font-size: 0.78rem;
+    font-weight: 750;
+    white-space: nowrap;
+  }
+
+  .prism-file-picker-action .prism-icon {
+    flex: 0 0 auto;
+  }
+
+  .prism-file-picker-summary {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--prism-color-text);
+    font-size: 0.82rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .prism-file-picker-summary-empty {
+    color: var(--prism-color-text-muted);
+  }
+
+  .prism-file-picker:has(.prism-file-picker-input:disabled) .prism-file-picker-trigger {
+    opacity: var(--prism-button-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  .prism-file-picker-invalid .prism-file-picker-trigger {
+    border-color: var(--prism-color-error);
+  }
+
+  .prism-file-picker-message {
+    display: block;
+    margin-top: 0.35rem;
+    color: var(--prism-color-text-subtle);
+    font-size: var(--prism-font-size-small);
+  }
+
+  .prism-file-picker-message-error {
+    color: var(--prism-color-error);
+  }
+
+  .prism-file-picker-small .prism-file-picker-trigger {
+    min-height: 2.25rem;
+    padding: 0.35rem 0.45rem;
+  }
+
+  .prism-file-picker-small .prism-file-picker-action {
+    min-height: 1.65rem;
+    padding: 0.28rem 0.5rem;
+    font-size: var(--prism-font-size-small);
+  }
+
+  .prism-file-picker-large .prism-file-picker-trigger {
+    min-height: 3.15rem;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .prism-file-picker-large .prism-file-picker-action {
+    min-height: 2.25rem;
+    padding: 0.45rem 0.75rem;
+    font-size: var(--prism-font-size-body);
   }
 
   .prism-date-picker,

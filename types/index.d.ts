@@ -485,6 +485,31 @@ export interface ColorPickerProps {
   onBlur?: (event: FocusEvent) => void
 }
 
+export interface FilePickerProps {
+  label?: unknown | Reactive<unknown>
+  ariaLabel?: string | Reactive<string>
+  ariaDescription?: unknown | Reactive<unknown>
+  ariaDescribedBy?: string | Reactive<string>
+  ariaInvalid?: boolean | Reactive<boolean>
+  error?: unknown | Reactive<unknown>
+  accept?: string | Reactive<string>
+  capture?: boolean | string | Reactive<boolean | string>
+  multiple?: boolean | Reactive<boolean>
+  buttonLabel?: unknown | Reactive<unknown>
+  emptyText?: unknown | Reactive<unknown>
+  disabled?: boolean | Reactive<boolean>
+  required?: boolean | Reactive<boolean>
+  size?: 'small' | 'medium' | 'large' | Reactive<'small' | 'medium' | 'large'>
+  id?: string
+  name?: string
+  class?: string
+  style?: StyleValue
+  onInput?: (event: InputEvent) => void
+  onChange?: (event: Event) => void
+  onFocus?: (event: FocusEvent) => void
+  onBlur?: (event: FocusEvent) => void
+}
+
 export interface DatePickerProps {
   value?: string | Reactive<string>
   label?: unknown | Reactive<unknown>

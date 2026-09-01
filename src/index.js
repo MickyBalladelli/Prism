@@ -29,6 +29,8 @@ export {
   CheckBoxComponent,
   ColorPicker,
   ColorPickerComponent,
+  FilePicker,
+  FilePickerComponent,
   CodeViewer,
   CodeViewerComponent,
   DatePicker,

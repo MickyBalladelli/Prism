@@ -110,6 +110,16 @@ export const componentRegistry = [
     details: ['Hex value display', 'Three sizes', 'Accessible labeling']
   },
   {
+    key: 'file-picker',
+    path: '/components/file-picker',
+    eyebrow: 'Forms',
+    title: 'FilePicker',
+    mark: '42',
+    description: 'A themed native file chooser with accessible labeling, accept filters, and a clear selection summary.',
+    highlights: ['Native file input', 'Single or multiple files', 'Accessible selection summary'],
+    details: ['Accept and capture hints', 'Reactive-friendly events', 'Disabled and validation states']
+  },
+  {
     key: 'date-picker',
     path: '/components/date-picker',
     eyebrow: 'Forms',

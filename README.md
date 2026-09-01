@@ -96,7 +96,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 | Group | Components | Use them for |
 | --- | --- | --- |
 | Layout | `Background`, `Box`, `Card`, `Header`, `Layout`, `Navigator`, `Footer`, `Label` | Surfaces, app chrome, page structure, navigation panes, and readable type |
-| Forms | `TextField`, `AutoComplete`, `Select`, `CheckBox`, `ColorPicker`, `DatePicker`, `DateTimePicker` | Basic input, suggestions, choice, color, and scheduling controls |
+| Forms | `TextField`, `AutoComplete`, `Select`, `CheckBox`, `ColorPicker`, `FilePicker`, `DatePicker`, `DateTimePicker` | Basic input, suggestions, choice, color, file, and scheduling controls |
 | Actions | `Button` | Primary, secondary, status, and icon actions |
 | Feedback | `Badge`, `Pulse`, `Alert`, `ToastRegion`, `Progress`, `Spinner`, `Skeleton`, `EmptyState` | Counts, state, health, async work, and empty results |
 | Navigation | `TreeView` | Nested product or workspace navigation |
@@ -110,7 +110,7 @@ Read the full [styling contract](STYLING.md) for token groups, form patterns, bu
 
 ### Signals
 
-Pass writable Matrix signals to controls when state must stay in sync. `TextField` writes to a `value` signal, `CheckBox` writes to a `checked` signal, and `ColorPicker` writes a hex color to a `value` signal. `Select`, `Popup`, `Table`, and most visual props also accept reactive values.
+Pass writable Matrix signals to controls when state must stay in sync. `TextField` writes to a `value` signal, `CheckBox` writes to a `checked` signal, and `ColorPicker` writes a hex color to a `value` signal. `FilePicker` exposes the browser's native `FileList` through its input and change events. `Select`, `Popup`, `Table`, and most visual props also accept reactive values.
 
 ```js
 import { CheckBox, Select, TextField } from '@mickyballadelli/prism'
@@ -139,7 +139,7 @@ Use `Label({ htmlFor: 'control-id' })` or a normal HTML `<label>` for named cont
 
 ### Events
 
-Event handlers use Matrix's normal DOM event shape. Button handlers receive a mouse event. TextField and CheckBox expose native input/change events. Table and TreeView add component-specific callbacks described below.
+Event handlers use Matrix's normal DOM event shape. Button handlers receive a mouse event. TextField, CheckBox, and FilePicker expose native input/change events. Table and TreeView add component-specific callbacks described below.
 
 ## Layout
 
@@ -323,6 +323,27 @@ const view = ColorPicker({
 ```
 
 Use `small`, `medium`, or `large` for the control size. `showValue`, `disabled`, `required`, `class`, and `style` are also supported. When no visible label is provided, set `ariaLabel`.
+
+### FilePicker
+
+`FilePicker` styles a native file input while preserving browser file access and behavior. It shows a useful selection summary, supports accept filters and single or multiple files, and passes the native event to `onInput` and `onChange`.
+
+```js
+import { FilePicker } from '@mickyballadelli/prism'
+
+const view = FilePicker({
+  id: 'brand-assets',
+  label: 'Brand assets',
+  accept: 'image/*,.svg',
+  multiple: true,
+  onChange: event => {
+    const files = Array.from(event.currentTarget.files ?? [])
+    console.log(files.map(file => file.name))
+  }
+})
+```
+
+Use `buttonLabel` and `emptyText` to tune the visible copy. `capture`, `disabled`, `required`, `ariaDescription`, `ariaDescribedBy`, `ariaInvalid`, `error`, `class`, and `style` are also supported. The component cannot bind a file value programmatically because browsers protect local file paths.
 
 ### DatePicker and DateTimePicker
 

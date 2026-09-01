@@ -7,6 +7,7 @@ import { TextFieldPlayground } from './text-field.jsx'
 import { SelectPlayground } from './select.jsx'
 import { CheckBoxPlayground } from './check-box.jsx'
 import { ColorPickerPlayground } from './color-picker.jsx'
+import { FilePickerPlayground } from './file-picker.jsx'
 import { DatePickerPlayground } from './date-picker.jsx'
 import { DateTimePickerPlayground } from './date-time-picker.jsx'
 import { CardPlayground } from './card.jsx'
@@ -50,6 +51,7 @@ export {
   SelectPlayground,
   CheckBoxPlayground,
   ColorPickerPlayground,
+  FilePickerPlayground,
   DatePickerPlayground,
   DateTimePickerPlayground,
   CardPlayground,
@@ -94,6 +96,7 @@ export const playgrounds = {
   select: SelectPlayground,
   'check-box': CheckBoxPlayground,
   'color-picker': ColorPickerPlayground,
+  'file-picker': FilePickerPlayground,
   'date-picker': DatePickerPlayground,
   'date-time-picker': DateTimePickerPlayground,
   card: CardPlayground,
