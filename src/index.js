@@ -139,6 +139,7 @@ export {
   UnlockIcon,
   UploadIcon,
   UserIcon,
+  UserPlusIcon,
   Tooltip,
   TooltipComponent,
   createToastController

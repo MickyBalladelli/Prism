@@ -137,6 +137,8 @@ export const MapPinIcon = createIcon('<path d="M19 10.2c0 4.7-7 10.3-7 10.3S5 14
 
 export const UserIcon = createIcon('<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2" /><path d="M5 20a7 7 0 0 1 14 0" /></g>')
 
+export const UserPlusIcon = createIcon('<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.2" cy="8" r="3" /><path d="M3.5 19a4.7 4.7 0 0 1 9.4 0" /><path d="M17 12.5v7M13.5 16h7" /></g>')
+
 export const GroupIcon = createIcon('<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="2.8" /><circle cx="16.5" cy="9" r="2.2" /><path d="M3.8 19a5.3 5.3 0 0 1 10.5 0M15 14.7a4.4 4.4 0 0 1 5.2 4.3" /></g>')
 
 export const SettingsIcon = createIcon('<path d="m12 3 1.2 2.3 2.5.6 2-1.2 1.7 1.7-1.2 2 .6 2.5L21 12l-2.2 1.1-.6 2.5 1.2 2-1.7 1.7-2-1.2-2.5.6L12 21l-1.1-2.3-2.5-.6-2 1.2-1.7-1.7 1.2-2-.6-2.5L3 12l2.3-1.1.6-2.5-1.2-2 1.7-1.7 2 1.2 2.5-.6L12 3Z" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" /><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7" />')

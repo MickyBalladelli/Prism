@@ -88,7 +88,8 @@ export {
   TreeToggleIcon,
   UnlockIcon,
   UploadIcon,
-  UserIcon
+  UserIcon,
+  UserPlusIcon
 } from './icons.js'
 export { TextField, TextFieldComponent } from './text-field.js'
 export { TreeView, TreeViewComponent } from './tree-view.js'
