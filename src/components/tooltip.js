@@ -9,7 +9,7 @@ export function Tooltip(props = {}) {
     children,
     class: classValue = '',
     content,
-    delay = 300,
+    delay = 100,
     disabled = false,
     id,
     placement = 'top',
@@ -23,7 +23,7 @@ export function Tooltip(props = {}) {
   const show = () => {
     clearTimeout(timer)
     if (readReactiveValue(disabled, false)) return
-    timer = setTimeout(() => { open.value = true }, Number(readReactiveValue(delayValue, 300)))
+    timer = setTimeout(() => { open.value = true }, Number(readReactiveValue(delayValue, 100)))
   }
   const hide = () => {
     clearTimeout(timer)
