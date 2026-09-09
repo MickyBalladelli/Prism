@@ -1,6 +1,6 @@
 {
   "name": "@mickyballadelli/prism",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Small UI components for Matrix",
   "license": "MIT",
   "repository": {
@@ -43,7 +43,9 @@
     "check:accessibility": "node scripts/accessibility-smoke.mjs",
     "check:imports": "node scripts/package-smoke.mjs",
     "showcase:build": "npm run build --prefix examples/showcase",
-    "check": "npm run typecheck && npm run build && npm run check:package && npm run check:imports && npm run check:accessibility && npm run showcase:build"
+    "check": "npm run typecheck && npm run build && npm run check:package && npm run check:imports && npm run check:accessibility && npm run showcase:build",
+    "version:bump": "sh scripts/bump-version.sh",
+    "publish:package": "sh scripts/publish-package.sh"
   },
   "publishConfig": {
     "access": "public"
