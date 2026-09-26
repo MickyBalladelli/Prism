@@ -123,6 +123,7 @@ export {
   TextField,
   TextFieldComponent,
   TerminalIcon,
+  TrashIcon,
   Tabs,
   TabsComponent,
   Tag,

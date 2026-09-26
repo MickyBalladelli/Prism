@@ -42,6 +42,7 @@ import {
   ShareIcon,
   SparkIcon,
   TerminalIcon,
+  TrashIcon,
   UnlockIcon,
   UploadIcon,
   UserIcon
@@ -73,6 +74,7 @@ export const iconCategories = [
     iconEntry('CloseIcon', CloseIcon, 'Dismiss a surface or cancel an action.'),
     iconEntry('SearchIcon', SearchIcon, 'Find content inside a view.'),
     iconEntry('FilterIcon', FilterIcon, 'Narrow a collection of results.'),
+    iconEntry('TrashIcon', TrashIcon, 'Delete an item or move it to trash.'),
     iconEntry('MoreHorizontalIcon', MoreHorizontalIcon, 'Reveal secondary actions.')
   ]),
   iconCategory('navigation', 'Navigation', 'Directional marks and tree controls for moving through a product.', [

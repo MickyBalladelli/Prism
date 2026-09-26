@@ -972,6 +972,7 @@ export function ImageIcon(props?: IconProps): TemplateResult
 export function DownloadIcon(props?: IconProps): TemplateResult
 export function UploadIcon(props?: IconProps): TemplateResult
 export function CopyIcon(props?: IconProps): TemplateResult
+export function TrashIcon(props?: IconProps): TemplateResult
 export function CalendarIcon(props?: IconProps): TemplateResult
 export function ClockIcon(props?: IconProps): TemplateResult
 export function MapPinIcon(props?: IconProps): TemplateResult

@@ -83,6 +83,7 @@ export {
   ShareIcon,
   SparkIcon,
   TerminalIcon,
+  TrashIcon,
   TreeBranchIcon,
   TreeLeafIcon,
   TreeToggleIcon,
