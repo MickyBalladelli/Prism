@@ -8,7 +8,7 @@ export function BackgroundPlayground() {
   const headline = signal('Deep focus, soft glow')
   const copy = signal('True mastery of a tool occurs when AI and UI dissolve into pure poetry.')
   const palette = signal('midnight')
-  const animation = signal('veil')
+  const animation = signal('mist')
   const animated = signal(true)
   const speed = signal(1)
   const intensity = signal(0.85)

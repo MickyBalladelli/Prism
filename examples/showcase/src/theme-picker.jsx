@@ -22,7 +22,7 @@ const initialTheme = Object.prototype.hasOwnProperty.call(treeViewModels, stored
   : 'nocturne'
 const initialAnimation = animationIds.has(storedSettings.animation)
   ? storedSettings.animation
-  : 'halo'
+  : 'mist'
 const initialAnimated = storedSettings.animated !== false
 
 export const showcaseThemeModel = signal(initialTheme)
